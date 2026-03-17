@@ -7126,7 +7126,7 @@ select.msg-prelim-input{cursor:pointer;-webkit-appearance:none;appearance:none;b
       </div>
       <div style="display:flex;gap:9px;margin-top:9px">
         <button class="msg-btn" style="border-color:transparent;font-size:12px;flex:0 0 auto" onclick="msgCancel()">Back</button>
-        <button class="msg-btn" style="flex:1" onclick="msgSaveToSent()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>Save to Sent</button>
+        <button class="msg-btn" style="flex:1;background:var(--c1);color:#fff;border-color:var(--c1)" onclick="msgSaveToSent()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>Save Message</button>
       </div>
     </div>
 
@@ -8729,62 +8729,6 @@ select.msg-prelim-input{cursor:pointer;-webkit-appearance:none;appearance:none;b
       <div style="flex:1"></div>
       <button class="ob-back-btn" onclick="closeBudgetModal()">Cancel</button>
       <button class="ob-continue-btn" id="b-save-btn" onclick="saveExpense()">Log Expense</button>
-    </div>
-  </div>
-</div>
-
-<!-- Budget PDF Export Options Modal -->
-<div class="ob-overlay" id="budget-pdf-modal" style="display:none;z-index:910" onclick="if(event.target===this)this.style.display='none'">
-  <div class="ob-modal" style="max-width:500px">
-    <div class="ob-modal-header">
-      <div class="ob-step-label">BUDGET PDF</div>
-      <div class="ob-step-title" id="bpdf-modal-title">Export Options</div>
-    </div>
-    <div class="ob-modal-body" style="display:flex;flex-direction:column;gap:18px">
-
-      <!-- Version number -->
-      <div>
-        <div style="font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px">Version</div>
-        <input class="ob-input" id="bpdf-version" placeholder="e.g. v1, Draft, Final" style="max-width:200px">
-        <div style="font-size:10px;color:var(--text3);margin-top:4px">Appears in header and filename</div>
-      </div>
-
-      <!-- Accent color -->
-      <div>
-        <div style="font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Accent Color</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="bpdf-swatch bpdf-swatch-active" data-color="#F5A67D" data-alt="#E8887A" data-label="#9B7FD4" onclick="bpdfSelSwatch(this)" title="Peach (default)" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#F5A67D,#E8887A);border:2px solid transparent;cursor:pointer;outline:2px solid var(--c1);outline-offset:2px"></button>
-          <button class="bpdf-swatch" data-color="#2563EB" data-alt="#1D4ED8" data-label="#7C3AED" onclick="bpdfSelSwatch(this)" title="Blue" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#1D4ED8);border:2px solid transparent;cursor:pointer;outline:none"></button>
-          <button class="bpdf-swatch" data-color="#059669" data-alt="#047857" data-label="#065F46" onclick="bpdfSelSwatch(this)" title="Green" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#059669,#047857);border:2px solid transparent;cursor:pointer;outline:none"></button>
-          <button class="bpdf-swatch" data-color="#DC2626" data-alt="#B91C1C" data-label="#7F1D1D" onclick="bpdfSelSwatch(this)" title="Red" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#DC2626,#B91C1C);border:2px solid transparent;cursor:pointer;outline:none"></button>
-          <button class="bpdf-swatch" data-color="#7C3AED" data-alt="#6D28D9" data-label="#4C1D95" onclick="bpdfSelSwatch(this)" title="Purple" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#6D28D9);border:2px solid transparent;cursor:pointer;outline:none"></button>
-          <button class="bpdf-swatch" data-color="#D97706" data-alt="#B45309" data-label="#78350F" onclick="bpdfSelSwatch(this)" title="Amber" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#D97706,#B45309);border:2px solid transparent;cursor:pointer;outline:none"></button>
-          <button class="bpdf-swatch" data-color="#1c1c1e" data-alt="#3d3d3d" data-label="#666" onclick="bpdfSelSwatch(this)" title="Black" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#1c1c1e,#3d3d3d);border:2px solid transparent;cursor:pointer;outline:none"></button>
-        </div>
-      </div>
-
-      <!-- Font -->
-      <div>
-        <div style="font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Font</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="bpdf-font-opt bpdf-font-active" data-font="-apple-system,'Helvetica Neue',sans-serif" data-name="System" onclick="bpdfSelFont(this)" style="padding:6px 14px;border-radius:100px;border:1.5px solid var(--c1);background:var(--c1-soft);color:var(--text);font-size:12px;cursor:pointer;font-family:-apple-system,'Helvetica Neue',sans-serif">System</button>
-          <button class="bpdf-font-opt" data-font="'Inter',sans-serif" data-name="Inter" onclick="bpdfSelFont(this)" style="padding:6px 14px;border-radius:100px;border:1.5px solid var(--border2);background:none;color:var(--text);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif">Inter</button>
-          <button class="bpdf-font-opt" data-font="Georgia,'Times New Roman',serif" data-name="Georgia" onclick="bpdfSelFont(this)" style="padding:6px 14px;border-radius:100px;border:1.5px solid var(--border2);background:none;color:var(--text);font-size:12px;cursor:pointer;font-family:Georgia,serif">Georgia</button>
-          <button class="bpdf-font-opt" data-font="'Courier New',Courier,monospace" data-name="Courier" onclick="bpdfSelFont(this)" style="padding:6px 14px;border-radius:100px;border:1.5px solid var(--border2);background:none;color:var(--text);font-size:12px;cursor:pointer;font-family:'Courier New',monospace">Courier</button>
-          <button class="bpdf-font-opt" data-font="'DM Sans',sans-serif" data-name="DM Sans" onclick="bpdfSelFont(this)" style="padding:6px 14px;border-radius:100px;border:1.5px solid var(--border2);background:none;color:var(--text);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif">DM Sans</button>
-        </div>
-      </div>
-
-      <!-- Notes -->
-      <div>
-        <div style="font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px">Notes <span style="font-weight:400;opacity:.6">(optional)</span></div>
-        <textarea class="ob-textarea" id="bpdf-note" placeholder="Add a note to appear at the bottom of the PDF — e.g. approved by, confidentiality notice, revision details…" style="height:72px;resize:vertical"></textarea>
-      </div>
-
-    </div>
-    <div class="ob-modal-footer">
-      <button class="ob-back-btn" onclick="document.getElementById('budget-pdf-modal').style.display='none'">Cancel</button>
-      <button class="ob-continue-btn" id="bpdf-confirm-btn" onclick="bpdfConfirm(false)">Export PDF</button>
     </div>
   </div>
 </div>
@@ -11311,7 +11255,7 @@ function runExportProductionPacket(dryRun) {
     <div class="pkt-budget-stat-row">
       <div class="pkt-bstat"><div class="pkt-bstat-l">Total Budget</div><div class="pkt-bstat-v">${budget.total!=null&&budget.total>0?fmtMoney(budget.total):'—'}</div></div>
       <div class="pkt-bstat"><div class="pkt-bstat-l">Spent</div><div class="pkt-bstat-v">${fmtMoney(totalSpent)}</div></div>
-      <div class="pkt-bstat"><div class="pkt-bstat-l">Remaining</div><div class="pkt-bstat-v">${budget.total?(remaining>=0?fmtMoney(remaining):'-'+fmtMoney(Math.abs(remaining))):'—'}</div></div>
+      <div class="pkt-bstat"><div class="pkt-bstat-l">Remaining</div><div class="pkt-bstat-v">${budget.total?fmtMoney(Math.max(0,budget.total-totalSpent)):'—'}</div></div>
       <div class="pkt-bstat"><div class="pkt-bstat-l">Entries</div><div class="pkt-bstat-v">${budget.expenses.length}</div></div>
     </div>
     ${Object.keys(deptTotals).length ? `
@@ -12482,44 +12426,14 @@ function renderBudget(){
   const spent = data.expenses.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
   const total = data.total||0;
   const remaining = total - spent;
-  const isOver = total > 0 && remaining < 0;
   const sub = document.getElementById('budget-subtitle');
   if(sub) sub.textContent = prod ? prod.title + (total?' · Budget: $'+total.toLocaleString():'') : 'No active production';
   const q = id => document.getElementById(id);
   if(q('b-total'))     q('b-total').textContent = total ? '$'+total.toLocaleString() : '—';
   if(q('b-spent'))     q('b-spent').textContent = '$'+spent.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
   if(q('b-spent-pct')) q('b-spent-pct').textContent = total ? Math.round(spent/total*100)+'% of total' : '';
-
-  // Remaining — show negative with minus sign and red when over budget
-  if(q('b-remaining')) {
-    if (!total) {
-      q('b-remaining').textContent = '—';
-      q('b-remaining').className = 'budget-stat-num';
-    } else if (isOver) {
-      q('b-remaining').textContent = '-$' + Math.abs(remaining).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
-      q('b-remaining').className = 'budget-stat-num red';
-    } else {
-      q('b-remaining').textContent = '$' + remaining.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
-      q('b-remaining').className = 'budget-stat-num green';
-    }
-  }
-  if(q('b-remaining-pct')) {
-    if (!total) {
-      q('b-remaining-pct').textContent = '';
-    } else if (isOver) {
-      q('b-remaining-pct').textContent = Math.round(Math.abs(remaining)/total*100)+'% over budget';
-      q('b-remaining-pct').style.color = 'var(--danger, #e55)';
-    } else {
-      q('b-remaining-pct').textContent = Math.round(remaining/total*100)+'% available';
-      q('b-remaining-pct').style.color = '';
-    }
-  }
-
-  // Spent — turn orange/red warning when over budget
-  if(q('b-spent')) {
-    q('b-spent').className = isOver ? 'budget-stat-num red' : 'budget-stat-num red';
-  }
-
+  if(q('b-remaining')) q('b-remaining').textContent = total ? '$'+Math.max(0,remaining).toLocaleString() : '—';
+  if(q('b-remaining-pct')) q('b-remaining-pct').textContent = total ? Math.round(Math.max(0,remaining)/total*100)+'% available' : '';
   if(q('b-count'))     q('b-count').textContent = data.expenses.length;
   const rows = document.getElementById('budget-rows');
   if(rows){
@@ -12548,27 +12462,10 @@ function renderBudget(){
       '<div style="margin-bottom:10px">'+
         '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">'+
           '<span>'+dept+'</span><span style="font-weight:600">$'+amt.toLocaleString()+'</span></div>'+
-        (total?'<div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:'+Math.min(100,Math.round(amt/total*100))+'%"'+(isOver?';background:var(--c2)':'')+' ></div></div>':'')+
+        (total?'<div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:'+Math.min(100,Math.round(amt/total*100))+'%"></div></div>':'')+
       '</div>'
     ).join('') || '<div style="font-size:12px;color:var(--text3);font-family:var(--font-body)">No expenses yet</div>';
   }
-
-  // Over-budget warning banner
-  const existingBanner = document.getElementById('budget-overbudget-banner');
-  if (existingBanner) existingBanner.remove();
-  if (isOver) {
-    const statsRow = document.getElementById('budget-stats-row');
-    if (statsRow) {
-      const banner = document.createElement('div');
-      banner.id = 'budget-overbudget-banner';
-      banner.style.cssText = 'margin:12px 0 0;padding:10px 16px;background:rgba(220,50,50,.08);border:1px solid rgba(220,50,50,.2);border-radius:10px;font-size:12px;color:#c0392b;display:flex;align-items:center;gap:8px;font-family:var(--font-body)';
-      banner.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
-        '<strong>Over budget by $' + Math.abs(remaining).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0}) + '</strong>' +
-        ' — ' + Math.round(Math.abs(remaining)/total*100) + '% above the $' + total.toLocaleString() + ' total.';
-      statsRow.insertAdjacentElement('afterend', banner);
-    }
-  }
-
   const inp = document.getElementById('budget-total-input');
   if(inp && total) inp.value = total;
 }
@@ -12637,15 +12534,7 @@ function exportBudgetCSV(){
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
 
-function _buildBudgetHTML(forSave, opts) {
-  opts = opts || {};
-  const accentColor  = opts.accentColor  || '#F5A67D';
-  const accentAlt    = opts.accentAlt    || '#E8887A';
-  const accentLabel  = opts.accentLabel  || '#9B7FD4';
-  const fontStack    = opts.fontStack    || '-apple-system,"Helvetica Neue",sans-serif';
-  const version      = opts.version      || '';
-  const noteText     = opts.note         || '';
-
+function _buildBudgetHTML(forSave) {
   const data = loadBudget();
   const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const fmtMoney = n => '$'+(parseFloat(n)||0).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
@@ -12659,229 +12548,169 @@ function _buildBudgetHTML(forSave, opts) {
   const deptRows = Object.entries(deptTotals).sort((a,b)=>b[1]-a[1]);
   const maxDept = deptRows[0]?.[1] || 1;
 
-  // Use accent color palette for dept bars
-  const COLORS = [accentColor, accentAlt, accentLabel, '#4CAF50','#2196F3','#FF9800','#9C27B0','#00BCD4','#FF5722','#607D8B'];
+  // Color palette matching app accents
+  const COLORS = ['#F5A67D','#E8887A','#9B7FD4','#4CAF50','#2196F3','#FF9800','#9C27B0','#00BCD4','#FF5722','#607D8B'];
 
   const deptBreakdown = deptRows.map(([dept,amt],i) => `
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
       <div style="width:10px;height:10px;border-radius:50%;background:${COLORS[i%COLORS.length]};flex-shrink:0"></div>
-      <div style="flex:1;font-size:12px;color:#444;font-family:${fontStack}">${esc(dept)}</div>
+      <div style="flex:1;font-size:12px;color:#444">${esc(dept)}</div>
       <div style="width:120px;height:6px;background:#eee;border-radius:3px;overflow:hidden">
         <div style="width:${Math.round(amt/maxDept*100)}%;height:100%;background:${COLORS[i%COLORS.length]};border-radius:3px"></div>
       </div>
-      <div style="font-size:12px;font-weight:700;color:#1c1c1e;min-width:60px;text-align:right;font-family:${fontStack}">${fmtMoney(amt)}</div>
+      <div style="font-size:12px;font-weight:700;color:#1c1c1e;min-width:60px;text-align:right">${fmtMoney(amt)}</div>
     </div>`).join('');
 
   const expenseRows = data.expenses.map((e,i) => `
     <tr style="background:${i%2===0?'#f9f9f9':'#fff'}">
-      <td style="padding:9px 12px;font-weight:600;color:#1c1c1e;font-family:${fontStack}">${esc(e.desc||'—')}</td>
-      <td style="padding:9px 12px;color:#555;font-family:${fontStack}">${esc(e.dept||'—')}</td>
-      <td style="padding:9px 12px;font-weight:700;color:#1c1c1e;font-family:${fontStack}">${fmtMoney(e.amount)}</td>
-      <td style="padding:9px 12px;color:#888;font-family:${fontStack}">${esc(e.date||'')}</td>
-      ${e.notes ? `<td style="padding:9px 12px;color:#999;font-size:11px;font-family:${fontStack}">${esc(e.notes)}</td>` : '<td style="padding:9px 12px"></td>'}
+      <td style="padding:9px 12px;font-weight:600;color:#1c1c1e">${esc(e.desc||'—')}</td>
+      <td style="padding:9px 12px;color:#555">${esc(e.dept||'—')}</td>
+      <td style="padding:9px 12px;font-weight:700;color:#1c1c1e">${fmtMoney(e.amount)}</td>
+      <td style="padding:9px 12px;color:#888">${esc(e.date||'')}</td>
+      ${e.notes ? `<td style="padding:9px 12px;color:#999;font-size:11px">${esc(e.notes)}</td>` : '<td style="padding:9px 12px"></td>'}
     </tr>`).join('');
 
-  const remaining = data.total != null ? (data.total - totalSpent) : null;
+  const remaining = data.total ? Math.max(0, data.total - totalSpent) : null;
   const pct = data.total ? Math.round(totalSpent / data.total * 100) : null;
-  const isOver = pct !== null && pct > 100;
 
   return `<!DOCTYPE html><html><head><meta charset="UTF-8">
-  <title>Budget${version ? ' ' + version : ''} — ${esc(prodName)}</title>
+  <title>Budget — ${esc(prodName)}</title>
   <style>
-    body { font-family:${fontStack}; margin:0; padding:0; background:#fff; color:#1c1c1e; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    body { font-family:-apple-system,'Helvetica Neue',sans-serif; margin:0; padding:0; background:#fff; color:#1c1c1e; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
     @page { size:A4; margin:28mm 20mm; }
-    @media print { body { padding:0; } .no-print { display:none !important; } }
+    @media print { body { padding:0; } }
   </style>
   </head><body>
   <div style="padding:40px 44px;max-width:860px;margin:0 auto">
 
     <!-- Header -->
-    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:32px;padding-bottom:18px;border-bottom:2px solid ${accentColor}">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:32px;padding-bottom:18px;border-bottom:2px solid #F5A67D">
       <div>
-        <div style="font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:${accentLabel};margin-bottom:6px;font-family:${fontStack}">${esc(prodName)} · BUDGET REPORT${version ? ' · ' + esc(version) : ''}</div>
-        <div style="font-size:32px;font-weight:800;letter-spacing:-1px;color:#1c1c1e;font-family:${fontStack}">Financial Summary</div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#9B7FD4;margin-bottom:6px">${esc(prodName)} · BUDGET REPORT</div>
+        <div style="font-size:32px;font-weight:800;letter-spacing:-1px;color:#1c1c1e">Financial Summary</div>
       </div>
-      <div style="font-size:11px;color:#888;text-align:right;font-family:${fontStack}">${dateStr}</div>
+      <div style="font-size:11px;color:#888;text-align:right">${dateStr}</div>
     </div>
 
     <!-- Stats row -->
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:32px">
       <div style="background:#f9f9f9;border-radius:12px;padding:16px 18px;border:1px solid #eee">
-        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:8px;font-family:${fontStack}">Total Budget</div>
-        <div style="font-size:22px;font-weight:800;color:#1c1c1e;font-family:${fontStack}">${data.total ? fmtMoney(data.total) : '—'}</div>
-        <div style="font-size:10px;color:#aaa;margin-top:4px;font-family:${fontStack}">Set in production</div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:8px">Total Budget</div>
+        <div style="font-size:22px;font-weight:800;color:#1c1c1e">${data.total ? fmtMoney(data.total) : '—'}</div>
+        <div style="font-size:10px;color:#aaa;margin-top:4px">Set in production</div>
       </div>
       <div style="background:#f9f9f9;border-radius:12px;padding:16px 18px;border:1px solid #eee">
-        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:8px;font-family:${fontStack}">Spent to Date</div>
-        <div style="font-size:22px;font-weight:800;color:${accentAlt};font-family:${fontStack}">${fmtMoney(totalSpent)}</div>
-        <div style="font-size:10px;color:#aaa;margin-top:4px;font-family:${fontStack}">${pct !== null ? pct+'% of total' : '—'}</div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:8px">Spent to Date</div>
+        <div style="font-size:22px;font-weight:800;color:#E8887A">${fmtMoney(totalSpent)}</div>
+        <div style="font-size:10px;color:#aaa;margin-top:4px">${pct !== null ? pct+'% of total' : '—'}</div>
       </div>
       <div style="background:#f9f9f9;border-radius:12px;padding:16px 18px;border:1px solid #eee">
-        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:8px;font-family:${fontStack}">Remaining</div>
-        <div style="font-size:22px;font-weight:800;color:${isOver ? '#E8887A' : '#4CAF50'};font-family:${fontStack}">${remaining !== null ? (remaining < 0 ? '-'+fmtMoney(Math.abs(remaining)) : fmtMoney(remaining)) : '—'}</div>
-        <div style="font-size:10px;color:${isOver ? '#c0392b' : '#aaa'};margin-top:4px;font-family:${fontStack}">${pct !== null ? (isOver ? (pct-100)+'% over budget' : (100-pct)+'% available') : '—'}</div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:8px">Remaining</div>
+        <div style="font-size:22px;font-weight:800;color:#4CAF50">${remaining !== null ? fmtMoney(remaining) : '—'}</div>
+        <div style="font-size:10px;color:#aaa;margin-top:4px">${pct !== null ? (100-pct)+'% available' : '—'}</div>
       </div>
       <div style="background:#f9f9f9;border-radius:12px;padding:16px 18px;border:1px solid #eee">
-        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:8px;font-family:${fontStack}">Expenses</div>
-        <div style="font-size:22px;font-weight:800;color:#1c1c1e;font-family:${fontStack}">${data.expenses.length}</div>
-        <div style="font-size:10px;color:#aaa;margin-top:4px;font-family:${fontStack}">logged entries</div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:8px">Expenses</div>
+        <div style="font-size:22px;font-weight:800;color:#1c1c1e">${data.expenses.length}</div>
+        <div style="font-size:10px;color:#aaa;margin-top:4px">logged entries</div>
       </div>
     </div>
 
     <!-- Progress bar -->
     ${pct !== null ? `<div style="margin-bottom:28px">
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:#888;margin-bottom:6px;font-family:${fontStack}">
-        <span>Budget utilisation</span><span style="color:${isOver?'#c0392b':'#888'};font-weight:${isOver?'700':'400'}">${pct}%${isOver?' — OVER BUDGET':''}</span>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:#888;margin-bottom:6px">
+        <span>Budget utilisation</span><span>${pct}%</span>
       </div>
       <div style="height:8px;background:#eee;border-radius:100px;overflow:hidden">
-        <div style="width:${Math.min(pct,100)}%;height:100%;background:${isOver?'linear-gradient(90deg,'+accentAlt+',#c0392b)':'linear-gradient(90deg,'+accentColor+','+accentAlt+')'};border-radius:100px"></div>
+        <div style="width:${Math.min(pct,100)}%;height:100%;background:linear-gradient(90deg,#F5A67D,#E8887A);border-radius:100px"></div>
       </div>
-      ${isOver?`<div style="margin-top:8px;padding:8px 12px;background:#fdf0f0;border:1px solid #f5c6c6;border-radius:8px;font-size:11px;color:#c0392b;font-weight:600;font-family:${fontStack}">⚠ Over budget by ${remaining!==null?('-$'+Math.abs(remaining).toLocaleString()):'unknown'} (${pct-100}% above total)</div>`:''}
     </div>` : ''}
 
-    <!-- Dept breakdown -->
+    <!-- Two-column: dept breakdown + space -->
     ${deptRows.length ? `<div style="margin-bottom:32px">
-      <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${accentLabel};margin-bottom:14px;font-family:${fontStack}">By Department</div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#9B7FD4;margin-bottom:14px">By Department</div>
       ${deptBreakdown}
     </div>` : ''}
 
     <!-- Expense table -->
     ${data.expenses.length ? `
-    <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${accentLabel};margin-bottom:10px;font-family:${fontStack}">Full Expense Log</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#9B7FD4;margin-bottom:10px">Full Expense Log</div>
     <table style="width:100%;border-collapse:collapse;font-size:12px">
       <thead>
         <tr style="background:#1c1c1e;color:#fff">
-          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px;border-radius:6px 0 0 6px;font-family:${fontStack}">Description</th>
-          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px;font-family:${fontStack}">Department</th>
-          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px;font-family:${fontStack}">Amount</th>
-          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px;font-family:${fontStack}">Date</th>
-          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px;border-radius:0 6px 6px 0;font-family:${fontStack}">Notes</th>
+          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px;border-radius:6px 0 0 6px">Description</th>
+          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px">Department</th>
+          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px">Amount</th>
+          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px">Date</th>
+          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px;border-radius:0 6px 6px 0">Notes</th>
         </tr>
       </thead>
       <tbody>${expenseRows}</tbody>
       <tfoot>
         <tr style="border-top:2px solid #eee">
-          <td colspan="2" style="padding:10px 12px;font-weight:700;font-size:12px;color:#888;font-family:${fontStack}">TOTAL SPENT</td>
-          <td style="padding:10px 12px;font-weight:800;font-size:14px;color:${isOver?'#c0392b':accentAlt};font-family:${fontStack}">${fmtMoney(totalSpent)}</td>
+          <td colspan="2" style="padding:10px 12px;font-weight:700;font-size:12px;color:#888">TOTAL SPENT</td>
+          <td style="padding:10px 12px;font-weight:800;font-size:14px;color:#E8887A">${fmtMoney(totalSpent)}</td>
           <td colspan="2"></td>
         </tr>
       </tfoot>
-    </table>` : `<div style="font-size:12px;color:#aaa;padding:20px 0;font-family:${fontStack}">No expenses logged yet.</div>`}
-
-    <!-- Notes section -->
-    ${noteText ? `<div style="margin-top:32px;padding:18px 20px;background:#f9f9f9;border-left:4px solid ${accentColor};border-radius:0 10px 10px 0">
-      <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${accentLabel};margin-bottom:8px;font-family:${fontStack}">Notes</div>
-      <div style="font-size:12px;color:#444;line-height:1.6;white-space:pre-wrap;font-family:${fontStack}">${esc(noteText)}</div>
-    </div>` : ''}
+    </table>` : '<div style="font-size:12px;color:#aaa;padding:20px 0">No expenses logged yet.</div>'}
 
     <!-- Footer -->
-    <div style="margin-top:40px;padding-top:16px;border-top:1px solid #eee;display:flex;justify-content:space-between;font-size:10px;color:#bbb;font-family:${fontStack}">
+    <div style="margin-top:40px;padding-top:16px;border-top:1px solid #eee;display:flex;justify-content:space-between;font-size:10px;color:#bbb">
       <span>80AD Production Hub</span>
-      <span>${esc(prodName)}${version ? ' · ' + esc(version) : ''} · Budget Report · ${dateStr}</span>
+      <span>${esc(prodName)} · Budget Report · ${dateStr}</span>
     </div>
   </div>
   ${forSave ? '' : '<script>window.onload=()=>{window.print();}<\/script>'}
   </body></html>`;
 }
 
-function bpdfSelSwatch(el) {
-  document.querySelectorAll('.bpdf-swatch').forEach(s => { s.classList.remove('bpdf-swatch-active'); s.style.outline = 'none'; });
-  el.classList.add('bpdf-swatch-active');
-  el.style.outline = '2px solid var(--c1)';
-  el.style.outlineOffset = '2px';
-}
-function bpdfSelFont(el) {
-  document.querySelectorAll('.bpdf-font-opt').forEach(f => {
-    f.classList.remove('bpdf-font-active');
-    f.style.borderColor = 'var(--border2)';
-    f.style.background = 'none';
-  });
-  el.classList.add('bpdf-font-active');
-  el.style.borderColor = 'var(--c1)';
-  el.style.background = 'var(--c1-soft)';
-}
-
 function exportBudgetPDF() {
   const data = loadBudget();
   if (!data.expenses.length && !data.total) { flashMsg('No budget data to export'); return; }
-  // Pre-fill version based on how many times we've exported
-  const vKey = 'budgetPdfVer_' + (activeProdId||'x');
-  const lastVer = parseInt(localStorage.getItem(vKey)||'0') + 1;
-  const el = id => document.getElementById(id);
-  if (el('bpdf-version')) el('bpdf-version').value = 'v' + lastVer;
-  if (el('bpdf-note')) el('bpdf-note').value = '';
-  // Reset swatch selection to first
-  document.querySelectorAll('.bpdf-swatch').forEach((s,i) => s.classList.toggle('bpdf-swatch-active', i===0));
-  document.querySelectorAll('.bpdf-font-opt').forEach((s,i) => s.classList.toggle('bpdf-font-active', i===0));
-  el('budget-pdf-modal').style.display = 'flex';
-  setTimeout(() => el('bpdf-version')?.focus(), 80);
-}
-
-function bpdfConfirm(forSave) {
-  const el = id => document.getElementById(id);
-  const version = el('bpdf-version')?.value.trim() || '';
-  const note    = el('bpdf-note')?.value.trim() || '';
-  const activeSwatch = document.querySelector('.bpdf-swatch.bpdf-swatch-active');
-  const accentColor  = activeSwatch?.dataset.color || '#F5A67D';
-  const accentAlt    = activeSwatch?.dataset.alt   || '#E8887A';
-  const accentLabel  = activeSwatch?.dataset.label || '#9B7FD4';
-  const activeFont   = document.querySelector('.bpdf-font-opt.bpdf-font-active');
-  const fontStack    = activeFont?.dataset.font || '-apple-system,"Helvetica Neue",sans-serif';
-  const fontName     = activeFont?.dataset.name || 'System';
-
-  el('budget-pdf-modal').style.display = 'none';
-
-  // Track version
-  const vKey = 'budgetPdfVer_' + (activeProdId||'x');
-  const verNum = parseInt(version.replace(/\D/g,'')) || (parseInt(localStorage.getItem(vKey)||'0')+1);
-  localStorage.setItem(vKey, verNum);
-
-  const opts = { version, note, accentColor, accentAlt, accentLabel, fontStack, fontName };
-  const html = _buildBudgetHTML(forSave, opts);
-
-  if (forSave) {
-    // Save to documents
-    const fmtMoney = n => '$'+(parseFloat(n)||0).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
-    const data = loadBudget();
-    const prodName = (() => { try { const p=(JSON.parse(localStorage.getItem('prods_v2')||'[]')).find(p=>p.id===activeProdId); return p?p.name:''; } catch(e){return '';} })();
-    const totalSpent = data.expenses.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
-    const dateStr = new Date().toISOString().split('T')[0];
-    const uploadedKey = 'uploaded_docs_' + (activeProdId||'x');
-    let docs = [];
-    try { docs = JSON.parse(localStorage.getItem(uploadedKey)||'[]'); } catch(e) {}
-    docs.push({
-      id:   'budget_pdf_' + Date.now(),
-      name: (prodName ? prodName + ' — ' : '') + 'Budget Report' + (version ? ' ' + version : ''),
-      ext:  'HTML', cat: 'budget', date: dateStr, size: html.length,
-      dataUrl: 'data:text/html;base64,' + btoa(unescape(encodeURIComponent(html))),
-      meta: fmtMoney(totalSpent) + ' · ' + data.expenses.length + ' expenses' + (version ? ' · ' + version : ''),
-    });
-    try { localStorage.setItem(uploadedKey, JSON.stringify(docs)); }
-    catch(e) { flashMsg('Storage full — try deleting old documents first'); return; }
-    const navLink = document.querySelector('.nav-link[onclick*="documents"]');
-    showPage('documents', navLink); renderDocs();
-    setDocsFilter('budget', document.querySelector('.docs-cat[onclick*="budget"]'));
-    setTimeout(() => flashMsg('Budget saved to Documents' + (version ? ' as ' + version : '')), 200);
-  } else {
-    const win = window.open('', '_blank');
-    if (!win) { flashMsg('Please allow pop-ups to export PDF'); return; }
-    win.document.write(html);
-    win.document.close();
-  }
+  const html = _buildBudgetHTML(false);
+  const win = window.open('', '_blank');
+  if (!win) { flashMsg('Please allow pop-ups to export PDF'); return; }
+  win.document.write(html);
+  win.document.close();
 }
 
 function saveBudgetToDocuments() {
   const data = loadBudget();
   if (!data.expenses.length && !data.total) { flashMsg('No budget data to save'); return; }
-  // Reuse the PDF options modal, but confirm routes to save
-  exportBudgetPDF();
-  // Switch the confirm button to "Save to Documents"
-  setTimeout(() => {
-    const btn = document.getElementById('bpdf-confirm-btn');
-    if (btn) { btn.textContent = 'Save to Documents'; btn.onclick = () => bpdfConfirm(true); }
-    const title = document.getElementById('bpdf-modal-title');
-    if (title) title.textContent = 'Save Budget to Documents';
-  }, 20);
+  const html = _buildBudgetHTML(true);
+  const prodName = (() => { try { const p=(JSON.parse(localStorage.getItem('prods_v2')||'[]')).find(p=>p.id===activeProdId); return p?p.name:''; } catch(e){return '';} })();
+  const dateStr = new Date().toISOString().split('T')[0];
+  const fmtMoney = n => '$'+(parseFloat(n)||0).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
+  const totalSpent = data.expenses.reduce((sum,e)=>sum+(parseFloat(e.amount)||0),0);
+
+  // Save into the uploaded-docs store so it appears in Documents tab
+  const uploadedKey = 'uploaded_docs_' + (activeProdId||'x');
+  let docs = [];
+  try { docs = JSON.parse(localStorage.getItem(uploadedKey)||'[]'); } catch(e) {}
+  const entry = {
+    id:   'budget_pdf_' + Date.now(),
+    name: (prodName ? prodName + ' — ' : '') + 'Budget Report',
+    ext:  'HTML',
+    cat:  'budget',
+    date: dateStr,
+    size: html.length,
+    dataUrl: 'data:text/html;base64,' + btoa(unescape(encodeURIComponent(html))),
+    meta: fmtMoney(totalSpent) + ' · ' + data.expenses.length + ' expenses',
+  };
+  docs.push(entry);
+  try {
+    localStorage.setItem(uploadedKey, JSON.stringify(docs));
+  } catch(e) {
+    flashMsg('Storage full — try deleting old documents first');
+    return;
+  }
+  // Navigate to Documents → Budget filter
+  const navLink = document.querySelector('.nav-link[onclick*="documents"]');
+  showPage('documents', navLink);
+  renderDocs();
+  setDocsFilter('budget', document.querySelector('.docs-cat[onclick*="budget"]'));
+  setTimeout(() => flashMsg('Budget saved to Documents'), 200);
 }
 
 // ════════════════════════════════════════════════
@@ -17747,6 +17576,8 @@ function msgPrelimFinish(){
 
   msgPrelimClose();
   msgPopulateForm();
+  // Clear any old draft for a fresh message
+  try{ localStorage.removeItem('msg_draft_'+(activeProdId||'x')); }catch(e){}
   var comp=document.getElementById('msg-composer'),sent=document.getElementById('msg-sent-view'),empty=document.getElementById('msg-empty');
   if(comp)comp.style.display='grid';if(sent)sent.style.display='none';if(empty)empty.style.display='none';
   msgBuildTemplatePicker();msgBuildFontPicker();msgBuildColorPicker();msgBuildPlanetPicker();msgUpdate();
@@ -17962,6 +17793,9 @@ function msgUpdateImageHint(s){
 
 function msgUpdate(){
   msgReadForm();
+  // Auto-save draft so work is never lost
+  var draftKey='msg_draft_'+(activeProdId||'x');
+  try{ localStorage.setItem(draftKey, JSON.stringify({state:msgState, activeIdx:_msgActiveIdx, savedAt:new Date().toISOString()})); } catch(e){}
   var f=document.getElementById('msg-flyer-preview');if(!f)return;
   f.className='msg-flyer'+(msgState.view==='condensed'?' condensed':'');
   f.style.position='relative';
@@ -18045,11 +17879,21 @@ function msgSetPlanet(n,el){
   msgUpdate();
 }
 function msgSaveToSent(){
-  msgReadForm();_msgSentList=msgLoadSent();
-  var e=Object.assign({},msgState,{savedAt:new Date().toISOString(),id:'msg_'+Date.now()});
-  if(_msgActiveIdx!==null){_msgSentList[_msgActiveIdx]=e;flashMsg('Updated');}
-  else{_msgSentList.unshift(e);flashMsg('Saved to sent');}
-  msgSaveSent(_msgSentList);msgShowSent();
+  msgReadForm();
+  _msgSentList=msgLoadSent();
+  var e=Object.assign({},msgState,{savedAt:new Date().toISOString(),id:(_msgActiveIdx!==null&&_msgSentList[_msgActiveIdx])?_msgSentList[_msgActiveIdx].id||('msg_'+Date.now()):'msg_'+Date.now()});
+  if(_msgActiveIdx!==null&&_msgSentList[_msgActiveIdx]){
+    _msgSentList[_msgActiveIdx]=e;
+    flashMsg('Message updated & saved');
+  } else {
+    _msgSentList.unshift(e);
+    _msgActiveIdx=0; // track it so future saves update in place
+    flashMsg('Message saved to Sent');
+  }
+  msgSaveSent(_msgSentList);
+  // Clear draft since it's now properly saved
+  try{ localStorage.removeItem('msg_draft_'+(activeProdId||'x')); }catch(e2){}
+  msgShowSent();
 }
 function msgRenderSentList(){
   _msgSentList=msgLoadSent();
@@ -18062,6 +17906,11 @@ function msgRenderSentList(){
 }
 function msgEditSent(i){
   _msgActiveIdx=i;msgState=Object.assign({},_msgSentList[i]);msgPopulateForm();
+  // Restore any unsaved draft edits for this entry
+  try{
+    var draft=JSON.parse(localStorage.getItem('msg_draft_'+(activeProdId||'x'))||'null');
+    if(draft&&draft.activeIdx===i&&draft.state){msgState=Object.assign({},draft.state);msgPopulateForm();}
+  }catch(e){}
   var comp=document.getElementById('msg-composer'),sent=document.getElementById('msg-sent-view');
   if(comp)comp.style.display='grid';if(sent)sent.style.display='none';
   document.querySelectorAll('.msg-view-btn').forEach(function(b){b.classList.toggle('sel',b.id==='msg-view-'+(msgState.view||'expanded'));});
@@ -18095,13 +17944,36 @@ function cseEsc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function cseSetField(id,v){var el=document.getElementById(id);if(el)el.value=v||'';}
 function cseGetField(id){return(document.getElementById(id)||{value:''}).value.trim();}
 function cseGetData(){return{title:cseGetField('cse-title'),company:cseGetField('cse-company'),date:cseGetField('cse-date'),day:cseGetField('cse-day'),generalCall:cseGetField('cse-crew-call'),shootTime:cseGetField('cse-shoot-time'),tz:cseGetField('cse-tz'),sunset:cseGetField('cse-sunset'),weather:cseGetField('cse-weather'),location:cseGetField('cse-location'),hospital:cseGetField('cse-hospital'),office:cseGetField('cse-office'),safety:cseGetField('cse-safety'),notes:cseGetField('cse-notes'),logoUrl:cseLogoUrl||'',crew:cseCrewRows.slice(),scenes:cseSceneRows.slice(),cast:cseCastRows.slice(),backRows:cseBackRows.slice(),props:cseProps.slice()};}
-function cseShowEditor(){document.getElementById('cs-list-view').classList.add('hidden');var ev=document.getElementById('cs-editor-view');if(ev)ev.style.display='flex';}
+function cseShowEditor(){document.getElementById('cs-list-view').classList.add('hidden');var ev=document.getElementById('cs-editor-view');if(ev)ev.style.display='flex';setTimeout(cseRender,50);}
 function cseHideEditor(){document.getElementById('cs-list-view').classList.remove('hidden');var ev=document.getElementById('cs-editor-view');if(ev)ev.style.display='none';}
 function cseOpenNew(){cseEditIdx=null;var prod=productions.find(function(p){return p.id===activeProdId;})||{};cseSetField('cse-company',prod.title||'');cseSetField('cse-title',prod.title||'');cseSetField('cse-safety','SAFETY FIRST | NO FORCED CALLS | NO SMOKING ON SET');cseCrewRows=[{pos:'Producer',name:'',phone:''},{pos:'Director',name:'',phone:''},{pos:'1st AD',name:'',phone:''},{pos:'DP',name:'',phone:''}];cseSceneRows=[{sc:'1',type:'INT',desc:'',cast:'',start:'',pages:''}];cseCastRows=[{id:'1',char:'',cast:'',status:'W',call:'',wrap:''}];cseBackRows=[];cseProps=[];cseRenderAllTables();document.getElementById('cse-editor-title').textContent='New Call Sheet';cseShowEditor();}
 function cseBackToList(){cseHideEditor();renderCallSheets();}
 function cseSaveSheet(){var d=cseGetData(),data=loadCS();var id=cseEditIdx!==null&&data[cseEditIdx]?data[cseEditIdx].id||'cse_'+cseEditIdx:'cse_'+Date.now();var entry={id:id,title:d.title||'Untitled',company:d.company,date:d.date,location:d.location,crewCount:d.crew.filter(function(r){return r.name;}).length,sceneCount:d.scenes.filter(function(r){return r.desc||r.sc;}).length,status:'draft',savedAt:new Date().toISOString()};if(cseEditIdx!==null&&data[cseEditIdx]){Object.assign(data[cseEditIdx],entry);}else{data.push(entry);cseEditIdx=data.length-1;}saveCS(data);saveCseState(id,Object.assign({},d,{id:id}));document.getElementById('cse-editor-title').textContent=d.title||'Untitled';flashMsg('Call sheet saved');}
 function cseOpenEdit(idx){var data=loadCS();if(!data[idx])return;cseEditIdx=idx;var id=data[idx].id||'cse_'+idx,state=loadCseState(id);if(state){['title','company','date','day','safety','notes','location','hospital','office','sunset','weather'].forEach(function(k){cseSetField('cse-'+k,state[k]||'');});cseSetField('cse-crew-call',state.generalCall||'');cseSetField('cse-shoot-time',state.shootTime||'');cseCrewRows=state.crew||[];cseSceneRows=state.scenes||[];cseCastRows=state.cast||[];cseBackRows=state.backRows||[];cseProps=state.props||[];cseRenderAllTables();}document.getElementById('cse-editor-title').textContent=data[idx].title||'Call Sheet';cseShowEditor();}
-function cseRender(){}
+function cseRender(){
+  var front=document.getElementById('cse-preview-front');
+  var back =document.getElementById('cse-preview-back');
+  if(!front||!back) return;
+  var d=cseGetData();
+  var accent=cseExpAccentColor||'#F5A67D';
+  var font  =cseExpFontFamily||'Inter';
+  var fmt   =cseExpFormat||'minimal';
+  try{
+    var frontHtml='', backHtml='';
+    if(fmt==='floaty'){
+      frontHtml=cseBuildFloatyFront(d,accent,font);
+      backHtml =cseBuildFloatyBack(d,accent,font);
+    } else if(fmt==='zine'){
+      frontHtml=cseBuildZineFront(d,accent,font);
+      backHtml =cseBuildZineBack(d,accent,font);
+    } else {
+      frontHtml=cseBuildMinimalFront(d,accent,font);
+      backHtml =cseBuildMinimalBack(d,accent,font);
+    }
+    front.innerHTML=frontHtml;
+    back.innerHTML =backHtml;
+  }catch(e){ front.innerHTML='<div style="padding:20px;color:#aaa;font-size:12px">Preview unavailable</div>'; }
+}
 function cseRenderAllTables(){cseRenderCrewTable();cseRenderSceneTable();cseRenderCastTable();cseRenderBackTable();}
 function cseRenderProps(){var b=document.getElementById('cse-props-master-list');if(b)b.innerHTML=cseProps.map(function(p){return '<option value="'+cseEsc(p)+'">';}).join('');}
 function cseRenderCrewTable(){var t=document.getElementById('cse-crew-body');if(!t)return;t.innerHTML=cseCrewRows.map(function(r,i){return '<tr><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.pos)+'" placeholder="Position" oninput="cseCrewRows['+i+'].pos=this.value"></td><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.name)+'" placeholder="Name" oninput="cseCrewRows['+i+'].name=this.value"></td><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.phone)+'" placeholder="Phone" oninput="cseCrewRows['+i+'].phone=this.value"></td><td><button onclick="cseCrewRows.splice('+i+',1);cseRenderCrewTable()" style="background:none;border:none;color:var(--text4);cursor:pointer;font-size:16px;padding:2px 6px">x</button></td></tr>';}).join('');}
@@ -18111,7 +17983,7 @@ function cseRenderBackTable(){var t=document.getElementById('cse-back-body');if(
 function cseAddRow(type){if(type==='crew'){cseCrewRows.push({pos:'',name:'',phone:''});cseRenderCrewTable();}if(type==='scene'){cseSceneRows.push({sc:'',type:'INT',desc:'',cast:'',start:'',pages:''});cseRenderSceneTable();}if(type==='cast'){cseCastRows.push({id:'',char:'',cast:'',status:'W',call:'',wrap:''});cseRenderCastTable();}if(type==='back'){cseBackRows.push({pos:'',name:'',phone:''});cseRenderBackTable();}}
 function cseAddDeptMsg(dept){var n=document.getElementById('cse-notes');if(n){n.value+=(n.value?'\n':'')+dept+': ';}}
 function cseSec(id){var s=document.getElementById(id);if(s)s.classList.toggle('open');}
-function cseSetFormat(fmt,el){document.querySelectorAll('.cse-tog').forEach(function(e){e.classList.remove('active');});if(el)el.classList.add('active');}
+function cseSetFormat(fmt,el){document.querySelectorAll('#cse-fmt-80ad,#cse-fmt-classic').forEach(function(e){e.classList.remove('active');});if(el)el.classList.add('active');cseExpFormat=(fmt==='80ad'?'floaty':'minimal');cseRender();}
 function cseOpenExport(){cseDoExport();}
 function cseCloseExport(){}
 function cseSelExport(el,f){cseExpFormat=f;}
@@ -18128,6 +18000,208 @@ function cseZoomStep(){}
 function cseSelSize(el,s){cseSetPageSize(s);}
 function cseOpenMapPreview(){var loc=cseGetField('cse-location');if(loc)window.open('https://maps.google.com?q='+encodeURIComponent(loc),'_blank');}
 function cseUpdateMapPreview(){}
+
+/* ═══════════════════════════════════════════════════
+   GANTT EXPORT — pvRefreshPreview, pvDoExport, builders
+═══════════════════════════════════════════════════ */
+
+function pvGetMeta(){
+  return {
+    title: (document.getElementById('pv-exp-title')||{value:''}).value || 'Production Timeline',
+    by:    (document.getElementById('pv-exp-by')||{value:''}).value || '',
+    dates: (document.getElementById('pv-exp-dates')||{value:''}).value || '',
+    rev:   (document.getElementById('pv-exp-rev')||{value:''}).value || 'v1',
+  };
+}
+
+function pvRefreshPreview(){
+  const paper = document.getElementById('pv-preview-paper');
+  if (!paper) return;
+  const m    = pvGetMeta();
+  const opts = pvGetExpOpts();
+  const fmt  = pvExpFmt || '80ad';
+  try {
+    const pages = pvRenderPreviewPages(m.title, m.by, m.dates, m.rev, fmt, opts);
+    paper.innerHTML = pages.map(p => {
+      const scale = opts.orient === 'portrait' ? 1 : 1;
+      return `<iframe srcdoc="${p.html.replace(/"/g,'&quot;')}"
+        style="width:${p.W}px;height:${p.H}px;border:none;display:block;background:#fff;
+               box-shadow:0 8px 40px rgba(0,0,0,.35);border-radius:4px;flex-shrink:0"
+        scrolling="no"></iframe>`;
+    }).join('');
+    const info = document.getElementById('pv-preview-page-info');
+    if (info) info.textContent = pages.length + ' page' + (pages.length !== 1 ? 's' : '');
+    setTimeout(pvPreviewFit, 100);
+  } catch(e) {
+    paper.innerHTML = '<div style="color:#fff;padding:20px;font-size:12px">Preview error: ' + e.message + '</div>';
+  }
+}
+
+function pvDoExport(){
+  const m    = pvGetMeta();
+  const opts = pvGetExpOpts();
+  const fmt  = pvExpFmt || '80ad';
+  const pages = pvRenderPreviewPages(m.title, m.by, m.dates, m.rev, fmt, opts);
+  if (!pages.length) { flashMsg('Nothing to export'); return; }
+  // Open each page in a new window and print
+  const combined = pages.map(p => p.html).join('\n<!-- page break -->\n');
+  // Combine into a single printable document with page breaks
+  const W = pages[0].W, H = pages[0].H;
+  const gf = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Courier+Prime:wght@400;700&display=swap';
+  const printDoc = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<link href="${gf}" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'${opts.font||'Inter'}',sans-serif;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .pv-page{width:${W}px;min-height:${H}px;page-break-after:always;overflow:hidden}
+  .pv-page:last-child{page-break-after:auto}
+  @page{size:${opts.orient==='portrait'?'letter portrait':'letter landscape'};margin:0}
+</style></head><body>
+${pages.map((p,i)=>{
+    // Extract body content from each page html
+    const m=p.html.match(/<body>([\s\S]*)<\/body>/);
+    return `<div class="pv-page">${m?m[1]:p.html}</div>`;
+}).join('\n')}
+<script>window.onload=function(){window.print()}<\/script>
+</body></html>`;
+  const win = window.open('', '_blank');
+  if (!win) { flashMsg('Allow pop-ups to export PDF'); return; }
+  win.document.write(printDoc);
+  win.document.close();
+}
+
+// ── Build functions ──────────────────────────────────────────────────────
+
+function pvBuildTitlePage(title, by, dates, rev, fmt, opts){
+  const bw = opts.bw;
+  const font = opts.font || 'Inter';
+  const ac = bw ? '#333' : '#2563EB';
+  return `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'${font}',sans-serif;padding:80px">
+    <div style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:${bw?'#999':ac};margin-bottom:20px">Production Timeline</div>
+    <div style="font-size:48px;font-weight:800;color:${bw?'#111':'#0F172A'};letter-spacing:-1px;text-align:center;margin-bottom:12px">${pvEsc(title)}</div>
+    <div style="font-size:14px;color:#666;margin-bottom:40px">${pvEsc(dates)}</div>
+    <div style="width:60px;height:3px;background:${bw?'#333':ac};margin-bottom:40px"></div>
+    <div style="font-size:12px;color:#999">Prepared by ${pvEsc(by)} &nbsp;·&nbsp; ${pvEsc(rev)}</div>
+    <div style="font-size:10px;color:#bbb;margin-top:8px">${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>
+  </div>`;
+}
+
+function pvBuildActivityListPage(title, by, dates, rev, fmt, opts){
+  const bw = opts.bw;
+  const font = opts.font || 'Inter';
+  const ac = bw ? '#333' : '#2563EB';
+  const activityList = pvBuildActivityList(fmt, opts);
+  const notes = opts.notes ? `<div style="position:absolute;bottom:24px;left:40px;right:40px;font-size:8px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:8px">${pvEsc(opts.notes)}</div>` : '';
+  return `<div style="position:relative;width:100%;min-height:100%;font-family:'${font}',sans-serif;padding:40px;background:#fff">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;border-bottom:2.5px solid ${bw?'#222':ac};padding-bottom:12px;margin-bottom:28px">
+      <div>
+        <div style="font-size:22px;font-weight:800;color:${bw?'#111':'#0F172A'};letter-spacing:-.5px">${pvEsc(title)}</div>
+        <div style="font-size:10px;color:#999;margin-top:3px;letter-spacing:1px;text-transform:uppercase">${pvEsc(dates)}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:9px;color:#bbb">Prepared by ${pvEsc(by)}</div>
+        <div style="font-size:9px;color:#bbb">${pvEsc(rev)} · ${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div>
+      </div>
+    </div>
+    ${activityList}
+    ${notes}
+  </div>`;
+}
+
+function pvBuildShared(title, by, dates, rev, fmt, opts){
+  // Landscape gantt chart page
+  const bw   = opts.bw;
+  const font = opts.font || 'Inter';
+  const ac   = bw ? '#333' : '#2563EB';
+  const fs   = opts.fontSize || 8;
+  const { startDay, endDay } = opts.range;
+  const dayCount = endDay - startDay + 1;
+
+  const PHASE_COLORS = bw
+    ? {preproduction:'#444',production:'#666',postproduction:'#888',other:'#aaa'}
+    : {preproduction:'#2563EB',production:'#059669',postproduction:'#7C3AED',other:'#D97706'};
+
+  // Build header row
+  const cellW = Math.max(18, Math.floor((1056 - 200) / dayCount));
+  let headCells = '';
+  for (let d = startDay; d <= endDay; d++) {
+    const dateStr = pvDayToDateStr ? pvDayToDateStr(d) : '';
+    const dt = dateStr ? new Date(dateStr + 'T12:00') : null;
+    const isWknd = dt ? (dt.getDay()===0||dt.getDay()===6) : false;
+    const label = dt ? dt.toLocaleString('default',{month:'short',day:'numeric'}) : ('D'+d);
+    headCells += `<th style="width:${cellW}px;min-width:${cellW}px;font-size:${fs-2}px;font-weight:400;color:${isWknd?'#ccc':'#999'};background:${isWknd?'#fafafa':'#fff'};padding:3px 1px;text-align:center;border-right:1px solid #f0f0f0;white-space:nowrap;overflow:hidden">${label}</th>`;
+  }
+
+  // Build activity rows
+  let bodyRows = '';
+  const acts = pvActivities.filter(a => {
+    const spans = a.spans && a.spans.length ? a.spans : [{start:a.start,dur:a.dur}];
+    const aStart = Math.min(...spans.map(sp=>sp.start));
+    const aEnd   = Math.max(...spans.map(sp=>sp.start+sp.dur-1));
+    return aEnd >= startDay && aStart <= endDay;
+  });
+
+  const PHASE_ORDER = ['preproduction','production','postproduction','other'];
+  for (const phase of PHASE_ORDER) {
+    const items = acts.filter(a=>a.cat===phase);
+    if (!items.length) continue;
+    const pc = PHASE_COLORS[phase];
+    bodyRows += `<tr><td colspan="${dayCount+1}" style="background:${bw?'#f5f5f5':'#f8faff'};padding:5px 8px;font-size:${fs-1}px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:${bw?'#555':pc};border-bottom:1px solid #e5e7eb">${phase.replace('production','production').toUpperCase().replace('PREPRODUCTION','PRE-PRODUCTION').replace('POSTPRODUCTION','POST-PRODUCTION')}</td></tr>`;
+    items.forEach(a => {
+      const spans = a.spans && a.spans.length ? a.spans : [{start:a.start,dur:a.dur}];
+      const barColor = bw ? '#555' : (a.color || pc);
+      // Name cell
+      let cells = `<td style="padding:3px 8px;font-size:${fs}px;font-weight:500;white-space:nowrap;overflow:hidden;max-width:180px;border-right:1px solid #f0f0f0;color:#111">${pvEsc(a.name)}</td>`;
+      // Day cells
+      for (let d = startDay; d <= endDay; d++) {
+        const inSpan = spans.some(sp => d >= sp.start && d < sp.start + sp.dur);
+        const isFirst = spans.some(sp => d === sp.start);
+        const isLast  = spans.some(sp => d === sp.start + sp.dur - 1);
+        const bg = inSpan ? barColor : 'transparent';
+        const radius = isFirst && isLast ? '4px' : isFirst ? '4px 0 0 4px' : isLast ? '0 4px 4px 0' : '0';
+        cells += `<td style="width:${cellW}px;min-width:${cellW}px;padding:2px 0;border-right:1px solid #f0f0f0">
+          ${inSpan ? `<div style="background:${bg};border-radius:${radius};height:14px;opacity:${bw?'.85':'1'}">${isFirst?`<span style="font-size:${fs-2}px;color:#fff;padding:0 4px;white-space:nowrap;overflow:hidden;display:block;line-height:14px">${pvEsc(a.name)}</span>`:''}</div>` : ''}
+        </td>`;
+      }
+      bodyRows += `<tr style="border-bottom:1px solid #f5f5f5">${cells}</tr>`;
+    });
+  }
+
+  const notes = opts.notes ? `<div style="position:absolute;bottom:16px;left:40px;right:40px;font-size:8px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:6px">${pvEsc(opts.notes)}</div>` : '';
+
+  return `<div style="position:relative;width:100%;min-height:100%;font-family:'${font}',sans-serif;padding:28px 32px 48px;background:#fff">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;border-bottom:2px solid ${bw?'#222':ac};padding-bottom:8px;margin-bottom:16px">
+      <div style="font-size:16px;font-weight:800;color:#0F172A;letter-spacing:-.3px">${pvEsc(title)}</div>
+      <div style="font-size:9px;color:#bbb">${pvEsc(dates)} &nbsp;·&nbsp; ${pvEsc(rev)} &nbsp;·&nbsp; ${pvEsc(by)}</div>
+    </div>
+    <div style="overflow:hidden">
+      <table style="border-collapse:collapse;width:100%;table-layout:fixed">
+        <thead><tr>
+          <th style="width:180px;min-width:180px;font-size:${fs-1}px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;padding:4px 8px;text-align:left;border-bottom:1px solid #e5e7eb;border-right:1px solid #f0f0f0">Activity</th>
+          ${headCells}
+        </tr></thead>
+        <tbody>${bodyRows}</tbody>
+      </table>
+    </div>
+    ${notes}
+  </div>`;
+}
+
+function pvBuildPortraitPagesArr(title, by, dates, rev, fmt, opts){
+  // Portrait: split timeline into monthly chunks
+  if (!pvStartDate || !pvTotalDays) return [pvBuildShared(title,by,dates,rev,fmt,opts)];
+  const pages = [];
+  let d = 1;
+  while (d <= pvTotalDays) {
+    const chunkOpts = Object.assign({}, opts, { range: { startDay: d, endDay: Math.min(pvTotalDays, d + 27) } });
+    pages.push(pvBuildShared(title, by, dates, rev, fmt, chunkOpts));
+    d += 28;
+  }
+  return pages;
+}
+
+function pvEsc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
 function pvDoExport(){cseDoExport();}
 function pvSaveToPacket(){}
 function clearProjectColors(){}
