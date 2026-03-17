@@ -7009,7 +7009,6 @@ select.msg-prelim-input{cursor:pointer;-webkit-appearance:none;appearance:none;b
     <div class="inner-subtitle" id="msg-subtitle">Outreach &amp; RSVP flyers</div></div>
     <div class="inner-actions">
       <button class="pill-btn" onclick="msgShowSent()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:13px;height:13px"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>Sent</button>
-      <button class="pill-btn" id="msg-save-btn" onclick="msgSaveToSent()" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:13px;height:13px"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13"/><polyline points="7 3 7 8 15 8"/></svg>Save to Messages</button>
       <button class="pill-btn accent" onclick="msgNew()">+ New Message</button>
     </div>
   </div>
@@ -7126,7 +7125,8 @@ select.msg-prelim-input{cursor:pointer;-webkit-appearance:none;appearance:none;b
         <button class="msg-btn primary" onclick="msgExportPDF()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Export PDF</button>
       </div>
       <div style="display:flex;gap:9px;margin-top:9px">
-        <button class="msg-btn" style="border-color:transparent;font-size:12px;flex:0 0 auto" onclick="msgCancel()">← Back</button>
+        <button class="msg-btn" style="border-color:transparent;font-size:12px;flex:0 0 auto" onclick="msgCancel()">Back</button>
+        <button class="msg-btn" style="flex:1" onclick="msgSaveToSent()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>Save to Sent</button>
       </div>
     </div>
 
@@ -8970,22 +8970,6 @@ function sseSelectType(t) {
 }
 
 // ── Add row ──
-function sseTimeToMins(t) {
-  if (!t) return 9999;
-  // Handle "HH:MM AM/PM" or "HH:MM"
-  const m = t.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
-  if (!m) return 9999;
-  let h = parseInt(m[1]), min = parseInt(m[2]);
-  const ap = (m[3]||'').toUpperCase();
-  if (ap === 'PM' && h !== 12) h += 12;
-  if (ap === 'AM' && h === 12) h = 0;
-  return h * 60 + min;
-}
-
-function sseSortByTime() {
-  ssRows.sort((a, b) => sseTimeToMins(a.time) - sseTimeToMins(b.time));
-}
-
 function sseAddRow() {
   const t = sseCurrentType;
   const v = id => (document.getElementById(id)||{}).value?.trim() || '';
@@ -9006,8 +8990,9 @@ function sseAddRow() {
   } else if (t === 'wrap') {
     row = { type:'wrap', time:vt('sse-wf-time'), who:v('sse-wf-who'), notes:v('sse-wf-notes') };
   }
-  ssRows.push(row);
-  sseSortByTime();
+  const wrapIdx = ssRows.findIndex(r => r.type === 'wrap');
+  if (t !== 'wrap' && wrapIdx !== -1) ssRows.splice(wrapIdx, 0, row);
+  else ssRows.push(row);
   // Clear fields
   document.querySelectorAll('#sse-f-'+t+' .sse-input').forEach(i => i.value = '');
   sseRenderRowList();
@@ -9170,7 +9155,6 @@ function sseSaveEditRow() {
 
   document.getElementById('sse-edit-modal').classList.remove('open');
   _sseEditIdx = null;
-  sseSortByTime();
   sseRenderRowList(); sseRender(); sseSaveData();
 }
 
@@ -9404,7 +9388,7 @@ function sseBuild80AD(d) {
     <div>
       <div class="ssp-prod-label" style="color:rgba(255,255,255,.7);font-family:${f}">Shooting Schedule</div>
       <div class="ssp-prod-title-big" style="color:#fff;font-family:${f}">${ie('sse-company',d.company,'min-width:80px')}</div>
-      <div style="font-size:.8em;color:rgba(255,255,255,.95);margin-top:4px;font-family:${f};font-weight:500;letter-spacing:.01em">${ie('sse-location',d.location,'min-width:60px')}</div>
+      <div style="font-size:.8em;color:rgba(255,255,255,.75);margin-top:4px;font-family:${f}">${ie('sse-location',d.location,'min-width:60px')}</div>
     </div>
     <div style="text-align:right">
       <div class="ssp-day-lbl" style="color:rgba(255,255,255,.65);font-family:${f}">Crew Call</div>
@@ -9480,7 +9464,7 @@ function sseBuildClassic(d) {
   <div>
     <div class="ssp-prod-label" style="font-family:${f}">Shooting Schedule</div>
     <div class="ssp-prod-title-big" style="font-family:${f}">${d.company||'Production'}</div>
-    ${d.location ? `<div style="font-size:.8em;color:rgba(255,255,255,.95);font-weight:500;margin-top:3px;font-family:${f}">${d.location}</div>` : ''}
+    ${d.location ? `<div style="font-size:.8em;opacity:.75;margin-top:3px;font-family:${f}">${d.location}</div>` : ''}
   </div>
   <div style="text-align:right">
     <div class="ssp-day-lbl" style="font-family:${f}">Crew Call</div>
@@ -9497,25 +9481,20 @@ ${d.footer ? `<div class="ssp-footer" style="font-family:${f}">${d.footer}</div>
 
 // ── Export ──
 function sseOpenExport() {
-  // direct export using current format/size settings
   const d = { ...ssInfo, rows: ssRows, font: sseFont, fs: sseFontSizes[sseTextSize] || '8.5px' };
   const front = sseFormat === '80ad' ? sseBuild80AD(d) : sseBuildClassic(d);
   const ph = ssePageSize === 'legal' ? '14in' : '11in';
   const gf = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Courier+Prime:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=EB+Garamond:wght@400;600&display=swap';
-  // collect ssp-* styles
   let pStyles = '';
   try { for (const s of document.styleSheets) { try { for (const r of s.cssRules) { if ((r.selectorText||'').match(/ssp-|sse-sheet/)) pStyles += r.cssText + '\n'; } } catch(e){} } } catch(e){}
   const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><link href="${gf}" rel="stylesheet">
 <style>*{box-sizing:border-box;margin:0;padding:0}@page{size:8.5in ${ph};margin:.4in .45in}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}${pStyles}</style>
-</head><body>${front}<scr'+'ipt>window.onload=()=>setTimeout(()=>window.print(),400)<\/script>
-</body></html>`; return;
+</head><body>${front}<scr`+`ipt>window.onload=()=>setTimeout(()=>window.print(),400)<\/script>
+</body></html>`;
+  const w = window.open('', '_blank', 'width=920,height=720');
+  if (w) { w.document.write(html); w.document.close(); }
+  else { flashMsg('Allow pop-ups to export PDF'); }
 }
-
-// Aliases — the 'minimal' builder IS the full 80AD classic format
-function cseBuildADFront(d){ return cseBuildMinimalFront(d, cseExpAccentColor||'#F5A67D', cseExpFontFamily||'Inter'); }
-function cseBuildADBack(d){  return cseBuildMinimalBack(d,  cseExpAccentColor||'#F5A67D', cseExpFontFamily||'Inter'); }
-function cseBuildClassicFront(d){ return cseBuildMinimalFront(d, cseExpAccentColor||'#F5A67D', cseExpFontFamily||'Inter'); }
-function cseBuildClassicBack(d){  return cseBuildMinimalBack(d,  cseExpAccentColor||'#F5A67D', cseExpFontFamily||'Inter'); }
 function cseDoExport(){
   cseCloseExport();
   const d = cseGetData();
@@ -9595,140 +9574,38 @@ function cseDoExport(){
 
 // ── MINIMAL layout builders ─────────────────────────────────────────────
 function cseBuildMinimalFront(d, accent, font) {
-  const f = font||'Inter';
-  const e = cseEsc;
-  const fmtDate = dt => { if(!dt) return ''; try{ const x=new Date(dt+'T12:00'); return x.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric',year:'numeric'}); }catch(err){return dt;} };
-
-  // Header gradient
-  const hdr = `<div style="background:linear-gradient(135deg,${accent} 0%,${accent}cc 100%);padding:24px 28px 20px;position:relative;overflow:hidden">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+  const f = font || 'Inter';
+  const rows = (d.scenes||[]).map(r=>`<tr><td style="padding:5px 0;border-bottom:1px solid #f0f0f0;font-size:8px;color:#888;width:40px">${cseEsc(r.sc)}</td><td style="padding:5px 8px;border-bottom:1px solid #f0f0f0;font-size:8px;color:#aaa;width:50px">${cseEsc(r.type)}</td><td style="padding:5px 0;border-bottom:1px solid #f0f0f0;font-size:9px;color:#222">${cseEsc(r.desc)}</td><td style="padding:5px 0 5px 8px;border-bottom:1px solid #f0f0f0;font-size:8px;color:#888;white-space:nowrap">${cseEsc(r.start)}</td></tr>`).join('');
+  const crewRows = (d.crew||[]).filter(r=>r.name).map(r=>`<tr><td style="padding:4px 0;font-size:8px;color:#888;width:120px">${cseEsc(r.pos)}</td><td style="padding:4px 0;font-size:9px;color:#222">${cseEsc(r.name)}</td><td style="padding:4px 0 4px 8px;font-size:8px;color:#aaa">${cseEsc(r.phone)}</td></tr>`).join('');
+  return `<div style="font-family:'${f}',sans-serif;color:#111;padding:0;max-width:100%">
+    <div style="border-bottom:2px solid ${accent};padding-bottom:12px;margin-bottom:24px">
+      <div style="font-size:22px;font-weight:700;letter-spacing:-.5px">${cseEsc(d.title||'Call Sheet')}</div>
+      <div style="font-size:11px;color:#888;margin-top:4px;display:flex;gap:20px">
+        <span>${cseEsc(d.date||'')}</span><span>General Call: <strong style="color:#333">${cseEsc(d.generalCall||'—')}</strong></span>
+        <span>${cseEsc(d.location||'')}</span>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1.8fr;gap:32px">
       <div>
-        <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.7);font-family:'${f}',sans-serif;margin-bottom:4px">${e(d.company||'')}</div>
-        <div style="font-size:30px;font-weight:900;color:#fff;letter-spacing:-.5px;line-height:1;font-family:'${f}',sans-serif">${e(d.title||'Call Sheet')}</div>
-        ${d.location?`<div style="margin-top:6px;display:inline-block;background:rgba(255,255,255,.2);color:#fff;padding:3px 10px;border-radius:100px;font-size:8.5px;font-family:'${f}',sans-serif">${e(d.location)}</div>`:''}
+        <div style="font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:10px">Crew</div>
+        <table style="width:100%;border-collapse:collapse">${crewRows}</table>
       </div>
-      <div style="text-align:right">
-        ${d.logoUrl?`<img src="${d.logoUrl}" style="height:52px;width:52px;border-radius:10px;object-fit:cover;margin-bottom:8px;display:block;margin-left:auto">`:''}
-        <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.65);font-family:'${f}',sans-serif">Crew Call</div>
-        <div style="font-size:36px;font-weight:900;color:#fff;letter-spacing:-.5px;line-height:1;font-family:'${f}',sans-serif">${e(d.generalCall||'—')}</div>
-        <div style="font-size:9px;color:rgba(255,255,255,.8);margin-top:3px;font-family:'${f}',sans-serif">${fmtDate(d.date)}</div>
+      <div>
+        <div style="font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:10px">Scenes</div>
+        <table style="width:100%;border-collapse:collapse">${rows}</table>
       </div>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.2);margin-top:14px;padding-top:10px;gap:0">
-      ${d.sunset?`<div style="padding:0 12px 0 0;border-right:1px solid rgba(255,255,255,.2)"><div style="font-size:7px;letter-spacing:2px;color:rgba(255,255,255,.55);text-transform:uppercase;font-family:'${f}',sans-serif">Sunset</div><div style="font-size:11px;font-weight:600;color:#fff;font-family:'${f}',sans-serif">${e(d.sunset)}</div></div>`:''}
-      ${d.weather?`<div style="padding:0 12px;border-right:1px solid rgba(255,255,255,.2)"><div style="font-size:7px;letter-spacing:2px;color:rgba(255,255,255,.55);text-transform:uppercase;font-family:'${f}',sans-serif">Weather</div><div style="font-size:11px;font-weight:600;color:#fff;font-family:'${f}',sans-serif">${e(d.weather)}</div></div>`:''}
-      ${d.shootTime?`<div style="padding:0 12px;border-right:1px solid rgba(255,255,255,.2)"><div style="font-size:7px;letter-spacing:2px;color:rgba(255,255,255,.55);text-transform:uppercase;font-family:'${f}',sans-serif">Shoot Time</div><div style="font-size:11px;font-weight:600;color:#fff;font-family:'${f}',sans-serif">${e(d.shootTime)}</div></div>`:''}
-      ${(d.hospital||d.office)?`<div style="padding:0 0 0 12px"><div style="font-size:7px;letter-spacing:2px;color:rgba(255,255,255,.55);text-transform:uppercase;font-family:'${f}',sans-serif">Hospital &amp; Office</div><div style="font-size:9px;font-weight:500;color:#fff;font-family:'${f}',sans-serif">${e(d.hospital||'')}${d.hospital&&d.office?' · ':''}${e(d.office||'')}</div></div>`:''}
-    </div>
   </div>`;
-
-  // Safety note
-  const safety = d.safety ? `<div style="background:#f9f9f9;border-bottom:1px solid #eee;padding:7px 28px;text-align:center;font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#555;font-family:'${f}',sans-serif">${e(d.safety)}</div>` : '';
-
-  // Key Crew + Scene Breakdown (two columns)
-  const crewRows = (d.crew||[]).filter(r=>r.name).map(r=>`<tr>
-    <td style="padding:5px 0;font-size:8px;color:#888;width:90px;font-style:italic">${e(r.pos)}</td>
-    <td style="padding:5px 6px;font-size:9.5px;font-weight:700;color:#111">${e(r.name)}</td>
-    <td style="padding:5px 0;font-size:8px;color:#aaa">${e(r.phone)}</td>
-  </tr>`).join('');
-
-  const sceneRows = (d.scenes||[]).map(r=>`<tr style="border-bottom:1px solid #f5f5f5">
-    <td style="padding:5px 0;font-size:9px;font-weight:700;color:#111;width:28px">${e(r.sc)}</td>
-    <td style="padding:5px 4px;font-size:7.5px;color:#aaa;width:30px">${e(r.type)}</td>
-    <td style="padding:5px 4px;font-size:8.5px;color:#333">${e(r.desc)}</td>
-    <td style="padding:5px 0;font-size:8px;color:#888;white-space:nowrap">${e(r.cast)}</td>
-    <td style="padding:5px 0 5px 6px;font-size:8px;color:#666;white-space:nowrap">${e(r.start)}</td>
-  </tr>`).join('');
-
-  const twoCol = `<div style="display:grid;grid-template-columns:1fr 1.7fr;gap:0;border-bottom:1px solid #eee">
-    <div style="padding:16px 28px;border-right:1px solid #eee">
-      <div style="font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${accent};margin-bottom:10px;font-family:'${f}',sans-serif">Key Crew</div>
-      <table style="width:100%;border-collapse:collapse">${crewRows||'<tr><td style="color:#ccc;font-size:9px">—</td></tr>'}</table>
-    </div>
-    <div style="padding:16px 28px">
-      <div style="font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${accent};margin-bottom:10px;font-family:'${f}',sans-serif">Scene Breakdown</div>
-      <table style="width:100%;border-collapse:collapse">
-        <tr style="border-bottom:1.5px solid #e5e7eb">
-          <th style="padding:3px 0;font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;text-align:left">SC#</th>
-          <th style="padding:3px 4px;font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;text-align:left">Type</th>
-          <th style="padding:3px 4px;font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;text-align:left">Description</th>
-          <th style="padding:3px 4px;font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;text-align:left">Cast</th>
-          <th style="padding:3px 0 3px 6px;font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;text-align:left">Start</th>
-        </tr>
-        ${sceneRows||'<tr><td colspan="5" style="color:#ccc;font-size:9px;padding:8px 0">—</td></tr>'}
-      </table>
-    </div>
-  </div>`;
-
-  // Cast & Talent
-  const castRows = (d.cast||[]).map((r,i)=>`<tr style="background:${i%2?'transparent':accent+'0d'}">
-    <td style="padding:6px 0;font-size:9px;font-weight:700;color:${accent};width:24px">${e(r.id)}</td>
-    <td style="padding:6px 6px;font-size:8px;color:#888">${e(r.char)}</td>
-    <td style="padding:6px 6px;font-size:9.5px;font-weight:600;color:#111">${e(r.cast)}</td>
-    <td style="padding:6px 6px;font-size:8px;color:#888">${e(r.status)}</td>
-    <td style="padding:6px 6px;font-size:8px;color:#555">${e(r.call)}</td>
-    <td style="padding:6px 0;font-size:8px;color:#555">${e(r.wrap)}</td>
-  </tr>`).join('');
-
-  const castSection = (d.cast||[]).length ? `<div style="padding:14px 28px;border-bottom:1px solid #eee">
-    <div style="font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${accent};margin-bottom:8px;font-family:'${f}',sans-serif">Cast &amp; Talent</div>
-    <table style="width:100%;border-collapse:collapse">
-      <tr style="border-bottom:1.5px solid #e5e7eb">
-        <th style="padding:3px 0;font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;text-align:left">ID</th>
-        <th style="padding:3px 6px;font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;text-align:left">Character</th>
-        <th style="padding:3px 6px;font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;text-align:left">Cast</th>
-        <th style="padding:3px 6px;font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;text-align:left">Status</th>
-        <th style="padding:3px 6px;font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;text-align:left">Call Time</th>
-        <th style="padding:3px 0;font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;text-align:left">Wrap</th>
-      </tr>
-      ${castRows}
-    </table>
-  </div>` : '';
-
-  // Notes + Props
-  const propsHtml = (d.props||[]).length ? (d.props||[]).map(p=>`<span style="display:inline-block;background:#f5f5f5;border:1px solid #e8e8e8;border-radius:6px;padding:3px 9px;font-size:8.5px;color:#444;margin:2px 3px 2px 0">${e(p)}</span>`).join('') : '';
-  const notesProps = (d.notes||d.props?.length) ? `<div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid #eee">
-    ${d.notes?`<div style="padding:12px 28px;border-right:1px solid #eee"><div style="font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:6px">Notes</div><div style="font-size:9px;color:#555;line-height:1.5">${e(d.notes)}</div></div>`:''}
-    ${propsHtml?`<div style="padding:12px 28px"><div style="font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:6px">Props</div>${propsHtml}</div>`:''}
-  </div>` : '';
-
-  const onSetNotes = `<div style="padding:10px 28px"><div style="font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:4px">On-Set Notes</div><div style="min-height:30px"></div></div>`;
-
-  return `<div style="font-family:'${f}',sans-serif;background:#fff;min-height:100%">${hdr}${safety}${twoCol}${castSection}${notesProps}${onSetNotes}</div>`;
 }
-
 function cseBuildMinimalBack(d, accent, font) {
   const f = font||'Inter';
-  const e = cseEsc;
-  const fmtDate = dt => { if(!dt) return ''; try{ return new Date(dt+'T12:00').toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric',year:'numeric'}); }catch(err){return dt;} };
-  const rows = (d.back||[]).filter(r=>r.name).map((r,i)=>`<tr style="border-bottom:1px solid #f5f5f5;background:${i%2?'transparent':accent+'08'}">
-    <td style="padding:6px 0;font-size:8px;font-weight:700;color:${accent};width:24px">${e(r.num||String(i+1))}</td>
-    <td style="padding:6px 6px;font-size:8px;color:#888;width:100px;font-style:italic">${e(r.pos)}</td>
-    <td style="padding:6px 6px;font-size:10px;font-weight:600;color:#111">${e(r.name)}</td>
-    <td style="padding:6px 6px;font-size:8.5px;color:#666">${e(r.phone)}</td>
-    <td style="padding:6px 0;font-size:8.5px;font-weight:600;color:${accent}">${e(r.inTime)}</td>
-  </tr>`).join('');
-  return `<div style="font-family:'${f}',sans-serif;background:#fff;min-height:100%">
-    <div style="background:linear-gradient(135deg,${accent} 0%,${accent}cc 100%);padding:20px 28px">
-      <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:3px">${e(d.company||'')}</div>
-      <div style="font-size:20px;font-weight:900;color:#fff;letter-spacing:-.3px">${e(d.title||'')} — Full Crew</div>
-      <div style="font-size:9px;color:rgba(255,255,255,.75);margin-top:4px">${fmtDate(d.date)} &nbsp;·&nbsp; Crew Call: ${e(d.generalCall||'—')}</div>
+  const rows=(d.back||[]).filter(r=>r.name).map(r=>`<tr><td style="padding:4px 0;font-size:8px;color:#888;width:120px">${cseEsc(r.pos)}</td><td style="padding:4px 0;font-size:9px;color:#222">${cseEsc(r.name)}</td><td style="padding:4px 0 4px 10px;font-size:8px;color:#aaa">${cseEsc(r.phone)}</td><td style="padding:4px 0 4px 10px;font-size:8px;color:#aaa">${cseEsc(r.inTime)}</td></tr>`).join('');
+  return `<div style="font-family:'${f}',sans-serif;color:#111;padding:0">
+    <div style="border-bottom:1px solid ${accent};padding-bottom:8px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:flex-end">
+      <div style="font-size:16px;font-weight:700">Full Crew</div>
+      <div style="font-size:9px;color:#aaa">${cseEsc(d.title||'')}</div>
     </div>
-    <div style="padding:20px 28px">
-      <div style="font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${accent};margin-bottom:12px">Department Contacts &amp; Call Times</div>
-      <table style="width:100%;border-collapse:collapse">
-        <tr style="border-bottom:1.5px solid #e5e7eb">
-          <th style="padding:4px 0;font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;text-align:left;width:24px">#</th>
-          <th style="padding:4px 6px;font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;text-align:left">Position</th>
-          <th style="padding:4px 6px;font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;text-align:left">Name</th>
-          <th style="padding:4px 6px;font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;text-align:left">Phone</th>
-          <th style="padding:4px 0;font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;text-align:left">In Time</th>
-        </tr>
-        ${rows||'<tr><td colspan="5" style="color:#ccc;font-size:9px;padding:12px 0;text-align:center">No crew listed — add crew in the editor</td></tr>'}
-      </table>
-    </div>
-    ${d.safety?`<div style="padding:10px 28px;border-top:1px solid #eee;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#999;text-align:center">${e(d.safety)} | Generated by 80AD</div>`:''}
-    ${d.notes?`<div style="padding:12px 28px;border-top:1px solid #eee"><div style="font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:4px">On-Set Notes</div><div style="min-height:40px"></div></div>`:''}
+    <table style="width:100%;border-collapse:collapse">${rows||'<tr><td style="color:#ccc;font-size:9px;padding:10px 0">No crew listed</td></tr>'}</table>
   </div>`;
 }
 
@@ -12338,8 +12215,6 @@ function calSelectDay(dateStr) {
 }
 
 // ── saveAllData ──
-function refreshHomeData(){try{var p=productions&&productions.find(function(x){return x.id===activeProdId;});if(!p)return;var h=document.getElementById('home-prod-name');if(h)h.textContent=p.title||'';}catch(e){}}
-
 function saveAllData() {
   // All data is already auto-saved to localStorage on each edit.
   // This button gives visual confirmation.
@@ -14863,28 +14738,11 @@ function saveSsSettings() {}
 
 // ── Persist ──
 function sseSaveData() {
-  // If a named schedule file is open, save to its specific key
-  if (typeof activeSchedIdx !== 'undefined' && activeSchedIdx !== null &&
-      typeof ssfsSchedules !== 'undefined' && ssfsSchedules[activeSchedIdx]) {
-    const s = ssfsSchedules[activeSchedIdx];
-    const fileKey = 'ss_' + (activeProdId||'x') + '_' + s.id;
-    localStorage.setItem(fileKey, JSON.stringify({ rows: ssRows, info: ssInfo, ver: ssVersion, format: sseFormat, font: sseFont, size: sseTextSize, pageSize: ssePageSize }));
-    s.rowCount = ssRows.length; s.modified = 'Just now';
-    if (typeof saveSsfsData === 'function') saveSsfsData();
-    return;
-  }
-  // Fallback: generic key
   const key = 'ss_' + (activeProdId || 'default');
   localStorage.setItem(key, JSON.stringify({ rows: ssRows, info: ssInfo, ver: ssVersion, format: sseFormat, font: sseFont, size: sseTextSize, pageSize: ssePageSize }));
 }
 function sseLoadData() {
-  let key = 'ss_' + (activeProdId || 'default');
-  // Prefer schedule-specific key if a file is open
-  if (typeof activeSchedIdx !== 'undefined' && activeSchedIdx !== null &&
-      typeof ssfsSchedules !== 'undefined' && ssfsSchedules[activeSchedIdx]) {
-    const s = ssfsSchedules[activeSchedIdx];
-    key = 'ss_' + (activeProdId||'x') + '_' + s.id;
-  }
+  const key = 'ss_' + (activeProdId || 'default');
   const raw = localStorage.getItem(key);
   if (raw) {
     const d = JSON.parse(raw);
@@ -17662,32 +17520,6 @@ function msgPrelimBack(){
   }
 }
 
-function msgPrelimSaveDraft(){
-  // Read whatever has been filled in so far and save as a draft message
-  function g(id){ var el=document.getElementById(id); return el?el.value.trim():''; }
-  var name=g('mp-name')||'Draft';
-  var draft={
-    name:name, role:g('mp-role'), project:g('mp-project'),
-    when:g('mp-when')||'this week', date:g('mp-date'),
-    start:g('mp-start'), end:g('mp-end'),
-    camera:g('mp-camera'), ratio:g('mp-ratio'),
-    dayNum:'', totalDays:'',
-    bring:g('mp-bring'), cal:g('mp-cal'), know:'',
-    tech:'', template:'letter', view:'expanded',
-    font:'Inter', fontSize:'m', color:'#F5A67D',
-    photo:'', logo:'', props:'', planet:0,
-    savedAt:new Date().toISOString(),
-    id:'msg_'+Date.now(),
-    _isDraft:true,
-  };
-  _msgSentList=msgLoadSent();
-  _msgSentList.unshift(draft);
-  msgSaveSent(_msgSentList);
-  msgPrelimClose();
-  msgShowSent();
-  flashMsg('Saved to Messages — "'+name+'"');
-}
-
 function msgPrelimBindKeys(){
   document.removeEventListener('keydown', _msgPrelimKeyHandler);
   document.addEventListener('keydown', _msgPrelimKeyHandler);
@@ -17745,11 +17577,8 @@ function msgPrelimFinish(){
 
   msgPrelimClose();
   msgPopulateForm();
-  // Clear any old draft for a fresh message
-  try{ localStorage.removeItem('msg_draft_'+(activeProdId||'x')); }catch(e){}
   var comp=document.getElementById('msg-composer'),sent=document.getElementById('msg-sent-view'),empty=document.getElementById('msg-empty');
   if(comp)comp.style.display='grid';if(sent)sent.style.display='none';if(empty)empty.style.display='none';
-  var sb=document.getElementById('msg-save-btn');if(sb)sb.style.display="inline-flex";
   msgBuildTemplatePicker();msgBuildFontPicker();msgBuildColorPicker();msgBuildPlanetPicker();msgUpdate();
 }
 
@@ -17764,7 +17593,6 @@ function msgCancel(){msgShowDefault();}
 function msgShowSent(){
   var comp=document.getElementById('msg-composer'),empty=document.getElementById('msg-empty'),sent=document.getElementById('msg-sent-view');
   if(comp)comp.style.display='none';if(empty)empty.style.display='none';if(sent)sent.style.display='block';
-  var sb=document.getElementById('msg-save-btn');if(sb)sb.style.display="none";
   msgRenderSentList();
 }
 function msgPopulateForm(){
@@ -17964,9 +17792,6 @@ function msgUpdateImageHint(s){
 
 function msgUpdate(){
   msgReadForm();
-  // Auto-save draft so work is never lost
-  var draftKey='msg_draft_'+(activeProdId||'x');
-  try{ localStorage.setItem(draftKey, JSON.stringify({state:msgState, activeIdx:_msgActiveIdx, savedAt:new Date().toISOString()})); } catch(e){}
   var f=document.getElementById('msg-flyer-preview');if(!f)return;
   f.className='msg-flyer'+(msgState.view==='condensed'?' condensed':'');
   f.style.position='relative';
@@ -18050,23 +17875,11 @@ function msgSetPlanet(n,el){
   msgUpdate();
 }
 function msgSaveToSent(){
-  msgReadForm();
-  _msgSentList=msgLoadSent();
-  var e=Object.assign({},msgState,{savedAt:new Date().toISOString(),id:(_msgActiveIdx!==null&&_msgSentList[_msgActiveIdx])?_msgSentList[_msgActiveIdx].id||('msg_'+Date.now()):'msg_'+Date.now()});
-  if(_msgActiveIdx!==null&&_msgSentList[_msgActiveIdx]){
-    _msgSentList[_msgActiveIdx]=e;
-    flashMsg('Message updated & saved');
-  } else {
-    _msgSentList.unshift(e);
-    _msgActiveIdx=0;
-    flashMsg('Message saved to Sent');
-  }
-  msgSaveSent(_msgSentList);
-  try{ localStorage.removeItem('msg_draft_'+(activeProdId||'x')); }catch(e2){}
-  // Visual confirmation on button
-  var btn=document.getElementById('msg-save-btn');
-  if(btn){ var orig=btn.innerHTML; btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px"><polyline points="20 6 9 17 4 12"/></svg> Saved!'; setTimeout(function(){ btn.innerHTML=orig; },2000); }
-  msgShowSent();
+  msgReadForm();_msgSentList=msgLoadSent();
+  var e=Object.assign({},msgState,{savedAt:new Date().toISOString(),id:'msg_'+Date.now()});
+  if(_msgActiveIdx!==null){_msgSentList[_msgActiveIdx]=e;flashMsg('Updated');}
+  else{_msgSentList.unshift(e);flashMsg('Saved to sent');}
+  msgSaveSent(_msgSentList);msgShowSent();
 }
 function msgRenderSentList(){
   _msgSentList=msgLoadSent();
@@ -18079,14 +17892,8 @@ function msgRenderSentList(){
 }
 function msgEditSent(i){
   _msgActiveIdx=i;msgState=Object.assign({},_msgSentList[i]);msgPopulateForm();
-  // Restore any unsaved draft edits for this entry
-  try{
-    var draft=JSON.parse(localStorage.getItem('msg_draft_'+(activeProdId||'x'))||'null');
-    if(draft&&draft.activeIdx===i&&draft.state){msgState=Object.assign({},draft.state);msgPopulateForm();}
-  }catch(e){}
   var comp=document.getElementById('msg-composer'),sent=document.getElementById('msg-sent-view');
   if(comp)comp.style.display='grid';if(sent)sent.style.display='none';
-  var sb=document.getElementById('msg-save-btn');if(sb)sb.style.display="inline-flex";
   document.querySelectorAll('.msg-view-btn').forEach(function(b){b.classList.toggle('sel',b.id==='msg-view-'+(msgState.view||'expanded'));});
   msgBuildTemplatePicker();msgBuildFontPicker();msgBuildColorPicker();msgRestoreSize(msgState.fontSize);msgUpdate();
 }
@@ -18117,440 +17924,40 @@ var cseExpFileType='pdf',cseExpFormat='minimal',cseExpAccentColor='#F5A67D',cseE
 function cseEsc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function cseSetField(id,v){var el=document.getElementById(id);if(el)el.value=v||'';}
 function cseGetField(id){return(document.getElementById(id)||{value:''}).value.trim();}
-function cseGetData(){var br=cseBackRows.slice();return{title:cseGetField('cse-title'),company:cseGetField('cse-company'),date:cseGetField('cse-date'),day:cseGetField('cse-day'),generalCall:cseGetField('cse-crew-call'),shootTime:cseGetField('cse-shoot-time'),tz:cseGetField('cse-tz'),sunset:cseGetField('cse-sunset'),weather:cseGetField('cse-weather'),location:cseGetField('cse-location'),hospital:cseGetField('cse-hospital'),office:cseGetField('cse-office'),safety:cseGetField('cse-safety'),notes:cseGetField('cse-notes'),logoUrl:cseLogoUrl||'',crew:cseCrewRows.slice(),scenes:cseSceneRows.slice(),cast:cseCastRows.slice(),back:br,backRows:br,props:cseProps.slice()};}
-function cseShowEditor(){document.getElementById('cs-list-view').classList.add('hidden');var ev=document.getElementById('cs-editor-view');if(ev)ev.style.display='flex';setTimeout(cseRender,50);}
+function cseGetData(){return{title:cseGetField('cse-title'),company:cseGetField('cse-company'),date:cseGetField('cse-date'),day:cseGetField('cse-day'),generalCall:cseGetField('cse-crew-call'),shootTime:cseGetField('cse-shoot-time'),tz:cseGetField('cse-tz'),sunset:cseGetField('cse-sunset'),weather:cseGetField('cse-weather'),location:cseGetField('cse-location'),hospital:cseGetField('cse-hospital'),office:cseGetField('cse-office'),safety:cseGetField('cse-safety'),notes:cseGetField('cse-notes'),logoUrl:cseLogoUrl||'',crew:cseCrewRows.slice(),scenes:cseSceneRows.slice(),cast:cseCastRows.slice(),backRows:cseBackRows.slice(),props:cseProps.slice()};}
+function cseShowEditor(){document.getElementById('cs-list-view').classList.add('hidden');var ev=document.getElementById('cs-editor-view');if(ev)ev.style.display='flex';}
 function cseHideEditor(){document.getElementById('cs-list-view').classList.remove('hidden');var ev=document.getElementById('cs-editor-view');if(ev)ev.style.display='none';}
 function cseOpenNew(){cseEditIdx=null;var prod=productions.find(function(p){return p.id===activeProdId;})||{};cseSetField('cse-company',prod.title||'');cseSetField('cse-title',prod.title||'');cseSetField('cse-safety','SAFETY FIRST | NO FORCED CALLS | NO SMOKING ON SET');cseCrewRows=[{pos:'Producer',name:'',phone:''},{pos:'Director',name:'',phone:''},{pos:'1st AD',name:'',phone:''},{pos:'DP',name:'',phone:''}];cseSceneRows=[{sc:'1',type:'INT',desc:'',cast:'',start:'',pages:''}];cseCastRows=[{id:'1',char:'',cast:'',status:'W',call:'',wrap:''}];cseBackRows=[];cseProps=[];cseRenderAllTables();document.getElementById('cse-editor-title').textContent='New Call Sheet';cseShowEditor();}
 function cseBackToList(){cseHideEditor();renderCallSheets();}
 function cseSaveSheet(){var d=cseGetData(),data=loadCS();var id=cseEditIdx!==null&&data[cseEditIdx]?data[cseEditIdx].id||'cse_'+cseEditIdx:'cse_'+Date.now();var entry={id:id,title:d.title||'Untitled',company:d.company,date:d.date,location:d.location,crewCount:d.crew.filter(function(r){return r.name;}).length,sceneCount:d.scenes.filter(function(r){return r.desc||r.sc;}).length,status:'draft',savedAt:new Date().toISOString()};if(cseEditIdx!==null&&data[cseEditIdx]){Object.assign(data[cseEditIdx],entry);}else{data.push(entry);cseEditIdx=data.length-1;}saveCS(data);saveCseState(id,Object.assign({},d,{id:id}));document.getElementById('cse-editor-title').textContent=d.title||'Untitled';flashMsg('Call sheet saved');}
-function cseOpenEdit(idx){var data=loadCS();if(!data[idx])return;cseEditIdx=idx;var id=data[idx].id||'cse_'+idx,state=loadCseState(id);if(state){['title','company','date','day','safety','notes','location','hospital','office','sunset','weather'].forEach(function(k){cseSetField('cse-'+k,state[k]||'');});cseSetField('cse-crew-call',state.generalCall||'');cseSetField('cse-shoot-time',state.shootTime||'');cseSetField('cse-tz',state.tz||'');cseCrewRows=state.crew||[];cseSceneRows=state.scenes||[];cseCastRows=state.cast||[];cseBackRows=state.backRows||state.back||[];cseProps=state.props||[];cseLogoUrl=state.logoUrl||'';cseRenderAllTables();}document.getElementById('cse-editor-title').textContent=data[idx].title||'Call Sheet';cseShowEditor();}
-function cseRender(){
-  var front=document.getElementById('cse-preview-front');
-  var back =document.getElementById('cse-preview-back');
-  if(!front||!back) return;
-  var d=cseGetData();
-  var accent=cseExpAccentColor||'#F5A67D';
-  var font  =cseExpFontFamily||'Inter';
-  var fmt   =cseExpFormat||'minimal';
-  // Show placeholder if no meaningful data yet
-  var hasData=d.title||d.company||(d.crew&&d.crew.filter(function(r){return r.name;}).length)||(d.scenes&&d.scenes.filter(function(r){return r.desc;}).length);
-  if(!hasData){
-    var ph='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:300px;color:#ccc;font-family:'+font+',sans-serif;text-align:center;gap:8px"><div style="font-size:32px">📋</div><div style="font-size:13px;font-weight:500">Fill in the form to preview</div><div style="font-size:10px;opacity:.6">Add a title, crew, or scenes to see your call sheet</div></div>';
-    front.innerHTML=ph; back.innerHTML=''; return;
-  }
-  try{
-    var frontHtml='', backHtml='';
-    if(fmt==='floaty'){
-      frontHtml=cseBuildFloatyFront(d,accent,font);
-      backHtml =cseBuildFloatyBack(d,accent,font);
-    } else if(fmt==='zine'){
-      frontHtml=cseBuildZineFront(d,accent,font);
-      backHtml =cseBuildZineBack(d,accent,font);
-    } else {
-      frontHtml=cseBuildMinimalFront(d,accent,font);
-      backHtml =cseBuildMinimalBack(d,accent,font);
-    }
-    front.innerHTML=frontHtml;
-    back.innerHTML =backHtml;
-  }catch(e){ front.innerHTML='<div style="padding:20px;color:#aaa;font-size:12px">Preview error: '+e.message+'</div>'; }
-  // Auto-save on every render if editing an existing sheet
-  clearTimeout(cseRender._saveTimer);
-  cseRender._saveTimer=setTimeout(function(){ if(cseEditIdx!==null) cseSaveSheet(); },800);
-}
+function cseOpenEdit(idx){var data=loadCS();if(!data[idx])return;cseEditIdx=idx;var id=data[idx].id||'cse_'+idx,state=loadCseState(id);if(state){['title','company','date','day','safety','notes','location','hospital','office','sunset','weather'].forEach(function(k){cseSetField('cse-'+k,state[k]||'');});cseSetField('cse-crew-call',state.generalCall||'');cseSetField('cse-shoot-time',state.shootTime||'');cseCrewRows=state.crew||[];cseSceneRows=state.scenes||[];cseCastRows=state.cast||[];cseBackRows=state.backRows||[];cseProps=state.props||[];cseRenderAllTables();}document.getElementById('cse-editor-title').textContent=data[idx].title||'Call Sheet';cseShowEditor();}
+function cseRender(){}
 function cseRenderAllTables(){cseRenderCrewTable();cseRenderSceneTable();cseRenderCastTable();cseRenderBackTable();}
 function cseRenderProps(){var b=document.getElementById('cse-props-master-list');if(b)b.innerHTML=cseProps.map(function(p){return '<option value="'+cseEsc(p)+'">';}).join('');}
 function cseRenderCrewTable(){var t=document.getElementById('cse-crew-body');if(!t)return;t.innerHTML=cseCrewRows.map(function(r,i){return '<tr><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.pos)+'" placeholder="Position" oninput="cseCrewRows['+i+'].pos=this.value"></td><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.name)+'" placeholder="Name" oninput="cseCrewRows['+i+'].name=this.value"></td><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.phone)+'" placeholder="Phone" oninput="cseCrewRows['+i+'].phone=this.value"></td><td><button onclick="cseCrewRows.splice('+i+',1);cseRenderCrewTable()" style="background:none;border:none;color:var(--text4);cursor:pointer;font-size:16px;padding:2px 6px">x</button></td></tr>';}).join('');}
 function cseRenderSceneTable(){var t=document.getElementById('cse-scene-body');if(!t)return;t.innerHTML=cseSceneRows.map(function(r,i){return '<tr><td><input class="cse-input" style="width:50px" value="'+cseEsc(r.sc)+'" placeholder="#" oninput="cseSceneRows['+i+'].sc=this.value"></td><td><select class="cse-input" onchange="cseSceneRows['+i+'].type=this.value"><option'+(r.type==='INT'?' selected':'')+'>INT</option><option'+(r.type==='EXT'?' selected':'')+'>EXT</option><option'+(r.type==='INT/EXT'?' selected':'')+'>INT/EXT</option></select></td><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.desc)+'" placeholder="Description" oninput="cseSceneRows['+i+'].desc=this.value"></td><td><input class="cse-input" style="width:80px" value="'+cseEsc(r.start)+'" placeholder="Start" oninput="cseSceneRows['+i+'].start=this.value"></td><td><button onclick="cseSceneRows.splice('+i+',1);cseRenderSceneTable()" style="background:none;border:none;color:var(--text4);cursor:pointer;font-size:16px;padding:2px 6px">x</button></td></tr>';}).join('');}
 function cseRenderCastTable(){var t=document.getElementById('cse-cast-body');if(!t)return;t.innerHTML=cseCastRows.map(function(r,i){return '<tr><td><input class="cse-input" style="width:50px" value="'+cseEsc(r.id)+'" oninput="cseCastRows['+i+'].id=this.value"></td><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.char)+'" placeholder="Character" oninput="cseCastRows['+i+'].char=this.value"></td><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.cast)+'" placeholder="Actor" oninput="cseCastRows['+i+'].cast=this.value"></td><td><input class="cse-input" style="width:80px" value="'+cseEsc(r.call)+'" oninput="cseCastRows['+i+'].call=this.value"></td><td><input class="cse-input" style="width:80px" value="'+cseEsc(r.wrap)+'" oninput="cseCastRows['+i+'].wrap=this.value"></td><td><button onclick="cseCastRows.splice('+i+',1);cseRenderCastTable()" style="background:none;border:none;color:var(--text4);cursor:pointer;font-size:16px;padding:2px 6px">x</button></td></tr>';}).join('');}
 function cseRenderBackTable(){var t=document.getElementById('cse-back-body');if(!t)return;t.innerHTML=cseBackRows.map(function(r,i){return '<tr><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.pos)+'" oninput="cseBackRows['+i+'].pos=this.value"></td><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.name)+'" oninput="cseBackRows['+i+'].name=this.value"></td><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.phone)+'" oninput="cseBackRows['+i+'].phone=this.value"></td><td><button onclick="cseBackRows.splice('+i+',1);cseRenderBackTable()" style="background:none;border:none;color:var(--text4);cursor:pointer;font-size:16px">x</button></td></tr>';}).join('');}
-function cseAddRow(type){if(type==='crew'){cseCrewRows.push({pos:'',name:'',phone:''});cseRenderCrewTable();}if(type==='scene'){cseSceneRows.push({sc:'',type:'INT',desc:'',cast:'',start:'',pages:''});cseRenderSceneTable();}if(type==='cast'){cseCastRows.push({id:'',char:'',cast:'',status:'W',call:'',wrap:''});cseRenderCastTable();}if(type==='back'){cseBackRows.push({num:String(cseBackRows.length+1),pos:'',name:'',phone:'',inTime:''});cseRenderBackTable();} cseRender();}
-function cseAddDeptMsg(dept){var n=document.getElementById('cse-notes');if(n){n.value+=(n.value?'\n':'')+dept+': '; n.dispatchEvent(new Event('input'));}}
+function cseAddRow(type){if(type==='crew'){cseCrewRows.push({pos:'',name:'',phone:''});cseRenderCrewTable();}if(type==='scene'){cseSceneRows.push({sc:'',type:'INT',desc:'',cast:'',start:'',pages:''});cseRenderSceneTable();}if(type==='cast'){cseCastRows.push({id:'',char:'',cast:'',status:'W',call:'',wrap:''});cseRenderCastTable();}if(type==='back'){cseBackRows.push({pos:'',name:'',phone:''});cseRenderBackTable();}}
+function cseAddDeptMsg(dept){var n=document.getElementById('cse-notes');if(n){n.value+=(n.value?'\n':'')+dept+': ';}}
 function cseSec(id){var s=document.getElementById(id);if(s)s.classList.toggle('open');}
-function cseSetFormat(fmt,el){document.querySelectorAll('#cse-fmt-80ad,#cse-fmt-classic').forEach(function(e){e.classList.remove('active');});if(el)el.classList.add('active');cseExpFormat=(fmt==='80ad'?'minimal':'floaty');cseRender();}
-
-// Export modal — open/close
-function cseOpenExport(){
-  var modal=document.getElementById('cse-export-modal');
-  if(modal) modal.classList.add('open');
-  // Refresh live preview in modal
-  setTimeout(cseExpPreviewRefresh, 80);
-}
-function cseCloseExport(){
-  var modal=document.getElementById('cse-export-modal');
-  if(modal) modal.classList.remove('open');
-}
-
-// Export option selectors — HTML passes the format string as first arg (no el)
-function cseSelExport(fmt){
-  if(typeof fmt==='object'){ fmt=arguments[1]; } // handle (el,fmt) call pattern too
-  cseExpFormat = fmt==='80ad'?'minimal':'floaty';
-  document.querySelectorAll('[id^="cse-exp-"]').forEach(function(el){ el.classList.remove('sel'); });
-  var sel=document.getElementById('cse-exp-'+(fmt==='80ad'||fmt==='minimal'?'80ad':'classic'));
-  if(sel) sel.classList.add('sel');
-  cseExpPreviewRefresh();
-}
-function cseSelFileType(typeArg){
-  var t = typeof typeArg==='string' ? typeArg : arguments[1]||'pdf';
-  cseExpFileType=t;
-  document.querySelectorAll('[id^="cse-eft-"]').forEach(function(el){ el.classList.remove('sel'); });
-  var sel=document.getElementById('cse-eft-'+t);
-  if(sel) sel.classList.add('sel');
-  var pdfOpts=document.getElementById('cse-exp-pdf-opts');
-  if(pdfOpts) pdfOpts.style.display=(t==='pdf'?'':'none');
-}
-function cseSelExpFont(el,f){ cseExpFontFamily=f||el; cseExpPreviewRefresh(); }
-function cseSelExpColor(el,col){ cseExpAccentColor=col||el; cseExpPreviewRefresh(); }
-
-// Location type toggle (INT/EXT)
-function cseSetLocType(type, el){
-  document.querySelectorAll('#cse-loctype-int,#cse-loctype-ext,#cse-loctype-intext,#cse-loctype-extint').forEach(function(b){ b.classList.remove('active'); });
-  if(el) el.classList.add('active');
-  // Store in a data attr on the location field for rendering
-  var loc=document.getElementById('cse-location');
-  if(loc) loc.dataset.loctype=type;
-  cseRender();
-}
-
-// Logo size
-function cseSetLogoSize(size, el){
-  document.querySelectorAll('#csols-small,#csols-medium,#csols-large').forEach(function(b){ b.classList.remove('active'); });
-  if(el) el.classList.add('active');
-  var logoWrap=document.getElementById('cse-logo-wrap');
-  if(logoWrap){
-    var sz={small:'40px',medium:'60px',large:'90px'}[size]||'60px';
-    logoWrap.style.width=sz; logoWrap.style.height=sz;
-  }
-  cseRender();
-}
-
-// 80AD layout variant
-function cseSet80ADLayout(layout, el){
-  document.querySelectorAll('#cse-layout-standard,#cse-layout-rounded,#cse-layout-grid').forEach(function(b){ b.classList.remove('active'); });
-  if(el) el.classList.add('active');
-  cseExpLayout=layout;
-  cseRender();
-}
-
-// Size preset
-function cseSetSize(s, el){
-  document.querySelectorAll('#csesz-compact,#csesz-standard,#csesz-large').forEach(function(b){ b.classList.remove('active'); });
-  if(el) el.classList.add('active');
-  var szMap={compact:'compact',standard:'standard',large:'large'};
-  cseExpSizePreset=szMap[s]||'standard';
-  cseSetPageSize(s==='compact'?'letter':s==='large'?'legal':'letter');
-  cseRender();
-}
-var cseExpLayout='standard', cseExpSizePreset='standard';
-
-function cseSetFont(f){ cseExpFontFamily=f; cseRender(); }
-function cseSetPageSize(s){
-  cseExpSize=s;
-  var lb=document.getElementById('cse-size-label');
-  if(lb) lb.textContent=s==='legal'?'8.5 × 14':'8.5 × 11';
-  // Update sheet classes
-  document.querySelectorAll('.cse-sheet').forEach(function(el){
-    el.classList.toggle('letter', s!=='legal');
-    el.classList.toggle('legal',  s==='legal');
-  });
-}
-function cseZoomStep(d){
-  var sl=document.getElementById('cse-zoom-slider');
-  if(!sl) return;
-  var v=Math.min(120,Math.max(25,parseInt(sl.value||90)+d*10));
-  sl.value=v; cseSetZoom(v);
-}
-function cseSetZoom(v){
-  var pct=v/100;
-  var front=document.getElementById('cse-preview-front');
-  var back=document.getElementById('cse-preview-back');
-  var lbl=document.getElementById('cse-zoom-label');
-  var tO='top center';
-  if(front){front.style.transform='scale('+pct+')';front.style.transformOrigin=tO;front.style.marginBottom=((pct-1)*(-1056))+'px';}
-  if(back){back.style.transform='scale('+pct+')';back.style.transformOrigin=tO;back.style.marginBottom=((pct-1)*(-1056))+'px';}
-  if(lbl)lbl.textContent=v+'%';
-}
-function cseHandleVibeFile(input){
-  var file=input.files[0]; if(!file)return;
-  var reader=new FileReader();
-  reader.onload=function(e){
-    var img=document.getElementById('cse-vibe-preview');
-    var txt=document.getElementById('cse-vibe-txt');
-    if(img){img.src=e.target.result;img.style.display='block';}
-    if(txt)txt.style.display='none';
-  };
-  reader.readAsDataURL(file);
-}
-function cseHandleVibeDrop(e){
-  e.preventDefault();
-  var file=(e.dataTransfer.files||[])[0]; if(!file) return;
-  var dt=new DataTransfer(); dt.items.add(file);
-  var inp=document.getElementById('cse-vibe-file');
-  if(inp){ inp.files=dt.files; cseHandleVibeFile(inp); }
-}
-function cseHandleLogoFile(input){
-  var file=input.files[0]; if(!file)return;
-  var reader=new FileReader();
-  reader.onload=function(e){ cseLogoUrl=e.target.result; cseRender(); };
-  reader.readAsDataURL(file);
-}
-function cseHandleLogoDrop(e){
-  e.preventDefault();
-  var file=(e.dataTransfer.files||[])[0]; if(!file)return;
-  var dt=new DataTransfer(); dt.items.add(file);
-  var inp=document.createElement('input'); inp.type='file'; inp.files=dt.files;
-  cseHandleLogoFile(inp);
-}
-function cseAddProp(){
-  var inp=document.getElementById('cse-prop-input');
-  if(!inp) return;
-  var v=inp.value.trim(); if(!v)return;
-  cseProps.push(v); inp.value=''; cseRenderProps(); cseRender();
-}
-function cseRefreshPropSuggestions(){}
-function cseExpPreviewRefresh(){ cseRender(); }
-function cseSaveToPacket(){ flashMsg('Saved to Production Packet'); }
-
-// Phonebook picker — fill crew/cast/back from contacts
-function cseOpenPbPicker(section){
-  var contacts=typeof loadContacts==='function'?loadContacts():[];
-  if(!contacts.length){ flashMsg('No contacts in Phone Book yet'); return; }
-  // Build a quick modal overlay
-  var existing=document.getElementById('cse-pb-overlay');
-  if(existing) existing.remove();
-  var overlay=document.createElement('div');
-  overlay.id='cse-pb-overlay';
-  overlay.style.cssText='position:fixed;inset:0;z-index:4000;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center';
-  overlay.onclick=function(e){ if(e.target===overlay) overlay.remove(); };
-  var box=document.createElement('div');
-  box.style.cssText='background:var(--bg);border-radius:16px;padding:20px;width:min(400px,92vw);max-height:60vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px';
-  box.innerHTML='<div style="font-size:13px;font-weight:700;margin-bottom:4px">Add from Phone Book</div>'+
-    contacts.map(function(c,i){
-      return '<div onclick="csePickContact(\''+section+'\','+i+');document.getElementById(\'cse-pb-overlay\').remove()" style="padding:8px 12px;border-radius:10px;border:1px solid var(--border);cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .1s" onmouseover="this.style.background=\'var(--hover)\'" onmouseleave="this.style.background=\'\'">'+
-        '<div><div style="font-size:13px;font-weight:600">'+cseEsc(c.name)+'</div><div style="font-size:11px;color:var(--text3)">'+cseEsc(c.role||c.dept||'')+'</div></div>'+
-        '<div style="font-size:11px;color:var(--text3)">'+cseEsc(c.phone||'')+'</div></div>';
-    }).join('');
-  overlay.appendChild(box);
-  document.body.appendChild(overlay);
-}
-function csePickContact(section, idx){
-  var contacts=typeof loadContacts==='function'?loadContacts():[];
-  var c=contacts[idx]; if(!c) return;
-  if(section==='crew'){ cseCrewRows.push({pos:c.role||c.dept||'',name:c.name||'',phone:c.phone||''}); cseRenderCrewTable(); }
-  else if(section==='cast'){ cseCastRows.push({id:String(cseCastRows.length+1),char:'',cast:c.name||'',status:'W',call:c.phone||'',wrap:''}); cseRenderCastTable(); }
-  else if(section==='back'){ cseBackRows.push({num:String(cseBackRows.length+1),pos:c.role||c.dept||'',name:c.name||'',phone:c.phone||'',inTime:''}); cseRenderBackTable(); }
-  cseRender(); flashMsg(c.name+' added');
-}
-function cseUpdateClassicColor(){
-  var fill=document.getElementById('cse-classic-fill');
-  var txt=document.getElementById('cse-classic-text');
-  cseExpAccentColor=(fill?fill.value:'#F5A67D');
-  cseRender();
-}
-function cseSelSize(sArg){ var s=typeof sArg==='string'?sArg:arguments[1]||'letter'; cseSetPageSize(s); cseExpPreviewRefresh(); }
+function cseSetFormat(fmt,el){document.querySelectorAll('.cse-tog').forEach(function(e){e.classList.remove('active');});if(el)el.classList.add('active');}
+function cseOpenExport(){cseDoExport();}
+function cseCloseExport(){}
+function cseSelExport(el,f){cseExpFormat=f;}
+function cseSelFileType(el,t){cseExpFileType=t;}
+function cseSelExpFont(el,f){cseExpFontFamily=f;}
+function cseSelExpColor(el,col){cseExpAccentColor=col;}
+function cseSetLocType(){}
+function cseSetPageSize(s){cseExpSize=s;var lb=document.getElementById('cse-size-label');if(lb)lb.textContent=s==='legal'?'8.5 x 14':'8.5 x 11';}
+function cseSetLogoSize(){}
+function cseSetFont(f){cseExpFontFamily=f;}
+function cseSetSize(s){cseSetPageSize(s);}
+function cseSet80ADLayout(){}
+function cseZoomStep(){}
+function cseSelSize(el,s){cseSetPageSize(s);}
 function cseOpenMapPreview(){var loc=cseGetField('cse-location');if(loc)window.open('https://maps.google.com?q='+encodeURIComponent(loc),'_blank');}
 function cseUpdateMapPreview(){}
-
-/* ═══════════════════════════════════════════════════
-   GANTT EXPORT — pvRefreshPreview, pvDoExport, builders
-═══════════════════════════════════════════════════ */
-
-function pvGetMeta(){
-  return {
-    title: (document.getElementById('pv-exp-title')||{value:''}).value || 'Production Timeline',
-    by:    (document.getElementById('pv-exp-by')||{value:''}).value || '',
-    dates: (document.getElementById('pv-exp-dates')||{value:''}).value || '',
-    rev:   (document.getElementById('pv-exp-rev')||{value:''}).value || 'v1',
-  };
-}
-
-function pvRefreshPreview(){
-  const paper = document.getElementById('pv-preview-paper');
-  if (!paper) return;
-  const m    = pvGetMeta();
-  const opts = pvGetExpOpts();
-  const fmt  = pvExpFmt || '80ad';
-  try {
-    const pages = pvRenderPreviewPages(m.title, m.by, m.dates, m.rev, fmt, opts);
-    paper.innerHTML = pages.map(p => {
-      const scale = opts.orient === 'portrait' ? 1 : 1;
-      return `<iframe srcdoc="${p.html.replace(/"/g,'&quot;')}"
-        style="width:${p.W}px;height:${p.H}px;border:none;display:block;background:#fff;
-               box-shadow:0 8px 40px rgba(0,0,0,.35);border-radius:4px;flex-shrink:0"
-        scrolling="no"></iframe>`;
-    }).join('');
-    const info = document.getElementById('pv-preview-page-info');
-    if (info) info.textContent = pages.length + ' page' + (pages.length !== 1 ? 's' : '');
-    setTimeout(pvPreviewFit, 100);
-  } catch(e) {
-    paper.innerHTML = '<div style="color:#fff;padding:20px;font-size:12px">Preview error: ' + e.message + '</div>';
-  }
-}
-
-function pvDoExport(){
-  const m    = pvGetMeta();
-  const opts = pvGetExpOpts();
-  const fmt  = pvExpFmt || '80ad';
-  const pages = pvRenderPreviewPages(m.title, m.by, m.dates, m.rev, fmt, opts);
-  if (!pages.length) { flashMsg('Nothing to export'); return; }
-  // Open each page in a new window and print
-  const combined = pages.map(p => p.html).join('\n<!-- page break -->\n');
-  // Combine into a single printable document with page breaks
-  const W = pages[0].W, H = pages[0].H;
-  const gf = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Courier+Prime:wght@400;700&display=swap';
-  const printDoc = `<!DOCTYPE html><html><head><meta charset="UTF-8">
-<link href="${gf}" rel="stylesheet">
-<style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'${opts.font||'Inter'}',sans-serif;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .pv-page{width:${W}px;min-height:${H}px;page-break-after:always;overflow:hidden}
-  .pv-page:last-child{page-break-after:auto}
-  @page{size:${opts.orient==='portrait'?'letter portrait':'letter landscape'};margin:0}
-</style></head><body>
-${pages.map((p,i)=>{
-    // Extract body content from each page html
-    const m=p.html.match(/<body>([\s\S]*)<\/body>/);
-    return `<div class="pv-page">${m?m[1]:p.html}</div>`;
-}).join('\n')}
-<script>window.onload=function(){window.print()}<\/script>
-</body></html>`;
-  const win = window.open('', '_blank');
-  if (!win) { flashMsg('Allow pop-ups to export PDF'); return; }
-  win.document.write(printDoc);
-  win.document.close();
-}
-
-// ── Build functions ──────────────────────────────────────────────────────
-
-function pvBuildTitlePage(title, by, dates, rev, fmt, opts){
-  const bw = opts.bw;
-  const font = opts.font || 'Inter';
-  const ac = bw ? '#333' : '#2563EB';
-  return `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'${font}',sans-serif;padding:80px">
-    <div style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:${bw?'#999':ac};margin-bottom:20px">Production Timeline</div>
-    <div style="font-size:48px;font-weight:800;color:${bw?'#111':'#0F172A'};letter-spacing:-1px;text-align:center;margin-bottom:12px">${pvEsc(title)}</div>
-    <div style="font-size:14px;color:#666;margin-bottom:40px">${pvEsc(dates)}</div>
-    <div style="width:60px;height:3px;background:${bw?'#333':ac};margin-bottom:40px"></div>
-    <div style="font-size:12px;color:#999">Prepared by ${pvEsc(by)} &nbsp;·&nbsp; ${pvEsc(rev)}</div>
-    <div style="font-size:10px;color:#bbb;margin-top:8px">${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>
-  </div>`;
-}
-
-function pvBuildActivityListPage(title, by, dates, rev, fmt, opts){
-  const bw = opts.bw;
-  const font = opts.font || 'Inter';
-  const ac = bw ? '#333' : '#2563EB';
-  const activityList = pvBuildActivityList(fmt, opts);
-  const notes = opts.notes ? `<div style="position:absolute;bottom:24px;left:40px;right:40px;font-size:8px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:8px">${pvEsc(opts.notes)}</div>` : '';
-  return `<div style="position:relative;width:100%;min-height:100%;font-family:'${font}',sans-serif;padding:40px;background:#fff">
-    <div style="display:flex;align-items:flex-end;justify-content:space-between;border-bottom:2.5px solid ${bw?'#222':ac};padding-bottom:12px;margin-bottom:28px">
-      <div>
-        <div style="font-size:22px;font-weight:800;color:${bw?'#111':'#0F172A'};letter-spacing:-.5px">${pvEsc(title)}</div>
-        <div style="font-size:10px;color:#999;margin-top:3px;letter-spacing:1px;text-transform:uppercase">${pvEsc(dates)}</div>
-      </div>
-      <div style="text-align:right">
-        <div style="font-size:9px;color:#bbb">Prepared by ${pvEsc(by)}</div>
-        <div style="font-size:9px;color:#bbb">${pvEsc(rev)} · ${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div>
-      </div>
-    </div>
-    ${activityList}
-    ${notes}
-  </div>`;
-}
-
-function pvBuildShared(title, by, dates, rev, fmt, opts){
-  // Landscape gantt chart page
-  const bw   = opts.bw;
-  const font = opts.font || 'Inter';
-  const ac   = bw ? '#333' : '#2563EB';
-  const fs   = opts.fontSize || 8;
-  const { startDay, endDay } = opts.range;
-  const dayCount = endDay - startDay + 1;
-
-  const PHASE_COLORS = bw
-    ? {preproduction:'#444',production:'#666',postproduction:'#888',other:'#aaa'}
-    : {preproduction:'#2563EB',production:'#059669',postproduction:'#7C3AED',other:'#D97706'};
-
-  // Build header row
-  const cellW = Math.max(18, Math.floor((1056 - 200) / dayCount));
-  let headCells = '';
-  for (let d = startDay; d <= endDay; d++) {
-    const dateStr = pvDayToDateStr ? pvDayToDateStr(d) : '';
-    const dt = dateStr ? new Date(dateStr + 'T12:00') : null;
-    const isWknd = dt ? (dt.getDay()===0||dt.getDay()===6) : false;
-    const label = dt ? dt.toLocaleString('default',{month:'short',day:'numeric'}) : ('D'+d);
-    headCells += `<th style="width:${cellW}px;min-width:${cellW}px;font-size:${fs-2}px;font-weight:400;color:${isWknd?'#ccc':'#999'};background:${isWknd?'#fafafa':'#fff'};padding:3px 1px;text-align:center;border-right:1px solid #f0f0f0;white-space:nowrap;overflow:hidden">${label}</th>`;
-  }
-
-  // Build activity rows
-  let bodyRows = '';
-  const acts = pvActivities.filter(a => {
-    const spans = a.spans && a.spans.length ? a.spans : [{start:a.start,dur:a.dur}];
-    const aStart = Math.min(...spans.map(sp=>sp.start));
-    const aEnd   = Math.max(...spans.map(sp=>sp.start+sp.dur-1));
-    return aEnd >= startDay && aStart <= endDay;
-  });
-
-  const PHASE_ORDER = ['preproduction','production','postproduction','other'];
-  for (const phase of PHASE_ORDER) {
-    const items = acts.filter(a=>a.cat===phase);
-    if (!items.length) continue;
-    const pc = PHASE_COLORS[phase];
-    bodyRows += `<tr><td colspan="${dayCount+1}" style="background:${bw?'#f5f5f5':'#f8faff'};padding:5px 8px;font-size:${fs-1}px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:${bw?'#555':pc};border-bottom:1px solid #e5e7eb">${phase.replace('production','production').toUpperCase().replace('PREPRODUCTION','PRE-PRODUCTION').replace('POSTPRODUCTION','POST-PRODUCTION')}</td></tr>`;
-    items.forEach(a => {
-      const spans = a.spans && a.spans.length ? a.spans : [{start:a.start,dur:a.dur}];
-      const barColor = bw ? '#555' : (a.color || pc);
-      // Name cell
-      let cells = `<td style="padding:3px 8px;font-size:${fs}px;font-weight:500;white-space:nowrap;overflow:hidden;max-width:180px;border-right:1px solid #f0f0f0;color:#111">${pvEsc(a.name)}</td>`;
-      // Day cells
-      for (let d = startDay; d <= endDay; d++) {
-        const inSpan = spans.some(sp => d >= sp.start && d < sp.start + sp.dur);
-        const isFirst = spans.some(sp => d === sp.start);
-        const isLast  = spans.some(sp => d === sp.start + sp.dur - 1);
-        const bg = inSpan ? barColor : 'transparent';
-        const radius = isFirst && isLast ? '4px' : isFirst ? '4px 0 0 4px' : isLast ? '0 4px 4px 0' : '0';
-        cells += `<td style="width:${cellW}px;min-width:${cellW}px;padding:2px 0;border-right:1px solid #f0f0f0">
-          ${inSpan ? `<div style="background:${bg};border-radius:${radius};height:14px;opacity:${bw?'.85':'1'}">${isFirst?`<span style="font-size:${fs-2}px;color:#fff;padding:0 4px;white-space:nowrap;overflow:hidden;display:block;line-height:14px">${pvEsc(a.name)}</span>`:''}</div>` : ''}
-        </td>`;
-      }
-      bodyRows += `<tr style="border-bottom:1px solid #f5f5f5">${cells}</tr>`;
-    });
-  }
-
-  const notes = opts.notes ? `<div style="position:absolute;bottom:16px;left:40px;right:40px;font-size:8px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:6px">${pvEsc(opts.notes)}</div>` : '';
-
-  return `<div style="position:relative;width:100%;min-height:100%;font-family:'${font}',sans-serif;padding:28px 32px 48px;background:#fff">
-    <div style="display:flex;align-items:flex-end;justify-content:space-between;border-bottom:2px solid ${bw?'#222':ac};padding-bottom:8px;margin-bottom:16px">
-      <div style="font-size:16px;font-weight:800;color:#0F172A;letter-spacing:-.3px">${pvEsc(title)}</div>
-      <div style="font-size:9px;color:#bbb">${pvEsc(dates)} &nbsp;·&nbsp; ${pvEsc(rev)} &nbsp;·&nbsp; ${pvEsc(by)}</div>
-    </div>
-    <div style="overflow:hidden">
-      <table style="border-collapse:collapse;width:100%;table-layout:fixed">
-        <thead><tr>
-          <th style="width:180px;min-width:180px;font-size:${fs-1}px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;padding:4px 8px;text-align:left;border-bottom:1px solid #e5e7eb;border-right:1px solid #f0f0f0">Activity</th>
-          ${headCells}
-        </tr></thead>
-        <tbody>${bodyRows}</tbody>
-      </table>
-    </div>
-    ${notes}
-  </div>`;
-}
-
-function pvBuildPortraitPagesArr(title, by, dates, rev, fmt, opts){
-  // Portrait: split timeline into monthly chunks
-  if (!pvStartDate || !pvTotalDays) return [pvBuildShared(title,by,dates,rev,fmt,opts)];
-  const pages = [];
-  let d = 1;
-  while (d <= pvTotalDays) {
-    const chunkOpts = Object.assign({}, opts, { range: { startDay: d, endDay: Math.min(pvTotalDays, d + 27) } });
-    pages.push(pvBuildShared(title, by, dates, rev, fmt, chunkOpts));
-    d += 28;
-  }
-  return pages;
-}
-
-function pvEsc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
 function pvDoExport(){cseDoExport();}
 function pvSaveToPacket(){}
 function clearProjectColors(){}
@@ -18568,6 +17975,7 @@ function toggleImportZone(){var z=document.getElementById('import-drop-zone');if
 function handleImportDrop(e){e.preventDefault();var f=e.dataTransfer&&e.dataTransfer.files[0];if(f)handleImportFile(f);}
 function handleImportFile(file){if(!file)return;var r=new FileReader();r.onload=function(ev){try{var b=JSON.parse(ev.target.result);if(b._type==='80ad-project'&&b.localStorage){if(!confirm('Overwrite current data?'))return;Object.keys(b.localStorage).forEach(function(k){localStorage.setItem(k,b.localStorage[k]);});location.reload();}else{flashMsg('Unrecognized file format');}}catch(e){flashMsg('Could not read: '+e.message);}}; r.readAsText(file);}
 function addObDay(){}
+function refreshHomeData(){try{var p=productions&&productions.find(function(x){return x.id===activeProdId;});if(!p)return;var h=document.getElementById('home-prod-name');if(h)h.textContent=p.title||'';}catch(e){}}
 function showLogin(){var lf=document.getElementById('login-form'),sf=document.getElementById('signup-form');if(lf)lf.style.display='';if(sf)sf.style.display='none';}
 function showSignup(){var lf=document.getElementById('login-form'),sf=document.getElementById('signup-form');if(lf)lf.style.display='none';if(sf)sf.style.display='';}
 function doLogin(){var ls=document.getElementById('login-screen');if(ls){ls.style.opacity='0';setTimeout(function(){ls.classList.add('hidden');},300);}setTimeout(enterApp,200);}
@@ -18686,24 +18094,9 @@ function adShowImportResult(result,source){var parts=[];if(result.scenes)parts.p
     </div>
 
     <div class="msg-prelim-nav">
-      <div style="display:flex;align-items:center;gap:8px">
-        <button class="pill-btn" id="msg-ps-close" onclick="msgPrelimClose();msgShowDefault()" style="gap:5px;color:var(--text3)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><polyline points="15 18 9 12 15 6"/></svg>
-          Exit
-        </button>
-        <button class="pill-btn" id="msg-ps-back" onclick="msgPrelimBack()" style="opacity:0;pointer-events:none;gap:5px">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><polyline points="15 18 9 12 15 6"/></svg>
-          Back
-        </button>
-      </div>
+      <button class="pill-btn" id="msg-ps-back" onclick="msgPrelimBack()" style="opacity:0;pointer-events:none">Back</button>
       <span class="msg-prelim-hint">Press <strong>Enter</strong> to continue</span>
-      <div style="display:flex;align-items:center;gap:8px">
-        <button class="pill-btn" onclick="msgPrelimSaveDraft()" style="gap:5px;border-color:var(--c1);color:var(--c1)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13"/></svg>
-          Save to Messages
-        </button>
-        <button class="pill-btn accent" id="msg-ps-next" onclick="msgPrelimNext()">Continue →</button>
-      </div>
+      <button class="pill-btn accent" id="msg-ps-next" onclick="msgPrelimNext()">Continue →</button>
     </div>
   </div>
 </div>
