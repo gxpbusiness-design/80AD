@@ -17958,7 +17958,174 @@ function cseZoomStep(){}
 function cseSelSize(el,s){cseSetPageSize(s);}
 function cseOpenMapPreview(){var loc=cseGetField('cse-location');if(loc)window.open('https://maps.google.com?q='+encodeURIComponent(loc),'_blank');}
 function cseUpdateMapPreview(){}
-function pvDoExport(){cseDoExport();}
+function pvEsc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function pvGetMeta(){
+  return {
+    title: (document.getElementById('pv-exp-title')||{value:''}).value || 'Production Timeline',
+    by:    (document.getElementById('pv-exp-by')||{value:''}).value || '',
+    dates: (document.getElementById('pv-exp-dates')||{value:''}).value || '',
+    rev:   (document.getElementById('pv-exp-rev')||{value:''}).value || 'v1',
+  };
+}
+
+function pvGetExpOpts(){
+  return {
+    font: document.getElementById('pv-exp-font')?.value || 'Inter',
+    fontSize: parseInt(document.getElementById('pv-exp-fontsize')?.value || '8'),
+    bw: pvExpColorMode === 'bw',
+    orient: pvExpOrient || 'landscape',
+    range: pvExpGetRangeDays(),
+    notes: document.getElementById('pv-exp-notes')?.value || '',
+    titlePage: document.getElementById('pv-exp-titlepage')?.checked || false,
+  };
+}
+
+function pvRefreshPreview(){
+  const paper = document.getElementById('pv-preview-paper');
+  if (!paper) return;
+  const m = pvGetMeta(), opts = pvGetExpOpts(), fmt = pvExpFmt || '80ad';
+  try {
+    const pages = pvRenderPreviewPages(m.title, m.by, m.dates, m.rev, fmt, opts);
+    paper.innerHTML = pages.map(p =>
+      `<iframe srcdoc="${p.html.replace(/"/g,'&quot;')}"
+        style="width:${p.W}px;height:${p.H}px;border:none;display:block;background:#fff;
+               box-shadow:0 8px 40px rgba(0,0,0,.35);border-radius:4px;flex-shrink:0"
+        scrolling="no"></iframe>`
+    ).join('');
+    const info = document.getElementById('pv-preview-page-info');
+    if (info) info.textContent = pages.length + ' page' + (pages.length !== 1 ? 's' : '');
+    setTimeout(pvPreviewFit, 100);
+  } catch(e) {
+    paper.innerHTML = '<div style="color:#fff;padding:20px;font-size:12px">Preview error: ' + e.message + '</div>';
+  }
+}
+
+function pvDoExport(){
+  const m = pvGetMeta(), opts = pvGetExpOpts(), fmt = pvExpFmt || '80ad';
+  const pages = pvRenderPreviewPages(m.title, m.by, m.dates, m.rev, fmt, opts);
+  if (!pages.length) { flashMsg('Nothing to export'); return; }
+  const W = pages[0].W, H = pages[0].H;
+  const gf = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Courier+Prime:wght@400;700&display=swap';
+  const printDoc = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<link href="${gf}" rel="stylesheet">
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'${opts.font||'Inter'}',sans-serif;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}.pv-page{width:${W}px;min-height:${H}px;page-break-after:always;overflow:hidden}.pv-page:last-child{page-break-after:auto}@page{size:${opts.orient==='portrait'?'letter portrait':'letter landscape'};margin:0}</style>
+</head><body>
+${pages.map(p=>{ const m=p.html.match(/<body>([\s\S]*)<\/body>/); return `<div class="pv-page">${m?m[1]:p.html}</div>`; }).join('\n')}
+<script>window.onload=function(){window.print()}<\/script>
+</body></html>`;
+  const win = window.open('', '_blank');
+  if (!win) { flashMsg('Allow pop-ups to export PDF'); return; }
+  win.document.write(printDoc);
+  win.document.close();
+}
+
+function pvBuildTitlePage(title, by, dates, rev, fmt, opts){
+  const bw=opts.bw, font=opts.font||'Inter', ac=bw?'#333':'#2563EB';
+  return `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'${font}',sans-serif;padding:80px;text-align:center;gap:8px">
+    <div style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:${bw?'#999':ac};margin-bottom:20px">Production Timeline</div>
+    <div style="font-size:48px;font-weight:800;color:#0F172A;letter-spacing:-1px;margin-bottom:12px">${pvEsc(title)}</div>
+    <div style="font-size:14px;color:#666;margin-bottom:40px">${pvEsc(dates)}</div>
+    <div style="width:60px;height:3px;background:${bw?'#333':ac};margin-bottom:40px"></div>
+    <div style="font-size:12px;color:#999">Prepared by ${pvEsc(by)} · ${pvEsc(rev)}</div>
+    <div style="font-size:10px;color:#bbb;margin-top:8px">${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>
+  </div>`;
+}
+
+function pvBuildActivityListPage(title, by, dates, rev, fmt, opts){
+  const bw=opts.bw, font=opts.font||'Inter', fs=opts.fontSize||8, ac=bw?'#333':'#2563EB';
+  const PHASE_COLORS=bw?{preproduction:'#333',production:'#555',postproduction:'#777',other:'#999'}:{preproduction:'#2563EB',production:'#059669',postproduction:'#7C3AED',other:'#D97706'};
+  const PHASE_LABELS={preproduction:'Pre-Production',production:'Production',postproduction:'Post-Production',other:'Other'};
+  const PHASE_ORDER=['preproduction','production','postproduction','other'];
+  let rows='';
+  for(const phase of PHASE_ORDER){
+    const items=pvActivities.filter(a=>a.cat===phase).sort((a,b)=>{const as=a.spans?Math.min(...a.spans.map(s=>s.start)):a.start,bs=b.spans?Math.min(...b.spans.map(s=>s.start)):b.start;return as-bs;});
+    if(!items.length) continue;
+    const pc=PHASE_COLORS[phase];
+    rows+=`<tr><td colspan="4" style="padding:14px 10px 4px;font-size:${fs-1}px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:${bw?'#444':pc};border-bottom:1px solid #E5E7EB">${PHASE_LABELS[phase]}</td></tr>`;
+    items.forEach(a=>{
+      const spans=a.spans&&a.spans.length?a.spans:[{start:a.start,dur:a.dur}];
+      const startDay=Math.min(...spans.map(s=>s.start)),endDay=Math.max(...spans.map(s=>s.start+s.dur-1));
+      const startStr=pvFmtDate(pvDayToDateStr(startDay)),endStr=pvFmtDate(pvDayToDateStr(endDay));
+      const barColor=bw?'#555':(a.color||pc);
+      rows+=`<tr style="border-bottom:1px solid #F3F4F6"><td style="padding:5px 10px;font-size:${fs}px"><span style="display:inline-block;width:7px;height:7px;border-radius:2px;background:${barColor};margin-right:8px;vertical-align:middle"></span><strong style="font-weight:600;color:#111">${pvEsc(a.name)}</strong></td><td style="padding:5px 10px;font-size:${fs}px;color:#6B7280">${pvEsc(a.chief||'—')}</td><td style="padding:5px 10px;font-size:${fs}px;color:#374151;white-space:nowrap">${startStr}</td><td style="padding:5px 10px;font-size:${fs}px;color:#374151;white-space:nowrap">${endStr}</td></tr>`;
+    });
+  }
+  const notes=opts.notes?`<div style="position:absolute;bottom:24px;left:40px;right:40px;font-size:8px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:8px">${pvEsc(opts.notes)}</div>`:'';
+  return `<div style="position:relative;width:100%;min-height:100%;font-family:'${font}',sans-serif;padding:40px;background:#fff">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;border-bottom:2.5px solid ${bw?'#222':ac};padding-bottom:12px;margin-bottom:28px">
+      <div><div style="font-size:22px;font-weight:800;color:#0F172A;letter-spacing:-.5px">${pvEsc(title)}</div><div style="font-size:10px;color:#999;margin-top:3px;letter-spacing:1px;text-transform:uppercase">${pvEsc(dates)}</div></div>
+      <div style="text-align:right"><div style="font-size:9px;color:#bbb">Prepared by ${pvEsc(by)}</div><div style="font-size:9px;color:#bbb">${pvEsc(rev)} · ${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div></div>
+    </div>
+    <table style="border-collapse:collapse;width:100%;font-family:'${font}',sans-serif">
+      <thead><tr><th style="padding:5px 10px;font-size:${fs-1}px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;border-bottom:1.5px solid #E5E7EB;text-align:left">Activity</th><th style="padding:5px 10px;font-size:${fs-1}px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;border-bottom:1.5px solid #E5E7EB;text-align:left">Owner</th><th style="padding:5px 10px;font-size:${fs-1}px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;border-bottom:1.5px solid #E5E7EB;text-align:left">Start</th><th style="padding:5px 10px;font-size:${fs-1}px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;border-bottom:1.5px solid #E5E7EB;text-align:left">End</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    ${notes}
+  </div>`;
+}
+
+function pvBuildShared(title, by, dates, rev, fmt, opts){
+  const bw=opts.bw, font=opts.font||'Inter', fs=opts.fontSize||8, ac=bw?'#333':'#2563EB';
+  const W=opts.orient==='portrait'?816:1056;
+  const {startDay,endDay}=opts.range;
+  const dayCount=endDay-startDay+1;
+  const cellW=Math.max(18,Math.floor((W-200)/dayCount));
+  const PHASE_COLORS=bw?{preproduction:'#444',production:'#666',postproduction:'#888',other:'#aaa'}:{preproduction:'#2563EB',production:'#059669',postproduction:'#7C3AED',other:'#D97706'};
+  const PHASE_ORDER=['preproduction','production','postproduction','other'];
+  const PHASE_LABELS={preproduction:'PRE-PRODUCTION',production:'PRODUCTION',postproduction:'POST-PRODUCTION',other:'OTHER'};
+  let headCells='';
+  for(let d=startDay;d<=endDay;d++){
+    const dateStr=pvDayToDateStr?pvDayToDateStr(d):'';
+    const dt=dateStr?new Date(dateStr+'T12:00'):null;
+    const isWknd=dt?(dt.getDay()===0||dt.getDay()===6):false;
+    const label=dt?dt.toLocaleString('default',{month:'short',day:'numeric'}):('D'+d);
+    headCells+=`<th style="width:${cellW}px;min-width:${cellW}px;font-size:${fs-2}px;font-weight:400;color:${isWknd?'#ccc':'#999'};background:${isWknd?'#fafafa':'#fff'};padding:3px 1px;text-align:center;border-right:1px solid #f0f0f0;white-space:nowrap;overflow:hidden">${label}</th>`;
+  }
+  let bodyRows='';
+  const acts=pvActivities.filter(a=>{
+    const spans=a.spans&&a.spans.length?a.spans:[{start:a.start,dur:a.dur}];
+    return Math.max(...spans.map(s=>s.start+s.dur-1))>=startDay&&Math.min(...spans.map(s=>s.start))<=endDay;
+  });
+  for(const phase of PHASE_ORDER){
+    const items=acts.filter(a=>a.cat===phase);
+    if(!items.length) continue;
+    const pc=PHASE_COLORS[phase];
+    bodyRows+=`<tr><td colspan="${dayCount+1}" style="background:${bw?'#f5f5f5':'#f8faff'};padding:5px 8px;font-size:${fs-1}px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:${bw?'#555':pc};border-bottom:1px solid #e5e7eb">${PHASE_LABELS[phase]}</td></tr>`;
+    items.forEach(a=>{
+      const spans=a.spans&&a.spans.length?a.spans:[{start:a.start,dur:a.dur}];
+      const barColor=bw?'#555':(a.color||pc);
+      let cells=`<td style="padding:3px 8px;font-size:${fs}px;font-weight:500;white-space:nowrap;overflow:hidden;max-width:180px;border-right:1px solid #f0f0f0;color:#111">${pvEsc(a.name)}</td>`;
+      for(let d=startDay;d<=endDay;d++){
+        const inSpan=spans.some(sp=>d>=sp.start&&d<sp.start+sp.dur);
+        const isFirst=spans.some(sp=>d===sp.start);
+        const isLast=spans.some(sp=>d===sp.start+sp.dur-1);
+        const radius=isFirst&&isLast?'4px':isFirst?'4px 0 0 4px':isLast?'0 4px 4px 0':'0';
+        cells+=`<td style="width:${cellW}px;min-width:${cellW}px;padding:2px 0;border-right:1px solid #f0f0f0">${inSpan?`<div style="background:${barColor};border-radius:${radius};height:14px;opacity:${bw?.85:1}">${isFirst?`<span style="font-size:${fs-2}px;color:#fff;padding:0 4px;white-space:nowrap;overflow:hidden;display:block;line-height:14px">${pvEsc(a.name)}</span>`:''}</div>`:''}</td>`;
+      }
+      bodyRows+=`<tr style="border-bottom:1px solid #f5f5f5">${cells}</tr>`;
+    });
+  }
+  const notes=opts.notes?`<div style="position:absolute;bottom:16px;left:40px;right:40px;font-size:8px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:6px">${pvEsc(opts.notes)}</div>`:'';
+  return `<div style="position:relative;width:100%;min-height:100%;font-family:'${font}',sans-serif;padding:28px 32px 48px;background:#fff">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;border-bottom:2px solid ${bw?'#222':ac};padding-bottom:8px;margin-bottom:16px">
+      <div style="font-size:16px;font-weight:800;color:#0F172A;letter-spacing:-.3px">${pvEsc(title)}</div>
+      <div style="font-size:9px;color:#bbb">${pvEsc(dates)} · ${pvEsc(rev)} · ${pvEsc(by)}</div>
+    </div>
+    <div style="overflow:hidden"><table style="border-collapse:collapse;width:100%;table-layout:fixed">
+      <thead><tr><th style="width:180px;min-width:180px;font-size:${fs-1}px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;padding:4px 8px;text-align:left;border-bottom:1px solid #e5e7eb;border-right:1px solid #f0f0f0">Activity</th>${headCells}</tr></thead>
+      <tbody>${bodyRows}</tbody>
+    </table></div>
+    ${notes}
+  </div>`;
+}
+
+function pvBuildPortraitPagesArr(title, by, dates, rev, fmt, opts){
+  if(!pvStartDate||!pvTotalDays) return [pvBuildShared(title,by,dates,rev,fmt,opts)];
+  const pages=[]; let d=1;
+  while(d<=pvTotalDays){ pages.push(pvBuildShared(title,by,dates,rev,fmt,Object.assign({},opts,{range:{startDay:d,endDay:Math.min(pvTotalDays,d+27)}}))); d+=28; }
+  return pages;
+}
 function pvSaveToPacket(){}
 function clearProjectColors(){}
 function closePbPicker(){var el=document.getElementById('cse-pb-picker');if(el)el.style.display='none';}
