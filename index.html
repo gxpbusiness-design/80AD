@@ -8732,6 +8732,62 @@ select.msg-prelim-input{cursor:pointer;-webkit-appearance:none;appearance:none;b
     </div>
   </div>
 </div>
+
+<!-- Budget PDF Export Options Modal -->
+<div class="ob-overlay" id="budget-pdf-modal" style="display:none;z-index:910" onclick="if(event.target===this)this.style.display='none'">
+  <div class="ob-modal" style="max-width:500px">
+    <div class="ob-modal-header">
+      <div class="ob-step-label">BUDGET PDF</div>
+      <div class="ob-step-title" id="bpdf-modal-title">Export Options</div>
+    </div>
+    <div class="ob-modal-body" style="display:flex;flex-direction:column;gap:18px">
+
+      <!-- Version number -->
+      <div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px">Version</div>
+        <input class="ob-input" id="bpdf-version" placeholder="e.g. v1, Draft, Final" style="max-width:200px">
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">Appears in header and filename</div>
+      </div>
+
+      <!-- Accent color -->
+      <div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Accent Color</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="bpdf-swatch bpdf-swatch-active" data-color="#F5A67D" data-alt="#E8887A" data-label="#9B7FD4" onclick="bpdfSelSwatch(this)" title="Peach (default)" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#F5A67D,#E8887A);border:2px solid transparent;cursor:pointer;outline:2px solid var(--c1);outline-offset:2px"></button>
+          <button class="bpdf-swatch" data-color="#2563EB" data-alt="#1D4ED8" data-label="#7C3AED" onclick="bpdfSelSwatch(this)" title="Blue" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#1D4ED8);border:2px solid transparent;cursor:pointer;outline:none"></button>
+          <button class="bpdf-swatch" data-color="#059669" data-alt="#047857" data-label="#065F46" onclick="bpdfSelSwatch(this)" title="Green" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#059669,#047857);border:2px solid transparent;cursor:pointer;outline:none"></button>
+          <button class="bpdf-swatch" data-color="#DC2626" data-alt="#B91C1C" data-label="#7F1D1D" onclick="bpdfSelSwatch(this)" title="Red" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#DC2626,#B91C1C);border:2px solid transparent;cursor:pointer;outline:none"></button>
+          <button class="bpdf-swatch" data-color="#7C3AED" data-alt="#6D28D9" data-label="#4C1D95" onclick="bpdfSelSwatch(this)" title="Purple" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#6D28D9);border:2px solid transparent;cursor:pointer;outline:none"></button>
+          <button class="bpdf-swatch" data-color="#D97706" data-alt="#B45309" data-label="#78350F" onclick="bpdfSelSwatch(this)" title="Amber" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#D97706,#B45309);border:2px solid transparent;cursor:pointer;outline:none"></button>
+          <button class="bpdf-swatch" data-color="#1c1c1e" data-alt="#3d3d3d" data-label="#666" onclick="bpdfSelSwatch(this)" title="Black" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#1c1c1e,#3d3d3d);border:2px solid transparent;cursor:pointer;outline:none"></button>
+        </div>
+      </div>
+
+      <!-- Font -->
+      <div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Font</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="bpdf-font-opt bpdf-font-active" data-font="-apple-system,'Helvetica Neue',sans-serif" data-name="System" onclick="bpdfSelFont(this)" style="padding:6px 14px;border-radius:100px;border:1.5px solid var(--c1);background:var(--c1-soft);color:var(--text);font-size:12px;cursor:pointer;font-family:-apple-system,'Helvetica Neue',sans-serif">System</button>
+          <button class="bpdf-font-opt" data-font="'Inter',sans-serif" data-name="Inter" onclick="bpdfSelFont(this)" style="padding:6px 14px;border-radius:100px;border:1.5px solid var(--border2);background:none;color:var(--text);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif">Inter</button>
+          <button class="bpdf-font-opt" data-font="Georgia,'Times New Roman',serif" data-name="Georgia" onclick="bpdfSelFont(this)" style="padding:6px 14px;border-radius:100px;border:1.5px solid var(--border2);background:none;color:var(--text);font-size:12px;cursor:pointer;font-family:Georgia,serif">Georgia</button>
+          <button class="bpdf-font-opt" data-font="'Courier New',Courier,monospace" data-name="Courier" onclick="bpdfSelFont(this)" style="padding:6px 14px;border-radius:100px;border:1.5px solid var(--border2);background:none;color:var(--text);font-size:12px;cursor:pointer;font-family:'Courier New',monospace">Courier</button>
+          <button class="bpdf-font-opt" data-font="'DM Sans',sans-serif" data-name="DM Sans" onclick="bpdfSelFont(this)" style="padding:6px 14px;border-radius:100px;border:1.5px solid var(--border2);background:none;color:var(--text);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif">DM Sans</button>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px">Notes <span style="font-weight:400;opacity:.6">(optional)</span></div>
+        <textarea class="ob-textarea" id="bpdf-note" placeholder="Add a note to appear at the bottom of the PDF — e.g. approved by, confidentiality notice, revision details…" style="height:72px;resize:vertical"></textarea>
+      </div>
+
+    </div>
+    <div class="ob-modal-footer">
+      <button class="ob-back-btn" onclick="document.getElementById('budget-pdf-modal').style.display='none'">Cancel</button>
+      <button class="ob-continue-btn" id="bpdf-confirm-btn" onclick="bpdfConfirm(false)">Export PDF</button>
+    </div>
+  </div>
+</div>
 </div>
 
 <div id="page-costume" class="page">
@@ -11255,7 +11311,7 @@ function runExportProductionPacket(dryRun) {
     <div class="pkt-budget-stat-row">
       <div class="pkt-bstat"><div class="pkt-bstat-l">Total Budget</div><div class="pkt-bstat-v">${budget.total!=null&&budget.total>0?fmtMoney(budget.total):'—'}</div></div>
       <div class="pkt-bstat"><div class="pkt-bstat-l">Spent</div><div class="pkt-bstat-v">${fmtMoney(totalSpent)}</div></div>
-      <div class="pkt-bstat"><div class="pkt-bstat-l">Remaining</div><div class="pkt-bstat-v">${budget.total?fmtMoney(Math.max(0,budget.total-totalSpent)):'—'}</div></div>
+      <div class="pkt-bstat"><div class="pkt-bstat-l">Remaining</div><div class="pkt-bstat-v">${budget.total?(remaining>=0?fmtMoney(remaining):'-'+fmtMoney(Math.abs(remaining))):'—'}</div></div>
       <div class="pkt-bstat"><div class="pkt-bstat-l">Entries</div><div class="pkt-bstat-v">${budget.expenses.length}</div></div>
     </div>
     ${Object.keys(deptTotals).length ? `
@@ -12426,14 +12482,44 @@ function renderBudget(){
   const spent = data.expenses.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
   const total = data.total||0;
   const remaining = total - spent;
+  const isOver = total > 0 && remaining < 0;
   const sub = document.getElementById('budget-subtitle');
   if(sub) sub.textContent = prod ? prod.title + (total?' · Budget: $'+total.toLocaleString():'') : 'No active production';
   const q = id => document.getElementById(id);
   if(q('b-total'))     q('b-total').textContent = total ? '$'+total.toLocaleString() : '—';
   if(q('b-spent'))     q('b-spent').textContent = '$'+spent.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
   if(q('b-spent-pct')) q('b-spent-pct').textContent = total ? Math.round(spent/total*100)+'% of total' : '';
-  if(q('b-remaining')) q('b-remaining').textContent = total ? '$'+Math.max(0,remaining).toLocaleString() : '—';
-  if(q('b-remaining-pct')) q('b-remaining-pct').textContent = total ? Math.round(Math.max(0,remaining)/total*100)+'% available' : '';
+
+  // Remaining — show negative with minus sign and red when over budget
+  if(q('b-remaining')) {
+    if (!total) {
+      q('b-remaining').textContent = '—';
+      q('b-remaining').className = 'budget-stat-num';
+    } else if (isOver) {
+      q('b-remaining').textContent = '-$' + Math.abs(remaining).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
+      q('b-remaining').className = 'budget-stat-num red';
+    } else {
+      q('b-remaining').textContent = '$' + remaining.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
+      q('b-remaining').className = 'budget-stat-num green';
+    }
+  }
+  if(q('b-remaining-pct')) {
+    if (!total) {
+      q('b-remaining-pct').textContent = '';
+    } else if (isOver) {
+      q('b-remaining-pct').textContent = Math.round(Math.abs(remaining)/total*100)+'% over budget';
+      q('b-remaining-pct').style.color = 'var(--danger, #e55)';
+    } else {
+      q('b-remaining-pct').textContent = Math.round(remaining/total*100)+'% available';
+      q('b-remaining-pct').style.color = '';
+    }
+  }
+
+  // Spent — turn orange/red warning when over budget
+  if(q('b-spent')) {
+    q('b-spent').className = isOver ? 'budget-stat-num red' : 'budget-stat-num red';
+  }
+
   if(q('b-count'))     q('b-count').textContent = data.expenses.length;
   const rows = document.getElementById('budget-rows');
   if(rows){
@@ -12462,10 +12548,27 @@ function renderBudget(){
       '<div style="margin-bottom:10px">'+
         '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">'+
           '<span>'+dept+'</span><span style="font-weight:600">$'+amt.toLocaleString()+'</span></div>'+
-        (total?'<div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:'+Math.min(100,Math.round(amt/total*100))+'%"></div></div>':'')+
+        (total?'<div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:'+Math.min(100,Math.round(amt/total*100))+'%"'+(isOver?';background:var(--c2)':'')+' ></div></div>':'')+
       '</div>'
     ).join('') || '<div style="font-size:12px;color:var(--text3);font-family:var(--font-body)">No expenses yet</div>';
   }
+
+  // Over-budget warning banner
+  const existingBanner = document.getElementById('budget-overbudget-banner');
+  if (existingBanner) existingBanner.remove();
+  if (isOver) {
+    const statsRow = document.getElementById('budget-stats-row');
+    if (statsRow) {
+      const banner = document.createElement('div');
+      banner.id = 'budget-overbudget-banner';
+      banner.style.cssText = 'margin:12px 0 0;padding:10px 16px;background:rgba(220,50,50,.08);border:1px solid rgba(220,50,50,.2);border-radius:10px;font-size:12px;color:#c0392b;display:flex;align-items:center;gap:8px;font-family:var(--font-body)';
+      banner.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
+        '<strong>Over budget by $' + Math.abs(remaining).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0}) + '</strong>' +
+        ' — ' + Math.round(Math.abs(remaining)/total*100) + '% above the $' + total.toLocaleString() + ' total.';
+      statsRow.insertAdjacentElement('afterend', banner);
+    }
+  }
+
   const inp = document.getElementById('budget-total-input');
   if(inp && total) inp.value = total;
 }
@@ -12534,7 +12637,15 @@ function exportBudgetCSV(){
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
 
-function _buildBudgetHTML(forSave) {
+function _buildBudgetHTML(forSave, opts) {
+  opts = opts || {};
+  const accentColor  = opts.accentColor  || '#F5A67D';
+  const accentAlt    = opts.accentAlt    || '#E8887A';
+  const accentLabel  = opts.accentLabel  || '#9B7FD4';
+  const fontStack    = opts.fontStack    || '-apple-system,"Helvetica Neue",sans-serif';
+  const version      = opts.version      || '';
+  const noteText     = opts.note         || '';
+
   const data = loadBudget();
   const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const fmtMoney = n => '$'+(parseFloat(n)||0).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
@@ -12548,169 +12659,229 @@ function _buildBudgetHTML(forSave) {
   const deptRows = Object.entries(deptTotals).sort((a,b)=>b[1]-a[1]);
   const maxDept = deptRows[0]?.[1] || 1;
 
-  // Color palette matching app accents
-  const COLORS = ['#F5A67D','#E8887A','#9B7FD4','#4CAF50','#2196F3','#FF9800','#9C27B0','#00BCD4','#FF5722','#607D8B'];
+  // Use accent color palette for dept bars
+  const COLORS = [accentColor, accentAlt, accentLabel, '#4CAF50','#2196F3','#FF9800','#9C27B0','#00BCD4','#FF5722','#607D8B'];
 
   const deptBreakdown = deptRows.map(([dept,amt],i) => `
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
       <div style="width:10px;height:10px;border-radius:50%;background:${COLORS[i%COLORS.length]};flex-shrink:0"></div>
-      <div style="flex:1;font-size:12px;color:#444">${esc(dept)}</div>
+      <div style="flex:1;font-size:12px;color:#444;font-family:${fontStack}">${esc(dept)}</div>
       <div style="width:120px;height:6px;background:#eee;border-radius:3px;overflow:hidden">
         <div style="width:${Math.round(amt/maxDept*100)}%;height:100%;background:${COLORS[i%COLORS.length]};border-radius:3px"></div>
       </div>
-      <div style="font-size:12px;font-weight:700;color:#1c1c1e;min-width:60px;text-align:right">${fmtMoney(amt)}</div>
+      <div style="font-size:12px;font-weight:700;color:#1c1c1e;min-width:60px;text-align:right;font-family:${fontStack}">${fmtMoney(amt)}</div>
     </div>`).join('');
 
   const expenseRows = data.expenses.map((e,i) => `
     <tr style="background:${i%2===0?'#f9f9f9':'#fff'}">
-      <td style="padding:9px 12px;font-weight:600;color:#1c1c1e">${esc(e.desc||'—')}</td>
-      <td style="padding:9px 12px;color:#555">${esc(e.dept||'—')}</td>
-      <td style="padding:9px 12px;font-weight:700;color:#1c1c1e">${fmtMoney(e.amount)}</td>
-      <td style="padding:9px 12px;color:#888">${esc(e.date||'')}</td>
-      ${e.notes ? `<td style="padding:9px 12px;color:#999;font-size:11px">${esc(e.notes)}</td>` : '<td style="padding:9px 12px"></td>'}
+      <td style="padding:9px 12px;font-weight:600;color:#1c1c1e;font-family:${fontStack}">${esc(e.desc||'—')}</td>
+      <td style="padding:9px 12px;color:#555;font-family:${fontStack}">${esc(e.dept||'—')}</td>
+      <td style="padding:9px 12px;font-weight:700;color:#1c1c1e;font-family:${fontStack}">${fmtMoney(e.amount)}</td>
+      <td style="padding:9px 12px;color:#888;font-family:${fontStack}">${esc(e.date||'')}</td>
+      ${e.notes ? `<td style="padding:9px 12px;color:#999;font-size:11px;font-family:${fontStack}">${esc(e.notes)}</td>` : '<td style="padding:9px 12px"></td>'}
     </tr>`).join('');
 
-  const remaining = data.total ? Math.max(0, data.total - totalSpent) : null;
+  const remaining = data.total != null ? (data.total - totalSpent) : null;
   const pct = data.total ? Math.round(totalSpent / data.total * 100) : null;
+  const isOver = pct !== null && pct > 100;
 
   return `<!DOCTYPE html><html><head><meta charset="UTF-8">
-  <title>Budget — ${esc(prodName)}</title>
+  <title>Budget${version ? ' ' + version : ''} — ${esc(prodName)}</title>
   <style>
-    body { font-family:-apple-system,'Helvetica Neue',sans-serif; margin:0; padding:0; background:#fff; color:#1c1c1e; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    body { font-family:${fontStack}; margin:0; padding:0; background:#fff; color:#1c1c1e; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
     @page { size:A4; margin:28mm 20mm; }
-    @media print { body { padding:0; } }
+    @media print { body { padding:0; } .no-print { display:none !important; } }
   </style>
   </head><body>
   <div style="padding:40px 44px;max-width:860px;margin:0 auto">
 
     <!-- Header -->
-    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:32px;padding-bottom:18px;border-bottom:2px solid #F5A67D">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:32px;padding-bottom:18px;border-bottom:2px solid ${accentColor}">
       <div>
-        <div style="font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#9B7FD4;margin-bottom:6px">${esc(prodName)} · BUDGET REPORT</div>
-        <div style="font-size:32px;font-weight:800;letter-spacing:-1px;color:#1c1c1e">Financial Summary</div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:${accentLabel};margin-bottom:6px;font-family:${fontStack}">${esc(prodName)} · BUDGET REPORT${version ? ' · ' + esc(version) : ''}</div>
+        <div style="font-size:32px;font-weight:800;letter-spacing:-1px;color:#1c1c1e;font-family:${fontStack}">Financial Summary</div>
       </div>
-      <div style="font-size:11px;color:#888;text-align:right">${dateStr}</div>
+      <div style="font-size:11px;color:#888;text-align:right;font-family:${fontStack}">${dateStr}</div>
     </div>
 
     <!-- Stats row -->
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:32px">
       <div style="background:#f9f9f9;border-radius:12px;padding:16px 18px;border:1px solid #eee">
-        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:8px">Total Budget</div>
-        <div style="font-size:22px;font-weight:800;color:#1c1c1e">${data.total ? fmtMoney(data.total) : '—'}</div>
-        <div style="font-size:10px;color:#aaa;margin-top:4px">Set in production</div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:8px;font-family:${fontStack}">Total Budget</div>
+        <div style="font-size:22px;font-weight:800;color:#1c1c1e;font-family:${fontStack}">${data.total ? fmtMoney(data.total) : '—'}</div>
+        <div style="font-size:10px;color:#aaa;margin-top:4px;font-family:${fontStack}">Set in production</div>
       </div>
       <div style="background:#f9f9f9;border-radius:12px;padding:16px 18px;border:1px solid #eee">
-        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:8px">Spent to Date</div>
-        <div style="font-size:22px;font-weight:800;color:#E8887A">${fmtMoney(totalSpent)}</div>
-        <div style="font-size:10px;color:#aaa;margin-top:4px">${pct !== null ? pct+'% of total' : '—'}</div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:8px;font-family:${fontStack}">Spent to Date</div>
+        <div style="font-size:22px;font-weight:800;color:${accentAlt};font-family:${fontStack}">${fmtMoney(totalSpent)}</div>
+        <div style="font-size:10px;color:#aaa;margin-top:4px;font-family:${fontStack}">${pct !== null ? pct+'% of total' : '—'}</div>
       </div>
       <div style="background:#f9f9f9;border-radius:12px;padding:16px 18px;border:1px solid #eee">
-        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:8px">Remaining</div>
-        <div style="font-size:22px;font-weight:800;color:#4CAF50">${remaining !== null ? fmtMoney(remaining) : '—'}</div>
-        <div style="font-size:10px;color:#aaa;margin-top:4px">${pct !== null ? (100-pct)+'% available' : '—'}</div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:8px;font-family:${fontStack}">Remaining</div>
+        <div style="font-size:22px;font-weight:800;color:${isOver ? '#E8887A' : '#4CAF50'};font-family:${fontStack}">${remaining !== null ? (remaining < 0 ? '-'+fmtMoney(Math.abs(remaining)) : fmtMoney(remaining)) : '—'}</div>
+        <div style="font-size:10px;color:${isOver ? '#c0392b' : '#aaa'};margin-top:4px;font-family:${fontStack}">${pct !== null ? (isOver ? (pct-100)+'% over budget' : (100-pct)+'% available') : '—'}</div>
       </div>
       <div style="background:#f9f9f9;border-radius:12px;padding:16px 18px;border:1px solid #eee">
-        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:8px">Expenses</div>
-        <div style="font-size:22px;font-weight:800;color:#1c1c1e">${data.expenses.length}</div>
-        <div style="font-size:10px;color:#aaa;margin-top:4px">logged entries</div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:8px;font-family:${fontStack}">Expenses</div>
+        <div style="font-size:22px;font-weight:800;color:#1c1c1e;font-family:${fontStack}">${data.expenses.length}</div>
+        <div style="font-size:10px;color:#aaa;margin-top:4px;font-family:${fontStack}">logged entries</div>
       </div>
     </div>
 
     <!-- Progress bar -->
     ${pct !== null ? `<div style="margin-bottom:28px">
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:#888;margin-bottom:6px">
-        <span>Budget utilisation</span><span>${pct}%</span>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:#888;margin-bottom:6px;font-family:${fontStack}">
+        <span>Budget utilisation</span><span style="color:${isOver?'#c0392b':'#888'};font-weight:${isOver?'700':'400'}">${pct}%${isOver?' — OVER BUDGET':''}</span>
       </div>
       <div style="height:8px;background:#eee;border-radius:100px;overflow:hidden">
-        <div style="width:${Math.min(pct,100)}%;height:100%;background:linear-gradient(90deg,#F5A67D,#E8887A);border-radius:100px"></div>
+        <div style="width:${Math.min(pct,100)}%;height:100%;background:${isOver?'linear-gradient(90deg,'+accentAlt+',#c0392b)':'linear-gradient(90deg,'+accentColor+','+accentAlt+')'};border-radius:100px"></div>
       </div>
+      ${isOver?`<div style="margin-top:8px;padding:8px 12px;background:#fdf0f0;border:1px solid #f5c6c6;border-radius:8px;font-size:11px;color:#c0392b;font-weight:600;font-family:${fontStack}">⚠ Over budget by ${remaining!==null?('-$'+Math.abs(remaining).toLocaleString()):'unknown'} (${pct-100}% above total)</div>`:''}
     </div>` : ''}
 
-    <!-- Two-column: dept breakdown + space -->
+    <!-- Dept breakdown -->
     ${deptRows.length ? `<div style="margin-bottom:32px">
-      <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#9B7FD4;margin-bottom:14px">By Department</div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${accentLabel};margin-bottom:14px;font-family:${fontStack}">By Department</div>
       ${deptBreakdown}
     </div>` : ''}
 
     <!-- Expense table -->
     ${data.expenses.length ? `
-    <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#9B7FD4;margin-bottom:10px">Full Expense Log</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${accentLabel};margin-bottom:10px;font-family:${fontStack}">Full Expense Log</div>
     <table style="width:100%;border-collapse:collapse;font-size:12px">
       <thead>
         <tr style="background:#1c1c1e;color:#fff">
-          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px;border-radius:6px 0 0 6px">Description</th>
-          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px">Department</th>
-          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px">Amount</th>
-          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px">Date</th>
-          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px;border-radius:0 6px 6px 0">Notes</th>
+          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px;border-radius:6px 0 0 6px;font-family:${fontStack}">Description</th>
+          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px;font-family:${fontStack}">Department</th>
+          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px;font-family:${fontStack}">Amount</th>
+          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px;font-family:${fontStack}">Date</th>
+          <th style="padding:9px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.5px;border-radius:0 6px 6px 0;font-family:${fontStack}">Notes</th>
         </tr>
       </thead>
       <tbody>${expenseRows}</tbody>
       <tfoot>
         <tr style="border-top:2px solid #eee">
-          <td colspan="2" style="padding:10px 12px;font-weight:700;font-size:12px;color:#888">TOTAL SPENT</td>
-          <td style="padding:10px 12px;font-weight:800;font-size:14px;color:#E8887A">${fmtMoney(totalSpent)}</td>
+          <td colspan="2" style="padding:10px 12px;font-weight:700;font-size:12px;color:#888;font-family:${fontStack}">TOTAL SPENT</td>
+          <td style="padding:10px 12px;font-weight:800;font-size:14px;color:${isOver?'#c0392b':accentAlt};font-family:${fontStack}">${fmtMoney(totalSpent)}</td>
           <td colspan="2"></td>
         </tr>
       </tfoot>
-    </table>` : '<div style="font-size:12px;color:#aaa;padding:20px 0">No expenses logged yet.</div>'}
+    </table>` : `<div style="font-size:12px;color:#aaa;padding:20px 0;font-family:${fontStack}">No expenses logged yet.</div>`}
+
+    <!-- Notes section -->
+    ${noteText ? `<div style="margin-top:32px;padding:18px 20px;background:#f9f9f9;border-left:4px solid ${accentColor};border-radius:0 10px 10px 0">
+      <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${accentLabel};margin-bottom:8px;font-family:${fontStack}">Notes</div>
+      <div style="font-size:12px;color:#444;line-height:1.6;white-space:pre-wrap;font-family:${fontStack}">${esc(noteText)}</div>
+    </div>` : ''}
 
     <!-- Footer -->
-    <div style="margin-top:40px;padding-top:16px;border-top:1px solid #eee;display:flex;justify-content:space-between;font-size:10px;color:#bbb">
+    <div style="margin-top:40px;padding-top:16px;border-top:1px solid #eee;display:flex;justify-content:space-between;font-size:10px;color:#bbb;font-family:${fontStack}">
       <span>80AD Production Hub</span>
-      <span>${esc(prodName)} · Budget Report · ${dateStr}</span>
+      <span>${esc(prodName)}${version ? ' · ' + esc(version) : ''} · Budget Report · ${dateStr}</span>
     </div>
   </div>
   ${forSave ? '' : '<script>window.onload=()=>{window.print();}<\/script>'}
   </body></html>`;
 }
 
+function bpdfSelSwatch(el) {
+  document.querySelectorAll('.bpdf-swatch').forEach(s => { s.classList.remove('bpdf-swatch-active'); s.style.outline = 'none'; });
+  el.classList.add('bpdf-swatch-active');
+  el.style.outline = '2px solid var(--c1)';
+  el.style.outlineOffset = '2px';
+}
+function bpdfSelFont(el) {
+  document.querySelectorAll('.bpdf-font-opt').forEach(f => {
+    f.classList.remove('bpdf-font-active');
+    f.style.borderColor = 'var(--border2)';
+    f.style.background = 'none';
+  });
+  el.classList.add('bpdf-font-active');
+  el.style.borderColor = 'var(--c1)';
+  el.style.background = 'var(--c1-soft)';
+}
+
 function exportBudgetPDF() {
   const data = loadBudget();
   if (!data.expenses.length && !data.total) { flashMsg('No budget data to export'); return; }
-  const html = _buildBudgetHTML(false);
-  const win = window.open('', '_blank');
-  if (!win) { flashMsg('Please allow pop-ups to export PDF'); return; }
-  win.document.write(html);
-  win.document.close();
+  // Pre-fill version based on how many times we've exported
+  const vKey = 'budgetPdfVer_' + (activeProdId||'x');
+  const lastVer = parseInt(localStorage.getItem(vKey)||'0') + 1;
+  const el = id => document.getElementById(id);
+  if (el('bpdf-version')) el('bpdf-version').value = 'v' + lastVer;
+  if (el('bpdf-note')) el('bpdf-note').value = '';
+  // Reset swatch selection to first
+  document.querySelectorAll('.bpdf-swatch').forEach((s,i) => s.classList.toggle('bpdf-swatch-active', i===0));
+  document.querySelectorAll('.bpdf-font-opt').forEach((s,i) => s.classList.toggle('bpdf-font-active', i===0));
+  el('budget-pdf-modal').style.display = 'flex';
+  setTimeout(() => el('bpdf-version')?.focus(), 80);
+}
+
+function bpdfConfirm(forSave) {
+  const el = id => document.getElementById(id);
+  const version = el('bpdf-version')?.value.trim() || '';
+  const note    = el('bpdf-note')?.value.trim() || '';
+  const activeSwatch = document.querySelector('.bpdf-swatch.bpdf-swatch-active');
+  const accentColor  = activeSwatch?.dataset.color || '#F5A67D';
+  const accentAlt    = activeSwatch?.dataset.alt   || '#E8887A';
+  const accentLabel  = activeSwatch?.dataset.label || '#9B7FD4';
+  const activeFont   = document.querySelector('.bpdf-font-opt.bpdf-font-active');
+  const fontStack    = activeFont?.dataset.font || '-apple-system,"Helvetica Neue",sans-serif';
+  const fontName     = activeFont?.dataset.name || 'System';
+
+  el('budget-pdf-modal').style.display = 'none';
+
+  // Track version
+  const vKey = 'budgetPdfVer_' + (activeProdId||'x');
+  const verNum = parseInt(version.replace(/\D/g,'')) || (parseInt(localStorage.getItem(vKey)||'0')+1);
+  localStorage.setItem(vKey, verNum);
+
+  const opts = { version, note, accentColor, accentAlt, accentLabel, fontStack, fontName };
+  const html = _buildBudgetHTML(forSave, opts);
+
+  if (forSave) {
+    // Save to documents
+    const fmtMoney = n => '$'+(parseFloat(n)||0).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
+    const data = loadBudget();
+    const prodName = (() => { try { const p=(JSON.parse(localStorage.getItem('prods_v2')||'[]')).find(p=>p.id===activeProdId); return p?p.name:''; } catch(e){return '';} })();
+    const totalSpent = data.expenses.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+    const dateStr = new Date().toISOString().split('T')[0];
+    const uploadedKey = 'uploaded_docs_' + (activeProdId||'x');
+    let docs = [];
+    try { docs = JSON.parse(localStorage.getItem(uploadedKey)||'[]'); } catch(e) {}
+    docs.push({
+      id:   'budget_pdf_' + Date.now(),
+      name: (prodName ? prodName + ' — ' : '') + 'Budget Report' + (version ? ' ' + version : ''),
+      ext:  'HTML', cat: 'budget', date: dateStr, size: html.length,
+      dataUrl: 'data:text/html;base64,' + btoa(unescape(encodeURIComponent(html))),
+      meta: fmtMoney(totalSpent) + ' · ' + data.expenses.length + ' expenses' + (version ? ' · ' + version : ''),
+    });
+    try { localStorage.setItem(uploadedKey, JSON.stringify(docs)); }
+    catch(e) { flashMsg('Storage full — try deleting old documents first'); return; }
+    const navLink = document.querySelector('.nav-link[onclick*="documents"]');
+    showPage('documents', navLink); renderDocs();
+    setDocsFilter('budget', document.querySelector('.docs-cat[onclick*="budget"]'));
+    setTimeout(() => flashMsg('Budget saved to Documents' + (version ? ' as ' + version : '')), 200);
+  } else {
+    const win = window.open('', '_blank');
+    if (!win) { flashMsg('Please allow pop-ups to export PDF'); return; }
+    win.document.write(html);
+    win.document.close();
+  }
 }
 
 function saveBudgetToDocuments() {
   const data = loadBudget();
   if (!data.expenses.length && !data.total) { flashMsg('No budget data to save'); return; }
-  const html = _buildBudgetHTML(true);
-  const prodName = (() => { try { const p=(JSON.parse(localStorage.getItem('prods_v2')||'[]')).find(p=>p.id===activeProdId); return p?p.name:''; } catch(e){return '';} })();
-  const dateStr = new Date().toISOString().split('T')[0];
-  const fmtMoney = n => '$'+(parseFloat(n)||0).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
-  const totalSpent = data.expenses.reduce((sum,e)=>sum+(parseFloat(e.amount)||0),0);
-
-  // Save into the uploaded-docs store so it appears in Documents tab
-  const uploadedKey = 'uploaded_docs_' + (activeProdId||'x');
-  let docs = [];
-  try { docs = JSON.parse(localStorage.getItem(uploadedKey)||'[]'); } catch(e) {}
-  const entry = {
-    id:   'budget_pdf_' + Date.now(),
-    name: (prodName ? prodName + ' — ' : '') + 'Budget Report',
-    ext:  'HTML',
-    cat:  'budget',
-    date: dateStr,
-    size: html.length,
-    dataUrl: 'data:text/html;base64,' + btoa(unescape(encodeURIComponent(html))),
-    meta: fmtMoney(totalSpent) + ' · ' + data.expenses.length + ' expenses',
-  };
-  docs.push(entry);
-  try {
-    localStorage.setItem(uploadedKey, JSON.stringify(docs));
-  } catch(e) {
-    flashMsg('Storage full — try deleting old documents first');
-    return;
-  }
-  // Navigate to Documents → Budget filter
-  const navLink = document.querySelector('.nav-link[onclick*="documents"]');
-  showPage('documents', navLink);
-  renderDocs();
-  setDocsFilter('budget', document.querySelector('.docs-cat[onclick*="budget"]'));
-  setTimeout(() => flashMsg('Budget saved to Documents'), 200);
+  // Reuse the PDF options modal, but confirm routes to save
+  exportBudgetPDF();
+  // Switch the confirm button to "Save to Documents"
+  setTimeout(() => {
+    const btn = document.getElementById('bpdf-confirm-btn');
+    if (btn) { btn.textContent = 'Save to Documents'; btn.onclick = () => bpdfConfirm(true); }
+    const title = document.getElementById('bpdf-modal-title');
+    if (title) title.textContent = 'Save Budget to Documents';
+  }, 20);
 }
 
 // ════════════════════════════════════════════════
