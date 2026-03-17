@@ -9404,7 +9404,7 @@ function sseBuild80AD(d) {
     <div>
       <div class="ssp-prod-label" style="color:rgba(255,255,255,.7);font-family:${f}">Shooting Schedule</div>
       <div class="ssp-prod-title-big" style="color:#fff;font-family:${f}">${ie('sse-company',d.company,'min-width:80px')}</div>
-      <div style="font-size:.8em;color:rgba(255,255,255,.75);margin-top:4px;font-family:${f}">${ie('sse-location',d.location,'min-width:60px')}</div>
+      <div style="font-size:.8em;color:rgba(255,255,255,.95);margin-top:4px;font-family:${f};font-weight:500;letter-spacing:.01em">${ie('sse-location',d.location,'min-width:60px')}</div>
     </div>
     <div style="text-align:right">
       <div class="ssp-day-lbl" style="color:rgba(255,255,255,.65);font-family:${f}">Crew Call</div>
@@ -9480,7 +9480,7 @@ function sseBuildClassic(d) {
   <div>
     <div class="ssp-prod-label" style="font-family:${f}">Shooting Schedule</div>
     <div class="ssp-prod-title-big" style="font-family:${f}">${d.company||'Production'}</div>
-    ${d.location ? `<div style="font-size:.8em;opacity:.75;margin-top:3px;font-family:${f}">${d.location}</div>` : ''}
+    ${d.location ? `<div style="font-size:.8em;color:rgba(255,255,255,.95);font-weight:500;margin-top:3px;font-family:${f}">${d.location}</div>` : ''}
   </div>
   <div style="text-align:right">
     <div class="ssp-day-lbl" style="font-family:${f}">Crew Call</div>
