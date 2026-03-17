@@ -11822,14 +11822,16 @@ ${propsPage}
       <!-- Step 1: Drop zone -->
       <div id="pb-import-step1">
         <div class="pb-import-dropzone" id="pb-import-dropzone"
+             onclick="document.getElementById('pb-import-file-input').click()"
              ondragover="event.preventDefault();this.classList.add('drag-over')"
              ondragleave="this.classList.remove('drag-over')"
-             ondrop="pbImportHandleDrop(event)">
+             ondrop="pbImportHandleDrop(event)"
+             style="cursor:pointer">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:10px;opacity:.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           <div class="pb-import-drop-title">Drop a CSV here or click to browse</div>
           <div class="pb-import-drop-sub">Accepts CSV files — columns: name, role, email, phone, company (or dept)</div>
           <input type="file" id="pb-import-file-input" accept=".csv" style="display:none" onchange="pbImportHandleFile(this.files[0])">
-          <button class="pill-btn" style="margin-top:14px" onclick="document.getElementById('pb-import-file-input').click()">Browse</button>
+          <button class="pill-btn" style="margin-top:14px" onclick="event.stopPropagation();document.getElementById('pb-import-file-input').click()">Browse CSV</button>
         </div>
       </div>
       <!-- Step 2: Loading -->
@@ -12802,8 +12804,6 @@ function exportPhonebookCSV() {
   const contacts = loadContacts();
   if (!contacts.length) { flashMsg('No contacts to export'); return; }
 
-  // 343Leads importPhonebook expects: name, role, email, phone, company
-  // Map 80AD fields: name=name, role=role, email=email, phone=phone, dept→company
   const escape = v => {
     const s = (v || '').replace(/"/g, '""');
     return /[,"\n]/.test(s) ? '"' + s + '"' : s;
@@ -12819,8 +12819,10 @@ function exportPhonebookCSV() {
   const a    = document.createElement('a');
   a.href     = url;
   a.download = '80ad-contacts-343leads.csv';
+  a.style.display = 'none';
+  document.body.appendChild(a);
   a.click();
-  URL.revokeObjectURL(url);
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 200);
   flashMsg('Exported ' + contacts.length + ' contact' + (contacts.length !== 1 ? 's' : ''));
 }
 function loadContacts(){ return JSON.parse(localStorage.getItem(pbKey())||'[]'); }
