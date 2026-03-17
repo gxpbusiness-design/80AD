@@ -8970,6 +8970,22 @@ function sseSelectType(t) {
 }
 
 // ── Add row ──
+function sseTimeToMins(t) {
+  if (!t) return 9999;
+  // Handle "HH:MM AM/PM" or "HH:MM"
+  const m = t.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+  if (!m) return 9999;
+  let h = parseInt(m[1]), min = parseInt(m[2]);
+  const ap = (m[3]||'').toUpperCase();
+  if (ap === 'PM' && h !== 12) h += 12;
+  if (ap === 'AM' && h === 12) h = 0;
+  return h * 60 + min;
+}
+
+function sseSortByTime() {
+  ssRows.sort((a, b) => sseTimeToMins(a.time) - sseTimeToMins(b.time));
+}
+
 function sseAddRow() {
   const t = sseCurrentType;
   const v = id => (document.getElementById(id)||{}).value?.trim() || '';
@@ -8990,9 +9006,8 @@ function sseAddRow() {
   } else if (t === 'wrap') {
     row = { type:'wrap', time:vt('sse-wf-time'), who:v('sse-wf-who'), notes:v('sse-wf-notes') };
   }
-  const wrapIdx = ssRows.findIndex(r => r.type === 'wrap');
-  if (t !== 'wrap' && wrapIdx !== -1) ssRows.splice(wrapIdx, 0, row);
-  else ssRows.push(row);
+  ssRows.push(row);
+  sseSortByTime();
   // Clear fields
   document.querySelectorAll('#sse-f-'+t+' .sse-input').forEach(i => i.value = '');
   sseRenderRowList();
@@ -9155,6 +9170,7 @@ function sseSaveEditRow() {
 
   document.getElementById('sse-edit-modal').classList.remove('open');
   _sseEditIdx = null;
+  sseSortByTime();
   sseRenderRowList(); sseRender(); sseSaveData();
 }
 
