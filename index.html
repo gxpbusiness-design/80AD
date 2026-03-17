@@ -5321,8 +5321,8 @@ select.cse-input { cursor:pointer; }
 .about-sec-label { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--c1); font-family:var(--font-display); margin-bottom:6px; }
 .about-sec-title { font-family:var(--font-display); font-size:clamp(24px,3vw,40px); font-weight:800; letter-spacing:-1px; color:var(--text); margin:0; }
 .about-scene-list { background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
-.about-scene-hdr { display:grid; grid-template-columns:60px 1fr 1fr 80px 60px 60px; gap:0; padding:8px 16px; background:var(--bg3); border-bottom:1px solid var(--border); font-size:8px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text4); font-family:var(--font-display); }
-.about-scene-row { display:grid; grid-template-columns:60px 1fr 1fr 80px 60px 60px; gap:0; padding:11px 16px; border-bottom:1px solid var(--border); align-items:center; cursor:pointer; transition:background .12s; }
+.about-scene-hdr { display:grid; grid-template-columns:60px 28px 1fr 160px 70px 60px 36px; gap:0; padding:8px 16px; background:var(--bg3); border-bottom:1px solid var(--border); font-size:8px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text4); font-family:var(--font-display); }
+.about-scene-row { display:grid; grid-template-columns:60px 28px 1fr 160px 70px 60px 36px; gap:0; padding:11px 16px; border-bottom:1px solid var(--border); align-items:center; cursor:pointer; transition:background .12s; }
 .about-scene-row:last-child { border-bottom:none; }
 .about-scene-row:hover { background:var(--hover); }
 .about-scene-row span { font-size:12px; color:var(--text); font-family:var(--font-body); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -5425,7 +5425,8 @@ textarea.msg-input{min-height:80px;resize:vertical;line-height:1.6}
 .msg-dash-bar-wrap{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
 .msg-dash-bar{height:100%;background:var(--c1);border-radius:3px;transition:width .4s}
 /* Sent list */
-.msg-sent-row{display:flex;align-items:center;gap:13px;padding:11px 16px;border-radius:13px;border:1px solid var(--border);background:var(--card);margin-bottom:9px}
+.msg-sent-row{display:flex;align-items:center;gap:13px;padding:11px 16px;border-radius:13px;border:1px solid var(--border);background:var(--card);margin-bottom:9px;transition:border-color .15s,background .15s}
+.msg-sent-row:hover{border-color:var(--c1);background:var(--hover)}
 .msg-sent-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .msg-sent-name{font-size:14px;font-weight:500;color:var(--text)}
 .msg-sent-role{font-size:12px;color:var(--text3)}
@@ -14172,7 +14173,7 @@ function aboutRenderScenes() {
       ondragend="aboutDragEnd()" style="transition:background .1s">
       <span class="sc-num" style="color:var(--text3);font-size:10px">${i+1}</span>
       <span style="cursor:grab;color:var(--text4);font-size:16px;line-height:1;padding-right:4px" title="Drag to reorder">⠿</span>
-      <span>${s.name||'—'}</span>
+      <span style="font-size:14px;font-weight:500;color:var(--text)">${s.name||'—'}</span>
       <span style="color:var(--text2)">${s.loc||'—'}</span>
       <span class="sc-ie">${s.ie||'INT'}</span>
       <span style="color:var(--text3)">${s.pages||'—'}</span>
@@ -14423,7 +14424,7 @@ function aboutScrollTo(idx) {
       </div>
       <div class="about-scene-list" id="about-scene-list">
         <div class="about-scene-hdr">
-          <span>SC #</span><span>Scene Name</span><span>Location</span><span>INT/EXT</span><span>Pages</span><span></span>
+          <span>SC #</span><span></span><span>Scene Name</span><span>Location</span><span>INT/EXT</span><span>Pages</span><span></span>
         </div>
         <div id="about-scene-rows"></div>
       </div>
@@ -17889,7 +17890,7 @@ function msgRenderSentList(){
   if(!_msgSentList.length){el.innerHTML='<div style="padding:32px;text-align:center;color:var(--text3);font-size:13px">No sent messages yet</div>';return;}
   el.innerHTML=_msgSentList.map(function(m,i){
     var date=m.savedAt?new Date(m.savedAt).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
-    return '<div class="msg-sent-row"><div class="msg-sent-dot" style="background:'+(m.color||'var(--c1)')+'"></div><div><div class="msg-sent-name">'+msgEsc(m.name||'Unnamed')+'</div><div class="msg-sent-role">'+msgEsc(m.role||'-')+' / '+msgEsc(m.project||'-')+'</div></div><div class="msg-sent-date">'+date+'</div><div class="msg-sent-actions"><button class="msg-sent-action" onclick="msgEditSent('+i+')">Edit</button><button class="msg-sent-action" onclick="msgExportSent('+i+')">PDF</button><button class="msg-sent-action" style="color:var(--text4)" onclick="msgDeleteSent('+i+')">x</button></div></div>';
+    return '<div class="msg-sent-row" onclick="msgEditSent('+i+')" style="cursor:pointer" title="Click to edit"><div class="msg-sent-dot" style="background:'+(m.color||'var(--c1)')+'"></div><div style="flex:1;min-width:0"><div class="msg-sent-name">'+msgEsc(m.name||'Unnamed')+'</div><div class="msg-sent-role">'+msgEsc(m.role||'-')+' / '+msgEsc(m.project||'-')+'</div></div><div class="msg-sent-date">'+date+'</div><div class="msg-sent-actions" onclick="event.stopPropagation()"><button class="msg-sent-action" onclick="msgEditSent('+i+')">Edit</button><button class="msg-sent-action" onclick="msgExportSent('+i+')">PDF</button><button class="msg-sent-action" style="color:var(--text4)" onclick="msgDeleteSent('+i+')">x</button></div></div>';
   }).join('');
 }
 function msgEditSent(i){
