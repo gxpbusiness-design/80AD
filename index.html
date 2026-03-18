@@ -5321,8 +5321,8 @@ select.cse-input { cursor:pointer; }
 .about-sec-label { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--c1); font-family:var(--font-display); margin-bottom:6px; }
 .about-sec-title { font-family:var(--font-display); font-size:clamp(24px,3vw,40px); font-weight:800; letter-spacing:-1px; color:var(--text); margin:0; }
 .about-scene-list { background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
-.about-scene-hdr { display:grid; grid-template-columns:60px 28px 1fr 160px 70px 60px 36px; gap:0; padding:8px 16px; background:var(--bg3); border-bottom:1px solid var(--border); font-size:8px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text4); font-family:var(--font-display); }
-.about-scene-row { display:grid; grid-template-columns:60px 28px 1fr 160px 70px 60px 36px; gap:0; padding:11px 16px; border-bottom:1px solid var(--border); align-items:center; cursor:pointer; transition:background .12s; }
+.about-scene-hdr { display:grid; grid-template-columns:60px 1fr 1fr 80px 60px 60px; gap:0; padding:8px 16px; background:var(--bg3); border-bottom:1px solid var(--border); font-size:8px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text4); font-family:var(--font-display); }
+.about-scene-row { display:grid; grid-template-columns:60px 1fr 1fr 80px 60px 60px; gap:0; padding:11px 16px; border-bottom:1px solid var(--border); align-items:center; cursor:pointer; transition:background .12s; }
 .about-scene-row:last-child { border-bottom:none; }
 .about-scene-row:hover { background:var(--hover); }
 .about-scene-row span { font-size:12px; color:var(--text); font-family:var(--font-body); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -5425,8 +5425,7 @@ textarea.msg-input{min-height:80px;resize:vertical;line-height:1.6}
 .msg-dash-bar-wrap{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
 .msg-dash-bar{height:100%;background:var(--c1);border-radius:3px;transition:width .4s}
 /* Sent list */
-.msg-sent-row{display:flex;align-items:center;gap:13px;padding:11px 16px;border-radius:13px;border:1px solid var(--border);background:var(--card);margin-bottom:9px;transition:border-color .15s,background .15s}
-.msg-sent-row:hover{border-color:var(--c1);background:var(--hover)}
+.msg-sent-row{display:flex;align-items:center;gap:13px;padding:11px 16px;border-radius:13px;border:1px solid var(--border);background:var(--card);margin-bottom:9px}
 .msg-sent-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .msg-sent-name{font-size:14px;font-weight:500;color:var(--text)}
 .msg-sent-role{font-size:12px;color:var(--text3)}
@@ -5476,6 +5475,104 @@ select.msg-prelim-input{cursor:pointer;-webkit-appearance:none;appearance:none;b
 /* ── Flyer text visibility ── */
 .msg-flyer-dark{color:#ffffff !important}
 .msg-flyer-light{color:#0a0a0a !important}
+
+/* ═══════ LIVE CALL SHEET EDITOR ═══════ */
+#page-callsheets{display:none;flex-direction:column;}
+#page-callsheets.active{display:flex;}
+#cs-list-view-wrapper.hidden{display:none!important;}
+#cs-editor-view{display:none;flex-direction:column;overflow:hidden;padding:14px 60px 0;margin-top:92px;height:calc(100vh - 92px);}
+.clf-canvas{flex:1;overflow-y:auto;overflow-x:hidden;background:var(--bg3);display:flex;flex-direction:column;align-items:center;padding:20px 0 80px;gap:8px;}
+.clf-page-lbl{font-size:8px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--text4);align-self:center;margin-bottom:2px;}
+.clf-sheet{width:816px;background:#fff;flex-shrink:0;box-shadow:0 4px 36px rgba(0,0,0,.14),0 1px 6px rgba(0,0,0,.08);border-radius:4px;color:#111;font-family:'Inter',sans-serif;transform-origin:top center;transform:scale(.75);margin-bottom:-250px;}
+.clf-field{outline:none;min-width:20px;}
+.clf-field:empty::before{content:attr(data-ph);opacity:.3;pointer-events:none;}
+.clf-field:not(.dark):hover:not(:focus){background:rgba(255,255,255,.12);border-radius:3px;}
+.clf-field:not(.dark):focus{background:rgba(255,255,255,.18);border-radius:3px;box-shadow:0 0 0 1.5px rgba(255,255,255,.6);}
+.clf-field.dark{color:#111;}
+.clf-field.dark:empty::before{color:#bbb;}
+.clf-field.dark:hover:not(:focus){background:rgba(245,166,125,.07);border-radius:3px;}
+.clf-field.dark:focus{background:#fff9f6;border-radius:3px;box-shadow:0 0 0 1.5px #F5A67D;}
+.clf-hdr{background:linear-gradient(135deg,#F5A67D 0%,#E8887A 40%,#9B7FD4 100%);padding:22px 24px 22px;position:relative;min-height:220px;display:flex;flex-direction:column;justify-content:flex-end;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.clf-hdr-logo{position:absolute;top:18px;right:20px;width:110px;height:90px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.18);}
+.clf-hdr-logo img{width:100%;height:100%;object-fit:contain;}
+.clf-hdr-logo-txt{font-size:9px;color:#ccc;text-align:center;padding:8px;line-height:1.4;}
+.clf-hdr-logo:hover .clf-hdr-logo-txt{color:#F5A67D;}
+.clf-hdr-call-block{position:absolute;right:20px;top:122px;text-align:right;}
+.clf-hdr-call-lbl{font-size:7.5px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:2px;}
+.clf-hdr-call-time{font-size:36px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1;min-width:80px;min-height:40px;display:block;}
+.clf-hdr-call-date{font-size:9px;color:rgba(255,255,255,.65);margin-top:3px;}
+.clf-company-field{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.75);margin-bottom:5px;min-height:13px;}
+.clf-title-field{font-size:30px;font-weight:900;color:#fff;letter-spacing:-.5px;line-height:1.1;min-height:36px;margin-bottom:12px;max-width:560px;}
+.clf-loc-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.2);border-radius:100px;padding:4px 12px 4px 6px;}
+.clf-loc-type-group{display:inline-flex;gap:2px;}
+.clf-loc-btn{padding:2px 7px;border-radius:100px;font-size:7.5px;font-weight:800;letter-spacing:.5px;border:1px solid rgba(255,255,255,.4);background:none;color:rgba(255,255,255,.6);cursor:pointer;transition:all .12s;font-family:'Inter',sans-serif;}
+.clf-loc-btn.active{background:#fff;color:#E8887A;border-color:transparent;}
+.clf-loc-addr{font-size:10px;font-weight:700;color:#fff;min-width:40px;min-height:14px;}
+.clf-info-strip{display:grid;grid-template-columns:1fr 1fr 1fr 2fr;background:#fff;}
+.clf-info-cell{padding:10px 16px;border-right:1px solid #f0f0f0;border-bottom:1px solid #f0f0f0;}
+.clf-info-cell:last-child{border-right:none;}
+.clf-info-lbl{font-size:7px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:#bbb;margin-bottom:3px;}
+.clf-info-inp{background:none;border:none;outline:none;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:#111;width:100%;cursor:text;}
+.clf-info-inp::placeholder{color:#aaa;}
+.clf-info-inp:focus{background:#fff9f6;border-radius:4px;outline:1.5px solid #F5A67D;}
+.clf-safety-bar{padding:7px 24px;background:#fafafa;border-bottom:1px solid #ebebeb;text-align:center;}
+.clf-safety-txt{font-size:7.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#333;min-height:11px;}
+.clf-body-cols{display:grid;grid-template-columns:1fr 1.7fr;border-bottom:1px solid #f0f0f0;}
+.clf-col{padding:14px 16px 12px;}
+.clf-col-right{border-left:1px solid #f0f0f0;}
+.clf-col-hdr{display:flex;align-items:center;gap:6px;margin-bottom:10px;}
+.clf-col-dot{width:7px;height:7px;border-radius:50%;background:#F5A67D;flex-shrink:0;}
+.clf-col-dot.blue{background:#5BA3C9;}
+.clf-col-title{font-size:9px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:#111;}
+.clf-crew-tbl{width:100%;border-collapse:collapse;table-layout:auto;}
+.clf-crew-tbl td{padding:3px 4px 3px 0;vertical-align:middle;}
+.clf-crew-tbl tr:hover .clf-del-btn{opacity:1;}
+.clf-pos-cell{font-size:11px;font-style:italic;color:#555;white-space:nowrap;min-width:80px;max-width:90px;overflow:hidden;text-overflow:ellipsis;}
+.clf-name-cell{font-size:13px;font-weight:700;color:#111;white-space:nowrap;min-width:90px;max-width:100px;overflow:hidden;text-overflow:ellipsis;}
+.clf-phone-cell{font-size:11px;color:#333;white-space:nowrap;width:100%;padding-left:0;}
+.clf-scene-tbl{width:100%;border-collapse:collapse;}
+.clf-scene-tbl th{font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#888;padding:0 6px 5px 0;text-align:left;border-bottom:1px solid #ebebeb;}
+.clf-scene-tbl td{padding:3px 6px 3px 0;vertical-align:middle;border-bottom:1px solid #f0f0f0;color:#111;}
+.clf-scene-tbl tr:hover .clf-del-btn{opacity:1;}
+.clf-cast-section{padding:12px 16px 10px;border-bottom:1px solid #f0f0f0;}
+.clf-cast-tbl{width:100%;border-collapse:collapse;}
+.clf-cast-tbl th{font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#888;padding:0 8px 5px;text-align:left;border-bottom:1px solid #ebebeb;}
+.clf-cast-tbl td{padding:5px 8px;vertical-align:middle;border-bottom:1px solid #f0f0f0;color:#111;}
+.clf-cast-tbl tr:hover .clf-del-btn{opacity:1;}
+.clf-status-chip{display:inline-block;padding:2px 7px;border-radius:100px;font-size:9px;font-weight:700;cursor:pointer;transition:all .12s;user-select:none;}
+.clf-notes-props{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #f0f0f0;}
+.clf-notes-col{padding:12px 16px;border-right:1px solid #f0f0f0;}
+.clf-props-col{padding:12px 16px;}
+.clf-np-lbl{font-size:7px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:#888;margin-bottom:6px;}
+.clf-notes-txt{font-size:11px;color:#222;line-height:1.65;min-height:28px;white-space:pre-wrap;}
+.clf-props-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px;min-height:10px;}
+.clf-prop-chip{background:#f5f5f5;border:1px solid #ebebeb;border-radius:100px;padding:3px 8px 3px 10px;font-size:10px;color:#555;display:flex;align-items:center;gap:4px;}
+.clf-prop-chip button{background:none;border:none;color:#ccc;cursor:pointer;font-size:12px;padding:0;line-height:1;}
+.clf-prop-chip button:hover{color:#e05252;}
+.clf-prop-add-row{display:flex;gap:5px;align-items:center;}
+.clf-prop-inp{flex:1;background:none;border:1.5px dashed #ddd;border-radius:5px;padding:4px 8px;font-size:10.5px;font-family:'Inter',sans-serif;color:#333;outline:none;}
+.clf-prop-inp:focus{border-color:#F5A67D;border-style:solid;}
+.clf-onset-section{padding:12px 16px 20px;}
+.clf-onset-line{border-bottom:1px solid #ebebeb;height:24px;}
+.clf-cell{font-size:11px;color:#111;padding:3px 5px;min-height:20px;border-radius:3px;outline:none;display:block;transition:background .1s;min-width:20px;}
+.clf-cell[data-col="desc"]{white-space:normal;}
+.clf-cell[data-col="pos"],.clf-cell[data-col="name"],.clf-cell[data-col="phone"]{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.clf-cell:empty::before{content:attr(data-ph);color:#bbb;pointer-events:none;}
+.clf-cell:empty::before{content:attr(data-ph);color:#ddd;pointer-events:none;}
+.clf-cell:hover{background:rgba(245,166,125,.07);}
+.clf-cell:focus{background:#fff8f5;outline:1.5px solid #F5A67D;}
+.clf-sel-cell{background:none;border:none;outline:none;font-family:'Inter',sans-serif;font-size:11px;color:#333;cursor:pointer;padding:3px 2px;-webkit-appearance:none;appearance:none;}
+.clf-sel-cell:focus{background:#fff8f5;outline:1.5px solid #F5A67D;border-radius:3px;}
+.clf-del-btn{background:none;border:none;color:#ddd;cursor:pointer;font-size:12px;padding:2px 4px;border-radius:3px;opacity:0;transition:all .1s;line-height:1;}
+.clf-del-btn:hover{color:#e05252;}
+.clf-add-btn{margin-top:5px;font-size:9px;color:#bbb;cursor:pointer;background:none;border:1.5px dashed #e8e8e8;border-radius:5px;padding:4px 10px;width:100%;text-align:left;transition:all .13s;font-family:'Inter',sans-serif;}
+.clf-add-btn:hover{border-color:#F5A67D;color:#F5A67D;background:rgba(245,166,125,.04);}
+.clf-pb-btn{background:none;border:1px solid #e8e8e8;border-radius:5px;padding:3px 8px;cursor:pointer;color:#888;transition:all .12s;font-size:9px;line-height:1.4;flex-shrink:0;display:inline-flex;align-items:center;gap:4px;}
+.clf-pb-btn:hover{border-color:#F5A67D;color:#F5A67D;}
+.clf-accent-swatch{width:16px;height:16px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .13s;flex-shrink:0;position:relative;display:inline-block;}
+.clf-accent-swatch:hover,.clf-accent-swatch.active{border-color:var(--text2);transform:scale(1.15);}
+.clf-accent-custom{background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red);overflow:hidden;}
+.clf-accent-custom input[type=color]{position:absolute;inset:-4px;width:calc(100%+8px);height:calc(100%+8px);opacity:0;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -7173,461 +7270,193 @@ select.msg-prelim-input{cursor:pointer;-webkit-appearance:none;appearance:none;b
      CALL SHEETS
 ══════════════════════════════════════════ -->
 <div id="page-callsheets" class="page">
-<div class="inner-page" style="padding-bottom:0">
 
-  <!-- ── LIST VIEW ── -->
-  <div id="cs-list-view">
-    <div class="inner-header">
-      <div>
-        <div class="inner-title"><span class="t-accent">Call</span> Sheets</div>
-        <div class="inner-subtitle" id="cs-subtitle">No active production</div>
+  <!-- LIST VIEW -->
+  <div class="inner-page" style="padding-bottom:60px" id="cs-list-view-wrapper">
+    <div id="cs-list-view">
+      <div class="inner-header">
+        <div>
+          <div class="inner-title"><span class="t-accent">Call</span> Sheets</div>
+          <div class="inner-subtitle" id="cs-subtitle">No active production</div>
+        </div>
+        <div class="inner-actions">
+          <button class="pill-btn" onclick="cseOpenImportModal()" style="gap:6px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Import
+          </button>
+          <button class="pill-btn accent" onclick="cseOpenNew()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px"><path d="M12 5v14M5 12h14"/></svg>
+            New Call Sheet
+          </button>
+        </div>
       </div>
-      <div class="inner-actions">
-        <button class="pill-btn" onclick="cseOpenImportModal()" style="gap:6px">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          Import
-        </button>
-        <button class="pill-btn accent" onclick="cseOpenNew()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px"><path d="M12 5v14M5 12h14"/></svg>
-          New Call Sheet
-        </button>
-      </div>
+      <div class="cs-grid" id="cs-grid"></div>
+      <div class="cs-detail" id="cs-detail" style="display:none"></div>
     </div>
-    <div class="cs-grid" id="cs-grid"></div>
-    <div class="cs-detail" id="cs-detail" style="display:none"></div>
   </div>
 
-  <!-- ── EDITOR VIEW ── -->
-  <div id="cs-editor-view" style="display:none;flex-direction:column;gap:0">
-    <!-- Editor toolbar -->
-    <div style="display:flex;align-items:center;gap:10px;padding:14px 0 12px;flex-wrap:wrap;flex-shrink:0">
+  <!-- EDITOR VIEW -->
+  <div id="cs-editor-view" style="display:none;flex-direction:column;gap:0;overflow:hidden;padding:14px 60px 0;margin-top:92px;height:calc(100vh - 92px)">
+    <!-- Toolbar -->
+    <div style="display:flex;align-items:center;gap:10px;padding:11px 0 9px;flex-wrap:wrap;flex-shrink:0;border-bottom:1px solid var(--border)">
       <button class="pill-btn" onclick="cseBackToList()" style="gap:5px">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><polyline points="15 18 9 12 15 6"/></svg>
         All Sheets
       </button>
-      <div style="font-family:var(--font-display);font-size:15px;font-weight:500;color:var(--text)" id="cse-editor-title">New Call Sheet</div>
-      <div style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <!-- Format toggle -->
-        <div class="cse-toggles">
-          <button class="cse-tog active" id="cse-fmt-80ad" onclick="cseSetFormat('80ad',this)">80AD</button>
-          <button class="cse-tog" id="cse-fmt-classic" onclick="cseSetFormat('classic',this)">Classic</button>
+      <div id="cse-editor-title" style="font-size:14px;font-weight:500;color:var(--text)">New Call Sheet</div>
+      <div style="margin-left:auto;display:flex;gap:7px;align-items:center;flex-wrap:wrap">
+        <div style="display:flex;gap:4px;align-items:center">
+          <span style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--text3)">Color</span>
+          <div class="clf-accent-swatch active" data-color="#F5A67D" style="background:#F5A67D" onclick="clfSetAccent(this.dataset.color,this)"></div>
+          <div class="clf-accent-swatch" data-color="#9B7FD4" style="background:#9B7FD4" onclick="clfSetAccent(this.dataset.color,this)"></div>
+          <div class="clf-accent-swatch" data-color="#5BA3C9" style="background:#5BA3C9" onclick="clfSetAccent(this.dataset.color,this)"></div>
+          <div class="clf-accent-swatch" data-color="#72B584" style="background:#72B584" onclick="clfSetAccent(this.dataset.color,this)"></div>
+          <div class="clf-accent-swatch" data-color="#111" style="background:#111" onclick="clfSetAccent(this.dataset.color,this)"></div>
+          <div class="clf-accent-swatch clf-accent-custom" title="Custom"><input type="color" id="clf-accent-custom-inp" value="#F5A67D" oninput="clfSetAccent(this.value,this.closest('.clf-accent-swatch'))"></div>
         </div>
-        <button class="pill-btn" onclick="cseOpenImportModal()" style="gap:6px">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:13px;height:13px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          Import
-        </button>
-        <button class="pill-btn" onclick="cseOpenExport()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:13px;height:13px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Export PDF
-        </button>
-        <button class="pill-btn accent" onclick="cseSaveSheet()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:13px;height:13px"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13"/><polyline points="7 3 7 8 15 8"/></svg>
-          Save Sheet
-        </button>
+        <div style="width:1px;height:16px;background:var(--border2)"></div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <button class="cse-zoom-btn" onclick="cseZoomStep(-1)">−</button>
+          <input class="cse-zoom-slider" type="range" id="cse-zoom-slider" min="30" max="110" value="75" oninput="cseSetZoom(this.value)">
+          <button class="cse-zoom-btn" onclick="cseZoomStep(1)">+</button>
+          <span class="cse-zoom-label" id="cse-zoom-label">75%</span>
+        </div>
+        <div style="width:1px;height:16px;background:var(--border2)"></div>
+        <button class="pill-btn" onclick="cseOpenImportModal()">Import</button>
+        <button class="pill-btn" onclick="cseOpenExport()">Export PDF</button>
+        <button class="pill-btn accent" onclick="cseSaveSheet()">Save</button>
       </div>
     </div>
-
-    <!-- Editor body -->
-    <div class="cse-wrap">
-
-      <!-- LEFT: Form panels -->
-      <div class="cse-panel">
-
-        <!-- Production Info -->
-        <div class="cse-sec open" id="cse-sec-prod">
-          <div class="cse-sec-hdr" onclick="cseSec('cse-sec-prod')">
-            <div class="cse-sec-dot"></div>
-            <div class="cse-sec-title">Production Info</div>
-            <div class="cse-sec-arrow">▾</div>
+    <!-- Canvas -->
+    <div class="clf-canvas" id="clf-canvas">
+      <div class="clf-page-lbl">FRONT PAGE</div>
+      <div class="clf-sheet" id="clf-front">
+        <div class="clf-hdr" id="clf-hdr-el">
+          <div class="clf-hdr-logo" onclick="document.getElementById('clf-logo-file').click()">
+            <img id="clf-logo-img" style="display:none;width:100%;height:100%;object-fit:contain">
+            <div class="clf-hdr-logo-txt" id="clf-hdr-logo-txt">+ Logo</div>
+            <input type="file" id="clf-logo-file" accept="image/*" style="display:none" onchange="clfHandleLogo(this)">
           </div>
-          <div class="cse-sec-body">
-            <div class="cse-col">
-              <div class="cse-lbl">Production Company</div>
-              <input class="cse-input" id="cse-company" placeholder="e.g. SINCERELY 343" oninput="cseRender()">
+          <div class="clf-hdr-call-block">
+            <div class="clf-hdr-call-lbl">CREW CALL</div>
+            <div class="clf-field clf-hdr-call-time" contenteditable="true" id="clf-crew-call" data-ph="10PM" spellcheck="false"></div>
+          </div>
+          <div class="clf-field clf-company-field" contenteditable="true" id="clf-company" data-ph="PRODUCTION COMPANY" spellcheck="false"></div>
+          <div class="clf-field clf-title-field" contenteditable="true" id="clf-title" data-ph="Production Title" spellcheck="false"></div>
+          <div class="clf-loc-pill">
+            <div class="clf-loc-type-group">
+              <button class="clf-loc-btn active" id="clf-loc-int"    onclick="clfSetLocType('INT',this)">INT</button>
+              <button class="clf-loc-btn"        id="clf-loc-ext"    onclick="clfSetLocType('EXT',this)">EXT</button>
+              <button class="clf-loc-btn"        id="clf-loc-intext" onclick="clfSetLocType('INT/EXT',this)">INT/EXT</button>
             </div>
-            <div class="cse-col">
-              <div class="cse-lbl">Production Title</div>
-              <input class="cse-input" id="cse-title" placeholder="e.g. GOLDFISHED" oninput="cseRender()">
-            </div>
-            <div class="cse-row">
-              <div class="cse-col">
-                <div class="cse-lbl">Date</div>
-                <input class="cse-input" id="cse-date" type="date" oninput="cseRender()">
+            <div class="clf-field clf-loc-addr" contenteditable="true" id="clf-location" data-ph="Shoot Address" spellcheck="false"></div>
+            <div style="width:1px;height:14px;background:rgba(255,255,255,.3);flex-shrink:0"></div>
+            <input type="date" id="clf-date" style="background:none;border:none;outline:none;font-family:Inter,sans-serif;font-size:9px;font-weight:700;color:rgba(255,255,255,.85);cursor:text;width:110px;flex-shrink:0">
+          </div>
+        </div>
+        <div class="clf-info-strip">
+          <div class="clf-info-cell"><div class="clf-info-lbl">SUNSET</div><input class="clf-info-inp" id="clf-sunset" placeholder="5:52 PM"></div>
+          <div class="clf-info-cell" id="clf-weather-cell">
+            <div class="clf-info-lbl">WEATHER</div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <div style="display:flex;align-items:baseline;gap:1px">
+                <input id="clf-weather-temp" class="clf-info-inp" placeholder="72" style="width:42px" type="number" min="-99" max="150" oninput="clfWeatherUpdate()">
+                <span style="font-size:13px;font-weight:700;color:#111">°F</span>
               </div>
-              <div class="cse-col">
-                <div class="cse-lbl">Day #</div>
-                <input class="cse-input" id="cse-day" placeholder="3 of 12" oninput="cseRender()">
-              </div>
-            </div>
-            <div class="cse-row">
-              <div class="cse-col">
-                <div class="cse-lbl">Crew Call</div>
-                <input class="cse-input" id="cse-crew-call" placeholder="11:00 AM" oninput="cseRender()">
-              </div>
-              <div class="cse-col">
-                <div class="cse-lbl">Shoot Time</div>
-                <input class="cse-input" id="cse-shoot-time" placeholder="12:00 PM" oninput="cseRender()">
-              </div>
-            </div>
-            <div class="cse-col">
-              <div class="cse-lbl">Timezone</div>
-              <select class="cse-input" id="cse-tz" onchange="cseRender()">
-                <option value="PST">PST — Pacific Standard</option>
-                <option value="PDT">PDT — Pacific Daylight</option>
-                <option value="MST">MST — Mountain Standard</option>
-                <option value="MDT">MDT — Mountain Daylight</option>
-                <option value="CST">CST — Central Standard</option>
-                <option value="CDT">CDT — Central Daylight</option>
-                <option value="EST">EST — Eastern Standard</option>
-                <option value="EDT">EDT — Eastern Daylight</option>
-                <option value="GMT">GMT — Greenwich Mean</option>
-                <option value="CET">CET — Central European</option>
+              <select id="clf-weather-desc" class="clf-info-inp" style="width:80px;font-size:12px;color:#111;cursor:pointer;padding:0;border:none;background:none;outline:none;-webkit-appearance:none;appearance:none" onchange="clfWeatherUpdate()">
+                <option value="">—</option>
+                <option>Sunny</option>
+                <option>Clear</option>
+                <option>Cloudy</option>
+                <option>Hot</option>
+                <option>Windy</option>
+                <option>Rain</option>
+                <option>Snow</option>
+                <option>Hail</option>
               </select>
             </div>
-            <div class="cse-row">
-              <div class="cse-col">
-                <div class="cse-lbl">Sunset</div>
-                <input class="cse-input" id="cse-sunset" placeholder="6:53 PM" oninput="cseRender()">
-              </div>
-              <div class="cse-col">
-                <div class="cse-lbl">Weather</div>
-                <input class="cse-input" id="cse-weather" placeholder="78°F Clear" oninput="cseRender()">
-              </div>
+            <input type="hidden" id="clf-weather" value="">
+          </div>
+          <div class="clf-info-cell"><div class="clf-info-lbl">SHOOT TIME</div><input class="clf-info-inp" id="clf-shoot-time" placeholder="12PM (PST)"></div>
+          <div class="clf-info-cell"><div class="clf-info-lbl">HOSPITAL &amp; OFFICE</div><input class="clf-info-inp" id="clf-hospital" placeholder="501 S Buena Vista · Kitchen"></div>
+        </div>
+        <div class="clf-safety-bar">
+          <div class="clf-field clf-safety-txt dark" contenteditable="true" id="clf-safety" data-ph="SAFETY FIRST | NO FORCED CALLS | NO SMOKING ON SET" spellcheck="false"></div>
+        </div>
+        <div class="clf-body-cols">
+          <div class="clf-col">
+            <div class="clf-col-hdr"><div class="clf-col-dot" id="clf-crew-dot"></div><div class="clf-col-title">KEY CREW</div></div>
+            <table class="clf-crew-tbl"><tbody id="clf-crew-body"></tbody></table>
+            <div style="display:flex;gap:5px;margin-top:6px">
+              <button class="clf-add-btn" style="flex:1" onclick="clfAddRow('crew')">+ Add crew member</button>
+              <button class="clf-pb-btn" onclick="clfOpenPhoneBook('crew')">📒 Phone Book</button>
             </div>
-            <div class="cse-col">
-              <div class="cse-lbl">Shoot Location</div>
-              <div class="cse-toggles" style="margin-bottom:6px">
-                <button class="cse-tog active" id="cse-loctype-int"    onclick="cseSetLocType('INT',this)">INT</button>
-                <button class="cse-tog"        id="cse-loctype-ext"    onclick="cseSetLocType('EXT',this)">EXT</button>
-                <button class="cse-tog"        id="cse-loctype-intext" onclick="cseSetLocType('INT/EXT',this)">INT/EXT</button>
-                <button class="cse-tog"        id="cse-loctype-extint" onclick="cseSetLocType('EXT/INT',this)">EXT/INT</button>
-              </div>
-              <div style="display:flex;gap:6px;align-items:center">
-                <input class="cse-input" id="cse-location" placeholder="11130 Morrison St, North Hollywood, CA" oninput="cseRender();cseUpdateMapPreview()" style="flex:1">
-                <button class="cse-pb-btn" onclick="cseOpenMapPreview()" id="cse-map-btn" title="View in Google Maps" style="white-space:nowrap;flex-shrink:0">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  Map
-                </button>
-              </div>
-              <div id="cse-map-preview" style="display:none;margin-top:8px;border-radius:10px;overflow:hidden;border:1px solid var(--border2);position:relative">
-                <iframe id="cse-map-iframe" width="100%" height="160" frameborder="0" style="display:block" allowfullscreen></iframe>
-                <a id="cse-map-link" href="#" target="_blank" style="position:absolute;bottom:6px;right:6px;background:rgba(255,255,255,.92);border:1px solid var(--border2);border-radius:20px;padding:3px 10px;font-size:10px;font-family:var(--font-display);color:var(--text2);text-decoration:none;font-weight:500">Open in Maps ↗</a>
-              </div>
-            </div>
-            <div class="cse-col">
-              <div class="cse-lbl">Nearest Hospital</div>
-              <input class="cse-input" id="cse-hospital" placeholder="Providence St. Joseph" oninput="cseRender()">
-            </div>
-            <div class="cse-col">
-              <div class="cse-lbl">Production Office</div>
-              <input class="cse-input" id="cse-office" placeholder="501 S Buena Vista St, Burbank, CA" oninput="cseRender()">
-            </div>
-            <div class="cse-col">
-              <div class="cse-lbl">Logo / Show Image</div>
-              <div class="cse-logo-drop" id="cse-logo-drop"
-                onclick="document.getElementById('cse-logo-file').click()"
-                ondragover="event.preventDefault();this.classList.add('drag-over')"
-                ondrop="cseHandleLogoDrop(event)"
-                ondragleave="this.classList.remove('drag-over')">
-                <img id="cse-logo-preview" src="" style="display:none">
-                <div class="cse-logo-txt" id="cse-logo-txt"><span>Click or drag</span> to upload logo</div>
-              </div>
-              <input type="file" id="cse-logo-file" accept="image/*" style="display:none" onchange="cseHandleLogoFile(this)">
-              <!-- Image size control — shown only in 80AD mode -->
-              <div id="cse-logo-size-section" style="margin-top:8px">
-                <div class="cse-lbl" style="margin-bottom:5px">Image Size</div>
-                <div class="cse-toggles">
-                  <button class="cse-tog active" id="csols-small"  onclick="cseSetLogoSize('small',this)">Small</button>
-                  <button class="cse-tog"         id="csols-medium" onclick="cseSetLogoSize('medium',this)">Medium</button>
-                  <button class="cse-tog"         id="csols-large"  onclick="cseSetLogoSize('large',this)">Large</button>
-                </div>
-              </div>
-            </div>
-            <!-- 80AD Layout style -->
-            <div id="cse-80ad-layout-section">
-              <div class="cse-lbl" style="margin-top:12px;margin-bottom:6px">80AD Layout Style</div>
-              <div class="cse-toggles">
-                <button class="cse-tog active" id="cse-layout-standard" onclick="cseSet80ADLayout('standard',this)">Standard</button>
-                <button class="cse-tog"        id="cse-layout-rounded"  onclick="cseSet80ADLayout('rounded',this)">Rounded</button>
-                <button class="cse-tog"        id="cse-layout-grid"     onclick="cseSet80ADLayout('grid',this)">Grid</button>
-              </div>
+          </div>
+          <div class="clf-col clf-col-right">
+            <div class="clf-col-hdr"><div class="clf-col-dot blue"></div><div class="clf-col-title">SCENE BREAKDOWN</div></div>
+            <table class="clf-scene-tbl">
+              <thead><tr><th style="width:34px">SC#</th><th style="width:44px">TYPE</th><th>DESCRIPTION</th><th style="width:48px">CAST</th><th style="width:68px">START</th><th style="width:34px">PAGE</th><th style="width:16px"></th></tr></thead>
+              <tbody id="clf-scene-body"></tbody>
+            </table>
+            <button class="clf-add-btn" onclick="clfAddRow('scene')">+ Add scene</button>
+          </div>
+        </div>
+        <div class="clf-cast-section">
+          <div class="clf-col-hdr" style="margin-bottom:8px"><div class="clf-col-dot" style="background:#E8887A" id="clf-cast-dot"></div><div class="clf-col-title">CAST &amp; TALENT</div></div>
+          <table class="clf-cast-tbl">
+            <thead><tr><th style="width:26px">ID</th><th>CHARACTER</th><th>CAST</th><th style="width:58px">STATUS</th><th style="width:88px">CALL TIME</th><th style="width:78px">WRAP</th><th style="width:16px"></th></tr></thead>
+            <tbody id="clf-cast-body"></tbody>
+          </table>
+          <div style="display:flex;gap:5px;margin-top:6px">
+            <button class="clf-add-btn" style="flex:1" onclick="clfAddRow('cast')">+ Add cast member</button>
+            <button class="clf-pb-btn" onclick="clfOpenPhoneBook('cast')">📒 Phone Book</button>
+          </div>
+        </div>
+        <div class="clf-notes-props">
+          <div class="clf-notes-col">
+            <div class="clf-np-lbl">NOTES</div>
+            <div class="clf-field clf-notes-txt dark" contenteditable="true" id="clf-notes" data-ph="Parking, arrival info, reminders…" spellcheck="false"></div>
+          </div>
+          <div class="clf-props-col">
+            <div class="clf-np-lbl">PROPS</div>
+            <div id="clf-props-wrap" class="clf-props-chips"></div>
+            <div class="clf-prop-add-row">
+              <input class="clf-prop-inp" id="clf-prop-inp" placeholder="Add prop… (Enter)" onkeydown="if(event.key==='Enter'){event.preventDefault();clfAddProp();}">
+              <button class="clf-add-btn" onclick="clfAddProp()" style="width:auto;padding:4px 10px;margin-top:0">Add</button>
             </div>
           </div>
         </div>
-
-        <!-- Safety & Notes -->
-        <div class="cse-sec open" id="cse-sec-safety">
-          <div class="cse-sec-hdr" onclick="cseSec('cse-sec-safety')">
-            <div class="cse-sec-dot" style="background:var(--c3)"></div>
-            <div class="cse-sec-title">Safety & Notes</div>
-            <div class="cse-sec-arrow">▾</div>
-          </div>
-          <div class="cse-sec-body">
-            <div class="cse-col">
-              <div class="cse-lbl">Safety Bar</div>
-              <textarea class="cse-input cse-textarea" id="cse-safety" oninput="cseRender()" style="min-height:44px" placeholder="SAFETY FIRST | NO FORCED CALLS | NO SMOKING ON SET"></textarea>
-            </div>
-            <div class="cse-col">
-              <div class="cse-lbl">General Notes</div>
-              <textarea class="cse-input cse-textarea" id="cse-notes" oninput="cseRender()" placeholder="Parking, attire, special instructions…"></textarea>
-            </div>
-          </div>
+        <div class="clf-onset-section">
+          <div class="clf-np-lbl">ON-SET NOTES</div>
+          <div class="clf-onset-line"></div><div class="clf-onset-line"></div>
+          <div class="clf-onset-line"></div><div class="clf-onset-line"></div>
+          <div class="clf-onset-line"></div>
         </div>
+      </div><!-- /clf-front -->
 
-        <!-- Key Crew -->
-        <div class="cse-sec open" id="cse-sec-crew">
-          <div class="cse-sec-hdr" onclick="cseSec('cse-sec-crew')">
-            <div class="cse-sec-dot" style="background:#72B584"></div>
-            <div class="cse-sec-title">Key Crew</div>
-            <button class="cse-pb-btn" onclick="event.stopPropagation();cseOpenPbPicker('crew')" title="Fill from Phone Book">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              Fill from Phone Book
-            </button>
-            <div class="cse-sec-arrow">▾</div>
-          </div>
-          <div class="cse-sec-body">
-            <table class="cse-tbl"><thead><tr>
-              <th style="width:80px">Position</th><th>Name</th><th style="width:88px">Phone</th><th style="width:20px"></th>
-            </tr></thead><tbody id="cse-crew-body"></tbody></table>
-            <button class="cse-add-btn" onclick="cseAddRow('crew')">+ Add Crew Member</button>
-          </div>
+      <div class="clf-page-lbl" style="margin-top:18px">BACK PAGE</div>
+      <div class="clf-sheet" id="clf-back" style="padding:40px 48px">
+        <div style="border-bottom:2px solid #F5A67D;padding-bottom:10px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:flex-end" id="clf-back-hdr">
+          <div style="font-size:18px;font-weight:800;color:#111">Full Crew &amp; Background</div>
+          <div style="font-size:9px;color:#bbb;font-weight:600" id="clf-back-title-ref"></div>
         </div>
-
-        <!-- Scenes -->
-        <div class="cse-sec open" id="cse-sec-scenes">
-          <div class="cse-sec-hdr" onclick="cseSec('cse-sec-scenes')">
-            <div class="cse-sec-dot" style="background:#7EC8E3"></div>
-            <div class="cse-sec-title">Scene Breakdown</div>
-            <div class="cse-sec-arrow">▾</div>
-          </div>
-          <div class="cse-sec-body">
-            <table class="cse-tbl"><thead><tr>
-              <th style="width:16px"></th><th style="width:24px">Sc#</th><th style="width:40px">Type</th><th>Description</th><th style="width:28px">Cast</th><th style="width:50px">Start</th><th style="width:22px">Pgs</th><th style="width:20px"></th>
-            </tr></thead><tbody id="cse-scene-body"></tbody></table>
-            <button class="cse-add-btn" onclick="cseAddRow('scene')">+ Add Scene</button>
-          </div>
+        <table class="clf-crew-tbl" style="margin-bottom:6px">
+          <thead><tr><th style="font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;padding:0 0 6px;text-align:left;width:35%;border-bottom:1px solid #f0f0f0">Position</th><th style="font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;padding:0 0 6px;text-align:left;width:35%;border-bottom:1px solid #f0f0f0">Name</th><th style="font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;padding:0 0 6px;text-align:left;border-bottom:1px solid #f0f0f0">Phone</th><th style="width:16px;border-bottom:1px solid #f0f0f0"></th></tr></thead>
+          <tbody id="clf-back-body"></tbody>
+        </table>
+        <div style="display:flex;gap:5px">
+          <button class="clf-add-btn" style="flex:1" onclick="clfAddRow('back')">+ Add crew / background</button>
+          <button class="clf-pb-btn" onclick="clfOpenPhoneBook('back')">📒 Phone Book</button>
         </div>
-
-        <!-- Cast -->
-        <div class="cse-sec open" id="cse-sec-cast">
-          <div class="cse-sec-hdr" onclick="cseSec('cse-sec-cast')">
-            <div class="cse-sec-dot" style="background:var(--c3)"></div>
-            <div class="cse-sec-title">Cast & Talent</div>
-            <button class="cse-pb-btn" onclick="event.stopPropagation();cseOpenPbPicker('cast')" title="Fill from Phone Book">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              Fill from Phone Book
-            </button>
-            <div class="cse-sec-arrow">▾</div>
-          </div>
-          <div class="cse-sec-body">
-            <table class="cse-tbl"><thead><tr>
-              <th style="width:20px">ID</th><th style="width:72px">Character</th><th>Actor</th><th style="width:36px">Status</th><th style="width:48px">Call</th><th style="width:48px">Wrap</th><th style="width:20px"></th>
-            </tr></thead><tbody id="cse-cast-body"></tbody></table>
-            <button class="cse-add-btn" onclick="cseAddRow('cast')">+ Add Cast Member</button>
-          </div>
+        <div style="margin-top:22px">
+          <div class="clf-np-lbl">PRODUCTION OFFICE</div>
+          <div class="clf-field clf-notes-txt dark" contenteditable="true" id="clf-office" data-ph="Office address &amp; phone" spellcheck="false" style="margin-top:4px;font-size:12px;color:#333;min-height:20px"></div>
         </div>
+      </div><!-- /clf-back -->
 
-        <!-- Props -->
-        <div class="cse-sec open" id="cse-sec-props">
-          <div class="cse-sec-hdr" onclick="cseSec('cse-sec-props')">
-            <div class="cse-sec-dot" style="background:#C9A96E"></div>
-            <div class="cse-sec-title">Props</div>
-            <div class="cse-sec-arrow">▾</div>
-          </div>
-          <div class="cse-sec-body">
-            <div id="cse-props-list" class="cse-props-wrap"></div>
-            <div style="display:flex;gap:7px;margin-top:7px;align-items:center">
-              <input class="cse-input" id="cse-new-prop" placeholder="Add prop…" style="flex:1" list="cse-props-master-list" onkeydown="if(event.key==='Enter')cseAddProp()" oninput="cseRefreshPropSuggestions()">
-              <datalist id="cse-props-master-list"></datalist>
-              <button class="cse-add-btn" style="width:auto;padding:6px 13px;margin:0" onclick="cseAddProp()">Add</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Back Page Crew -->
-        <div class="cse-sec open" id="cse-sec-back">
-          <div class="cse-sec-hdr" onclick="cseSec('cse-sec-back')">
-            <div class="cse-sec-dot" style="background:#E8A4C8"></div>
-            <div class="cse-sec-title">Back Page — Full Crew</div>
-            <button class="cse-pb-btn" onclick="event.stopPropagation();cseOpenPbPicker('back')" title="Fill from Phone Book">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              Fill from Phone Book
-            </button>
-            <div class="cse-sec-arrow">▾</div>
-          </div>
-          <div class="cse-sec-body">
-            <table class="cse-tbl"><thead><tr>
-              <th style="width:20px">#</th><th style="width:90px">Position</th><th>Name</th><th style="width:86px">Phone</th><th style="width:52px">IN Time</th><th style="width:20px"></th>
-            </tr></thead><tbody id="cse-back-body"></tbody></table>
-            <button class="cse-add-btn" onclick="cseAddRow('back')">+ Add Crew Member</button>
-          </div>
-        </div>
-
-        <!-- Print Options: Fonts & Size -->
-        <div class="cse-sec open" id="cse-sec-print">
-          <div class="cse-sec-hdr" onclick="cseSec('cse-sec-print')">
-            <div class="cse-sec-dot" style="background:var(--c2)"></div>
-            <div class="cse-sec-title">Print Options</div>
-            <div class="cse-sec-arrow">▾</div>
-          </div>
-          <div class="cse-sec-body">
-            <div class="cse-lbl" style="margin-bottom:6px">Font</div>
-            <div class="cse-font-opts">
-              <div class="cse-font-opt active" id="csefnt-inter" onclick="cseSetFont('Inter, -apple-system, sans-serif','csefnt-inter')">
-                <div class="cse-font-opt-name" style="font-family:Inter,sans-serif">Inter</div>
-                <div class="cse-font-opt-sample" style="font-family:Inter,sans-serif">Modern · Clean</div>
-              </div>
-              <div class="cse-font-opt" id="csefnt-courier" onclick="cseSetFont('Courier Prime, Courier, monospace','csefnt-courier')">
-                <div class="cse-font-opt-name" style="font-family:'Courier Prime',Courier,monospace">Courier Prime</div>
-                <div class="cse-font-opt-sample" style="font-family:'Courier Prime',Courier,monospace">Script · Classic</div>
-              </div>
-              <div class="cse-font-opt" id="csefnt-ibm" onclick="cseSetFont('IBM Plex Sans, sans-serif','csefnt-ibm')">
-                <div class="cse-font-opt-name" style="font-family:'IBM Plex Sans',sans-serif">IBM Plex Sans</div>
-                <div class="cse-font-opt-sample" style="font-family:'IBM Plex Sans',sans-serif">Technical · Sharp</div>
-              </div>
-              <div class="cse-font-opt" id="csefnt-eb" onclick="cseSetFont('EB Garamond, Georgia, serif','csefnt-eb')">
-                <div class="cse-font-opt-name" style="font-family:'EB Garamond',Georgia,serif">EB Garamond</div>
-                <div class="cse-font-opt-sample" style="font-family:'EB Garamond',Georgia,serif">Prestige · Editorial</div>
-              </div>
-              <div class="cse-font-opt" id="csefnt-dm" onclick="cseSetFont('DM Sans, sans-serif','csefnt-dm')" style="grid-column:span 2">
-                <div class="cse-font-opt-name" style="font-family:'DM Sans',sans-serif">DM Sans</div>
-                <div class="cse-font-opt-sample" style="font-family:'DM Sans',sans-serif">Contemporary · Friendly</div>
-              </div>
-            </div>
-            <div class="cse-lbl" style="margin-top:12px;margin-bottom:6px">Text Size</div>
-            <div class="cse-toggles">
-              <button class="cse-tog" id="csesz-compact" onclick="cseSetSize('compact',this)">Compact</button>
-              <button class="cse-tog active" id="csesz-standard" onclick="cseSetSize('standard',this)">Standard</button>
-              <button class="cse-tog" id="csesz-large" onclick="cseSetSize('large',this)">Large</button>
-            </div>
-
-            <!-- Classic header color -->
-            <div id="cse-classic-color-section" style="display:none">
-              <div class="cse-lbl" style="margin-top:12px;margin-bottom:6px">Classic Header Color</div>
-              <div class="cse-classic-color-row">
-                <div class="cse-classic-color-label">Header fill &amp; text color</div>
-                <div style="display:flex;gap:8px;align-items:center">
-                  <div>
-                    <div style="font-size:8px;color:var(--text3);margin-bottom:3px;text-align:center">Fill</div>
-                    <div class="cse-classic-color-swatch" id="cse-classic-fill-swatch" style="background:#000000">
-                      <input type="color" id="cse-classic-fill" value="#000000" oninput="cseUpdateClassicColor()">
-                    </div>
-                  </div>
-                  <div>
-                    <div style="font-size:8px;color:var(--text3);margin-bottom:3px;text-align:center">Text</div>
-                    <div class="cse-classic-color-swatch" id="cse-classic-text-swatch" style="background:#ffffff">
-                      <input type="color" id="cse-classic-text" value="#ffffff" oninput="cseUpdateClassicColor()">
-                    </div>
-                  </div>
-                  <button class="cse-pb-btn" onclick="document.getElementById('cse-classic-fill').value='#000000';document.getElementById('cse-classic-text').value='#ffffff';cseUpdateClassicColor();" style="font-size:9px">Reset</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="cse-lbl" style="margin-top:14px;margin-bottom:6px">Print Extras</div>
-            <label style="display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--card);transition:background .15s" onmouseenter="this.style.background='var(--hover)'" onmouseleave="this.style.background='var(--card)'">
-              <input type="checkbox" id="cse-print-notes-toggle" onchange="cseRender()" style="accent-color:var(--c1);width:14px;height:14px;cursor:pointer">
-              <div>
-                <div style="font-size:11px;font-weight:600;color:var(--text2)">Note-taking section</div>
-                <div style="font-size:9.5px;color:var(--text3);margin-top:1px">Adds lined notes area to printed sheet</div>
-              </div>
-            </label>
-            <div id="cse-print-notes-config" style="display:none;flex-direction:column;gap:6px;margin-top:6px">
-              <div class="cse-col">
-                <div class="cse-lbl">Notes Section Title</div>
-                <input class="cse-input" id="cse-print-notes-label" value="On-Set Notes" oninput="cseRender()" placeholder="On-Set Notes">
-              </div>
-              <div class="cse-col">
-                <div class="cse-lbl">Number of lines</div>
-                <select class="cse-input" id="cse-print-notes-lines" onchange="cseRender()">
-                  <option value="6">6 lines</option>
-                  <option value="10" selected>10 lines</option>
-                  <option value="16">16 lines</option>
-                  <option value="22">22 lines (full page)</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- AD Summary (optional section, off by default) -->
-        <div class="cse-sec" id="cse-sec-summary">
-          <div class="cse-sec-hdr" onclick="cseSec('cse-sec-summary')">
-            <div class="cse-sec-dot" style="background:var(--c3);box-shadow:0 0 0 3px var(--c3-soft)"></div>
-            <div class="cse-sec-title" style="color:var(--c3)">AD Summary <span style="font-size:8px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--text4);background:var(--bg3);border-radius:100px;padding:1px 7px;margin-left:4px">optional</span></div>
-            <div class="cse-sec-arrow">▾</div>
-          </div>
-          <div class="cse-sec-body">
-            <div style="font-size:9.5px;color:var(--text3);line-height:1.5;padding:2px 0 6px;font-family:var(--font-body)">Write messages to specific departments, summarize the day, and set the production vibe. This section does not print by default — enable it in Export when ready.</div>
-            <!-- @ Reference Analytics -->
-            <div id="cse-ref-stats">
-              <div style="font-size:8px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--text3);margin-bottom:8px;display:flex;align-items:center;gap:6px">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:10px;height:10px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                @ References
-              </div>
-              <div id="cse-ref-bars"></div>
-            </div>
-            <div class="cse-col">
-              <div class="cse-lbl">Day Summary</div>
-              <textarea class="cse-input cse-textarea" id="cse-summary-day" oninput="cseRender()" placeholder="How did the day go? Wins, challenges, notes for next time… (type @ to reference a name, scene, prop or location)" style="min-height:64px"></textarea>
-            </div>
-            <div class="cse-lbl" style="margin-top:4px">Dept Messages</div>
-            <div id="cse-dept-msgs" style="display:flex;flex-direction:column;gap:6px"></div>
-            <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:6px" id="cse-dept-tags">
-              <button class="cse-summary-dept-tag" onclick="cseAddDeptMsg('Direction')">Direction</button>
-              <button class="cse-summary-dept-tag" onclick="cseAddDeptMsg('Camera')">Camera</button>
-              <button class="cse-summary-dept-tag" onclick="cseAddDeptMsg('Art')">Art</button>
-              <button class="cse-summary-dept-tag" onclick="cseAddDeptMsg('G&E')">G&amp;E</button>
-              <button class="cse-summary-dept-tag" onclick="cseAddDeptMsg('Sound')">Sound</button>
-              <button class="cse-summary-dept-tag" onclick="cseAddDeptMsg('Costume')">Costume</button>
-              <button class="cse-summary-dept-tag" onclick="cseAddDeptMsg('Cast')">Cast</button>
-            </div>
-            <div class="cse-col" style="margin-top:12px">
-              <div class="cse-lbl">Production Vibe Photo</div>
-              <div class="cse-vibe-drop" id="cse-vibe-drop"
-                onclick="document.getElementById('cse-vibe-file').click()"
-                ondragover="event.preventDefault();this.classList.add('drag-over')"
-                ondrop="cseHandleVibeDrop(event)"
-                ondragleave="this.classList.remove('drag-over')">
-                <img id="cse-vibe-preview" src="" style="display:none">
-                <div id="cse-vibe-txt" style="font-size:9.5px;color:var(--text3);text-align:center"><span style="color:var(--c3);font-weight:600">Click or drag</span> to add a vibe photo</div>
-              </div>
-              <input type="file" id="cse-vibe-file" accept="image/*" style="display:none" onchange="cseHandleVibeFile(this)">
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /cse-panel -->
-
-      <!-- RIGHT: Preview -->
-      <div class="cse-preview" id="cse-preview-panel">
-        <div class="cse-preview-toolbar">
-          <span>Preview</span>
-          <div style="width:1px;height:11px;background:var(--border2)"></div>
-          <div class="cse-toggles">
-            <button class="cse-tog active" id="cse-sz-letter" onclick="cseSetPageSize('letter',this)">Letter</button>
-            <button class="cse-tog" id="cse-sz-legal" onclick="cseSetPageSize('legal',this)">Legal</button>
-          </div>
-          <div style="width:1px;height:11px;background:var(--border2)"></div>
-          <span id="cse-size-label">8.5 × 11</span>
-          <div style="width:1px;height:11px;background:var(--border2)"></div>
-          <div class="cse-zoom-wrap">
-            <button class="cse-zoom-btn" onclick="cseZoomStep(-1)" title="Zoom out">−</button>
-            <input class="cse-zoom-slider" type="range" id="cse-zoom-slider" min="25" max="120" value="90" oninput="cseSetZoom(this.value)">
-            <button class="cse-zoom-btn" onclick="cseZoomStep(1)" title="Zoom in">+</button>
-            <span class="cse-zoom-label" id="cse-zoom-label">90%</span>
-          </div>
-        </div>
-        <div style="font-size:8.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3)">FRONT PAGE</div>
-        <div class="cse-sheet letter" id="cse-preview-front"></div>
-        <div style="font-size:8.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3)">BACK PAGE</div>
-        <div class="cse-sheet letter" id="cse-preview-back"></div>
-      </div>
-
-    </div><!-- /cse-wrap -->
+    </div><!-- /clf-canvas -->
   </div><!-- /cs-editor-view -->
 
-</div><!-- /inner-page -->
 
 <!-- Export Modal -->
 <div class="cse-modal-overlay" id="cse-export-modal" onclick="if(event.target===this)cseCloseExport()">
@@ -9154,13 +8983,13 @@ function sseSaveEditRow() {
     if (t === 'wrap')    { r.who = mainVal; r.notes = notesVal; }
   }
 
-  document.getElementById('sse-edit-modal')?.classList.remove('open');
+  document.getElementById('sse-edit-modal').classList.remove('open');
   _sseEditIdx = null;
   sseRenderRowList(); sseRender(); sseSaveData();
 }
 
 function sseCloseEdit() {
-  document.getElementById('sse-edit-modal')?.classList.remove('open');
+  document.getElementById('sse-edit-modal').classList.remove('open');
   _sseEditIdx = null;
 }
 
@@ -9482,10 +9311,12 @@ ${d.footer ? `<div class="ssp-footer" style="font-family:${f}">${d.footer}</div>
 
 // ── Export ──
 function sseOpenExport() {
+  // direct export using current format/size settings
   const d = { ...ssInfo, rows: ssRows, font: sseFont, fs: sseFontSizes[sseTextSize] || '8.5px' };
   const front = sseFormat === '80ad' ? sseBuild80AD(d) : sseBuildClassic(d);
   const ph = ssePageSize === 'legal' ? '14in' : '11in';
   const gf = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Courier+Prime:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=EB+Garamond:wght@400;600&display=swap';
+  // collect ssp-* styles
   let pStyles = '';
   try { for (const s of document.styleSheets) { try { for (const r of s.cssRules) { if ((r.selectorText||'').match(/ssp-|sse-sheet/)) pStyles += r.cssText + '\n'; } } catch(e){} } } catch(e){}
   const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><link href="${gf}" rel="stylesheet">
@@ -10168,13 +9999,13 @@ let _cseImportFileName = '';
 
 function cseOpenImportModal() {
   cseImportReset();
-  document.getElementById('cse-import-overlay')?.classList.add('open');
+  document.getElementById('cse-import-overlay').classList.add('open');
 }
 function cseImportOverlayClick(e) {
   if (e.target === document.getElementById('cse-import-overlay')) cseCloseImportModal();
 }
 function cseCloseImportModal() {
-  document.getElementById('cse-import-overlay')?.classList.remove('open');
+  document.getElementById('cse-import-overlay').classList.remove('open');
 }
 
 function cseShowImportStep(n) {
@@ -10194,7 +10025,7 @@ function cseImportReset() {
 
 function cseHandleImportDrop(event) {
   event.preventDefault();
-  document.getElementById('cse-import-dropzone')?.classList.remove('drag-over');
+  document.getElementById('cse-import-dropzone').classList.remove('drag-over');
   const file = event.dataTransfer.files[0];
   if (file) cseHandleImportFile(file);
 }
@@ -10629,7 +10460,7 @@ function openDocCtx(event, docId, docType) {
   // Position menu near cursor
   const menu = document.getElementById('doc-ctx-menu');
   menu.classList.add('open');
-  document.getElementById('doc-ctx-overlay')?.classList.add('open');
+  document.getElementById('doc-ctx-overlay').classList.add('open');
   const mx = event.clientX, my = event.clientY;
   const mw = 188, mh = 260;
   menu.style.left = (mx + mw > window.innerWidth  ? mx - mw : mx) + 'px';
@@ -10743,10 +10574,10 @@ function openPacketModal() {
   pktPopulateDetails();
   pktPopulateContent();
   pktShowStep(1);
-  document.getElementById('packet-modal')?.classList.add('open');
+  document.getElementById('packet-modal').classList.add('open');
 }
 function closePacketModal() {
-  document.getElementById('packet-modal')?.classList.remove('open');
+  document.getElementById('packet-modal').classList.remove('open');
 }
 
 // ── Step navigation ──
@@ -11823,16 +11654,14 @@ ${propsPage}
       <!-- Step 1: Drop zone -->
       <div id="pb-import-step1">
         <div class="pb-import-dropzone" id="pb-import-dropzone"
-             onclick="document.getElementById('pb-import-file-input').click()"
              ondragover="event.preventDefault();this.classList.add('drag-over')"
              ondragleave="this.classList.remove('drag-over')"
-             ondrop="pbImportHandleDrop(event)"
-             style="cursor:pointer">
+             ondrop="pbImportHandleDrop(event)">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:10px;opacity:.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           <div class="pb-import-drop-title">Drop a CSV here or click to browse</div>
           <div class="pb-import-drop-sub">Accepts CSV files — columns: name, role, email, phone, company (or dept)</div>
           <input type="file" id="pb-import-file-input" accept=".csv" style="display:none" onchange="pbImportHandleFile(this.files[0])">
-          <button class="pill-btn" style="margin-top:14px" onclick="event.stopPropagation();document.getElementById('pb-import-file-input').click()">Browse CSV</button>
+          <button class="pill-btn" style="margin-top:14px" onclick="document.getElementById('pb-import-file-input').click()">Browse</button>
         </div>
       </div>
       <!-- Step 2: Loading -->
@@ -11939,11 +11768,11 @@ function openNewMeetingModal() {
   document.getElementById('mtg-time').value = '10:00';
   document.querySelectorAll('.mtg-color-swatch').forEach(s => s.classList.toggle('selected', s.dataset.color === _mtgColor));
   document.querySelectorAll('#mtg-loc-inperson,#mtg-loc-gmeet,#mtg-loc-otp').forEach(b => b.classList.remove('active'));
-  document.getElementById('mtg-loc-inperson')?.classList.add('active');
+  document.getElementById('mtg-loc-inperson').classList.add('active');
   document.getElementById('mtg-address-row').style.display = '';
   document.getElementById('mtg-link-row').style.display = 'none';
   renderMtgAttendees();
-  document.getElementById('meeting-modal')?.classList.add('open');
+  document.getElementById('meeting-modal').classList.add('open');
 }
 
 function openEditMeetingModal(id) {
@@ -11971,10 +11800,10 @@ function openEditMeetingModal(id) {
   document.getElementById('mtg-address-row').style.display = _mtgLocType !== 'gmeet' ? '' : 'none';
   document.getElementById('mtg-link-row').style.display    = _mtgLocType === 'gmeet' ? '' : 'none';
   renderMtgAttendees();
-  document.getElementById('meeting-modal')?.classList.add('open');
+  document.getElementById('meeting-modal').classList.add('open');
 }
 
-function closeMeetingModal() { document.getElementById('meeting-modal')?.classList.remove('open'); }
+function closeMeetingModal() { document.getElementById('meeting-modal').classList.remove('open'); }
 
 function mtgSetColor(el, color) {
   _mtgColor = color;
@@ -12267,9 +12096,9 @@ function openPktDlModal(id) {
   // Start on style tab
   pktDlTab(document.querySelector('.pktdl-tab'), 'style');
 
-  document.getElementById('pkt-dl-modal')?.classList.add('open');
+  document.getElementById('pkt-dl-modal').classList.add('open');
 }
-function closePktDlModal() { document.getElementById('pkt-dl-modal')?.classList.remove('open'); }
+function closePktDlModal() { document.getElementById('pkt-dl-modal').classList.remove('open'); }
 
 function pktDlTab(el, tab) {
   document.querySelectorAll('.pktdl-tab').forEach(t => t.classList.remove('active'));
@@ -12805,6 +12634,8 @@ function exportPhonebookCSV() {
   const contacts = loadContacts();
   if (!contacts.length) { flashMsg('No contacts to export'); return; }
 
+  // 343Leads importPhonebook expects: name, role, email, phone, company
+  // Map 80AD fields: name=name, role=role, email=email, phone=phone, dept→company
   const escape = v => {
     const s = (v || '').replace(/"/g, '""');
     return /[,"\n]/.test(s) ? '"' + s + '"' : s;
@@ -12820,10 +12651,8 @@ function exportPhonebookCSV() {
   const a    = document.createElement('a');
   a.href     = url;
   a.download = '80ad-contacts-343leads.csv';
-  a.style.display = 'none';
-  document.body.appendChild(a);
   a.click();
-  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 200);
+  URL.revokeObjectURL(url);
   flashMsg('Exported ' + contacts.length + ' contact' + (contacts.length !== 1 ? 's' : ''));
 }
 function loadContacts(){ return JSON.parse(localStorage.getItem(pbKey())||'[]'); }
@@ -13027,8 +12856,8 @@ function fabToggle(){
 }
 function fabOpen(){
   _fabOpen = true;
-  document.getElementById('fab-backdrop')?.classList.add('open');
-  document.getElementById('fab-menu')?.classList.add('open');
+  document.getElementById('fab-backdrop').classList.add('open');
+  document.getElementById('fab-menu').classList.add('open');
   const floatBtn = document.getElementById('fab-float-btn');
   if (floatBtn) floatBtn.classList.add('fab-open');
   // legacy nav btn (may not exist)
@@ -13038,8 +12867,8 @@ function fabOpen(){
 }
 function fabClose(){
   _fabOpen = false;
-  document.getElementById('fab-backdrop')?.classList.remove('open');
-  document.getElementById('fab-menu')?.classList.remove('open');
+  document.getElementById('fab-backdrop').classList.remove('open');
+  document.getElementById('fab-menu').classList.remove('open');
   const floatBtn = document.getElementById('fab-float-btn');
   if (floatBtn) floatBtn.classList.remove('fab-open');
   document.getElementById('nav-fab-btn')?.classList.remove('fab-open');
@@ -13245,12 +13074,12 @@ function fabOpenQM(type){
   // Color the submit button to match type accent
   const colors = { callsheet:'#F5A67D', contact:'#9B7FD4', meeting:'#5BA3C9', expense:'#72B584', todo:'#D4B84A' };
   submitBtn.style.background = colors[type] || 'var(--c1)';
-  document.getElementById('fab-quick-modal')?.classList.add('open');
+  document.getElementById('fab-quick-modal').classList.add('open');
   setTimeout(()=>document.getElementById('fab-f1')?.focus(), 80);
 }
 
 function fabQmClose(){
-  document.getElementById('fab-quick-modal')?.classList.remove('open');
+  document.getElementById('fab-quick-modal').classList.remove('open');
   _fabQmType = null;
 }
 
@@ -13265,10 +13094,10 @@ function fabQmSave(){
 // Keyboard: Enter to submit, Escape to close
 document.addEventListener('keydown', function(e){
   if(e.key === 'Escape'){
-    if(document.getElementById('fab-quick-modal')?.classList.contains('open')){ fabQmClose(); return; }
+    if(document.getElementById('fab-quick-modal').classList.contains('open')){ fabQmClose(); return; }
     if(_fabOpen){ fabClose(); return; }
   }
-  if(e.key === 'Enter' && document.getElementById('fab-quick-modal')?.classList.contains('open')){
+  if(e.key === 'Enter' && document.getElementById('fab-quick-modal').classList.contains('open')){
     if(document.activeElement?.tagName !== 'TEXTAREA') fabQmSave();
   }
 
@@ -13369,10 +13198,10 @@ let _pbImportClean   = [];   // contacts with no duplicates
 
 function openPbImportModal() {
   pbImportReset();
-  document.getElementById('pb-import-overlay')?.classList.add('open');
+  document.getElementById('pb-import-overlay').classList.add('open');
 }
 function closePbImportModal() {
-  document.getElementById('pb-import-overlay')?.classList.remove('open');
+  document.getElementById('pb-import-overlay').classList.remove('open');
 }
 
 function pbImportShowStep(n) {
@@ -13393,7 +13222,7 @@ function pbImportReset() {
 
 function pbImportHandleDrop(event) {
   event.preventDefault();
-  document.getElementById('pb-import-dropzone')?.classList.remove('drag-over');
+  document.getElementById('pb-import-dropzone').classList.remove('drag-over');
   const file = event.dataTransfer.files[0];
   if (file) pbImportHandleFile(file);
 }
@@ -13720,7 +13549,7 @@ function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&l
       <label class="cstm-check"><input type="checkbox" id="cstm-chk-safety" checked> Safety notice</label>
     </div>
     <div class="cstm-footer">
-      <button class="pill-btn" onclick="document.getElementById('cs-template-modal')?.classList.remove('open')">Cancel</button>
+      <button class="pill-btn" onclick="document.getElementById('cs-template-modal').classList.remove('open')">Cancel</button>
       <button class="pill-btn accent" onclick="csConfirmSaveTemplate()">Save Template</button>
     </div>
   </div>
@@ -13734,7 +13563,7 @@ function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&l
     <div style="font-family:var(--font-display);font-size:18px;font-weight:400;margin-bottom:14px;letter-spacing:-.3px">Rename Call Sheet</div>
     <input class="cstm-input" id="csrn-input" placeholder="Sheet title…" style="margin-bottom:16px;display:block;width:100%;box-sizing:border-box">
     <div style="display:flex;gap:8px;justify-content:flex-end">
-      <button class="pill-btn" onclick="document.getElementById('cs-rename-modal')?.classList.remove('open')">Cancel</button>
+      <button class="pill-btn" onclick="document.getElementById('cs-rename-modal').classList.remove('open')">Cancel</button>
       <button class="pill-btn accent" onclick="csConfirmRename()">Rename</button>
     </div>
   </div>
@@ -13745,10 +13574,10 @@ function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&l
 //  NEW DOCUMENT MODAL — ⌘+Shift+N
 // ════════════════════════════════════════════════
 function openNewDocModal() {
-  document.getElementById('new-doc-modal')?.classList.add('open');
+  document.getElementById('new-doc-modal').classList.add('open');
 }
 function closeNewDocModal() {
-  document.getElementById('new-doc-modal')?.classList.remove('open');
+  document.getElementById('new-doc-modal').classList.remove('open');
 }
 function newDocNavigate(page) {
   closeNewDocModal();
@@ -13782,8 +13611,8 @@ document.addEventListener('keydown', function(e) {
   }
   if (e.key === 'Escape') {
     closeNewDocModal();
-    document.getElementById('cs-template-modal')?.classList.remove('open');
-    document.getElementById('cs-rename-modal')?.classList.remove('open');
+    document.getElementById('cs-template-modal').classList.remove('open');
+    document.getElementById('cs-rename-modal').classList.remove('open');
     closeMeetingModal();
   }
 });
@@ -13976,7 +13805,7 @@ function csOpenRename(idx) {
   _csCtxIdx = idx;
   const data = loadCS();
   document.getElementById('csrn-input').value = data[idx]?.title || '';
-  document.getElementById('cs-rename-modal')?.classList.add('open');
+  document.getElementById('cs-rename-modal').classList.add('open');
   setTimeout(() => document.getElementById('csrn-input').focus(), 200);
 }
 function csConfirmRename() {
@@ -13990,7 +13819,7 @@ function csConfirmRename() {
     const state = loadCseState(data[_csCtxIdx].id || ('cse_'+_csCtxIdx));
     if (state) { state.title = name; saveCseState(state.id, state); }
   }
-  document.getElementById('cs-rename-modal')?.classList.remove('open');
+  document.getElementById('cs-rename-modal').classList.remove('open');
   renderCallSheets();
   flashMsg('Renamed');
 }
@@ -14000,7 +13829,7 @@ function csOpenSaveTemplate(idx) {
   _csCtxIdx = idx;
   const data = loadCS();
   document.getElementById('cstm-name').value = (data[idx]?.title||'Sheet') + ' Template';
-  document.getElementById('cs-template-modal')?.classList.add('open');
+  document.getElementById('cs-template-modal').classList.add('open');
 }
 function csConfirmSaveTemplate() {
   const name = document.getElementById('cstm-name').value.trim() || 'Template';
@@ -14024,7 +13853,7 @@ function csConfirmSaveTemplate() {
   const templates = JSON.parse(localStorage.getItem('cs_templates')||'[]');
   templates.push(template);
   localStorage.setItem('cs_templates', JSON.stringify(templates));
-  document.getElementById('cs-template-modal')?.classList.remove('open');
+  document.getElementById('cs-template-modal').classList.remove('open');
   flashMsg('Template saved: ' + name);
 }
 
@@ -14173,7 +14002,7 @@ function aboutRenderScenes() {
       ondragend="aboutDragEnd()" style="transition:background .1s">
       <span class="sc-num" style="color:var(--text3);font-size:10px">${i+1}</span>
       <span style="cursor:grab;color:var(--text4);font-size:16px;line-height:1;padding-right:4px" title="Drag to reorder">⠿</span>
-      <span style="font-size:14px;font-weight:500;color:var(--text)">${s.name||'—'}</span>
+      <span>${s.name||'—'}</span>
       <span style="color:var(--text2)">${s.loc||'—'}</span>
       <span class="sc-ie">${s.ie||'INT'}</span>
       <span style="color:var(--text3)">${s.pages||'—'}</span>
@@ -14205,8 +14034,8 @@ function aboutDrop(e, i) {
   aboutDragEnd();
   aboutSave(); aboutRenderScenes();
 }
-function aboutAddScene() { _aboutEditSceneIdx = null; document.getElementById('about-scene-modal-title').textContent='Add Scene'; ['name','loc','pages'].forEach(k=>document.getElementById('abt-sc-'+k).value=''); document.getElementById('abt-sc-ie').value='INT'; document.getElementById('about-scene-modal')?.classList.add('open'); }
-function aboutEditScene(i) { _aboutEditSceneIdx=i; const s=aboutData.scenes[i]; document.getElementById('about-scene-modal-title').textContent='Edit Scene'; document.getElementById('abt-sc-name').value=s.name||''; document.getElementById('abt-sc-loc').value=s.loc||''; document.getElementById('abt-sc-ie').value=s.ie||'INT'; document.getElementById('abt-sc-pages').value=s.pages||''; document.getElementById('about-scene-modal')?.classList.add('open'); }
+function aboutAddScene() { _aboutEditSceneIdx = null; document.getElementById('about-scene-modal-title').textContent='Add Scene'; ['name','loc','pages'].forEach(k=>document.getElementById('abt-sc-'+k).value=''); document.getElementById('abt-sc-ie').value='INT'; document.getElementById('about-scene-modal').classList.add('open'); }
+function aboutEditScene(i) { _aboutEditSceneIdx=i; const s=aboutData.scenes[i]; document.getElementById('about-scene-modal-title').textContent='Edit Scene'; document.getElementById('abt-sc-name').value=s.name||''; document.getElementById('abt-sc-loc').value=s.loc||''; document.getElementById('abt-sc-ie').value=s.ie||'INT'; document.getElementById('abt-sc-pages').value=s.pages||''; document.getElementById('about-scene-modal').classList.add('open'); }
 function aboutSaveScene() {
   const sc = { name:document.getElementById('abt-sc-name').value.trim(), loc:document.getElementById('abt-sc-loc').value.trim(), ie:document.getElementById('abt-sc-ie').value, pages:document.getElementById('abt-sc-pages').value.trim() };
   if (_aboutEditSceneIdx !== null) aboutData.scenes[_aboutEditSceneIdx] = sc;
@@ -14214,7 +14043,7 @@ function aboutSaveScene() {
   aboutCloseScene(); aboutSave(); aboutRenderScenes();
 }
 function aboutDeleteScene(i) { aboutData.scenes.splice(i,1); aboutSave(); aboutRenderScenes(); }
-function aboutCloseScene() { document.getElementById('about-scene-modal')?.classList.remove('open'); _aboutEditSceneIdx=null; }
+function aboutCloseScene() { document.getElementById('about-scene-modal').classList.remove('open'); _aboutEditSceneIdx=null; }
 
 function aboutRenderCast() {
   const el = document.getElementById('about-cast-rows');
@@ -14232,8 +14061,8 @@ function aboutRenderCast() {
   const hdr = document.querySelector('#about-panel-cast .about-scene-hdr');
   if (hdr) hdr.style.gridTemplateColumns = '1fr 1fr 1fr 1fr 50px';
 }
-function aboutAddCast() { _aboutEditCastIdx=null; buildCastChips(''); ['name','role','costume','props'].forEach(k=>document.getElementById('abt-cast-'+k).value=''); document.getElementById('about-cast-modal')?.classList.add('open'); }
-function aboutEditCast(i) { _aboutEditCastIdx=i; const c=aboutData.cast[i]; buildCastChips(c.name||''); document.getElementById('abt-cast-name').value=c.name||''; document.getElementById('abt-cast-role').value=c.role||''; document.getElementById('abt-cast-costume').value=c.costume||''; document.getElementById('abt-cast-props').value=c.props||''; document.getElementById('about-cast-modal')?.classList.add('open'); }
+function aboutAddCast() { _aboutEditCastIdx=null; buildCastChips(''); ['name','role','costume','props'].forEach(k=>document.getElementById('abt-cast-'+k).value=''); document.getElementById('about-cast-modal').classList.add('open'); }
+function aboutEditCast(i) { _aboutEditCastIdx=i; const c=aboutData.cast[i]; buildCastChips(c.name||''); document.getElementById('abt-cast-name').value=c.name||''; document.getElementById('abt-cast-role').value=c.role||''; document.getElementById('abt-cast-costume').value=c.costume||''; document.getElementById('abt-cast-props').value=c.props||''; document.getElementById('about-cast-modal').classList.add('open'); }
 function buildCastChips(selected) {
   const contacts = (typeof loadContacts==='function' ? loadContacts() : []).map(c=>c.name).filter(Boolean);
   const chips = document.getElementById('abt-cast-chips');
@@ -14247,7 +14076,7 @@ function aboutSaveCast() {
   aboutCloseCast(); aboutSave(); aboutRenderCast();
 }
 function aboutDeleteCast(i) { aboutData.cast.splice(i,1); aboutSave(); aboutRenderCast(); }
-function aboutCloseCast() { document.getElementById('about-cast-modal')?.classList.remove('open'); _aboutEditCastIdx=null; }
+function aboutCloseCast() { document.getElementById('about-cast-modal').classList.remove('open'); _aboutEditCastIdx=null; }
 
 function aboutTab(id, btn) {
   document.querySelectorAll('.about-tab').forEach(b=>b.classList.remove('active'));
@@ -14424,7 +14253,7 @@ function aboutScrollTo(idx) {
       </div>
       <div class="about-scene-list" id="about-scene-list">
         <div class="about-scene-hdr">
-          <span>SC #</span><span></span><span>Scene Name</span><span>Location</span><span>INT/EXT</span><span>Pages</span><span></span>
+          <span>SC #</span><span>Scene Name</span><span>Location</span><span>INT/EXT</span><span>Pages</span><span></span>
         </div>
         <div id="about-scene-rows"></div>
       </div>
@@ -14943,6 +14772,12 @@ function showPage(name, linkEl) {
   }
   if (name === 'home') { refreshHomeData(); if (typeof homeScrollTo === 'function') homeScrollTo('hero'); document.body.style.overflowX = 'hidden'; document.body.style.overflowY = 'hidden'; }
   else { document.body.style.overflowX = 'hidden'; document.body.style.overflowY = ''; }
+  // Always reset call sheet editor when switching pages
+  if (name !== 'callsheets') {
+    var ev = document.getElementById('cs-editor-view');
+    if (ev) ev.style.display = 'none';
+    document.getElementById('cs-list-view-wrapper')?.classList.remove('hidden');
+  }
   if (name === 'callsheets') renderCallSheets();
   if (name === 'todo') renderTodos();
   if (name === 'documents') renderDocs();
@@ -15106,10 +14941,10 @@ function loadProfile() {
 }
 
 function openModal() {
-  document.getElementById('restart-modal')?.classList.add('open');
+  document.getElementById('restart-modal').classList.add('open');
 }
 function closeModal() {
-  document.getElementById('restart-modal')?.classList.remove('open');
+  document.getElementById('restart-modal').classList.remove('open');
 }
 function confirmRestart() {
   localStorage.clear();
@@ -15628,11 +15463,11 @@ function switchProduction(id) {
 
 // New production modal
 function openNewProd() {
-  document.getElementById('new-prod-modal')?.classList.add('open');
+  document.getElementById('new-prod-modal').classList.add('open');
   document.getElementById('np-title').focus();
 }
 function closeNewProd() {
-  document.getElementById('new-prod-modal')?.classList.remove('open');
+  document.getElementById('new-prod-modal').classList.remove('open');
   document.getElementById('np-title').value = '';
   document.getElementById('np-type').value = '';
 }
@@ -15750,7 +15585,7 @@ function schubAction(){
   const activeTab = document.querySelector('.schub-tab.active');
   const cur = activeTab ? (activeTab.getAttribute('onclick')||'').match(/'(\w+)'/)?.[1] : 'schedules';
   if(cur==='schedules' || !cur) openNewSsfsModal();
-  else if(cur==='prodview') document.getElementById('pv-add-modal')?.classList.add('open');
+  else if(cur==='prodview') document.getElementById('pv-add-modal').classList.add('open');
   else openNewSsfsModal(); // fallback
 }
 
@@ -15870,7 +15705,7 @@ function sseTogglePreview() {
   if (topLbl) topLbl.textContent = isCollapsed ? 'Show Preview' : 'Hide Preview';
 }
 function closeSsfsEditor() {
-  document.getElementById('schub-panel-editor')?.classList.remove('active');
+  document.getElementById('schub-panel-editor').classList.remove('active');
   document.body.style.overflow = '';
 }
 function openSsfsEditor(idx){
@@ -15887,7 +15722,7 @@ function openSsfsEditor(idx){
   else{ssRows=[];ssInfo={company:'',day:'',date:'',total:'',crewCall:'',window:'',location:'',weather:'',hospital:'',footer:''};}
   renderSsTimeline();updateSsInfoDisplay();
   // Open fullscreen editor overlay
-  document.getElementById('schub-panel-editor')?.classList.add('active');
+  document.getElementById('schub-panel-editor').classList.add('active');
   document.body.style.overflow = 'hidden';
   } catch(err) { console.error('openSsfsEditor error:', err); }
 }
@@ -16269,7 +16104,7 @@ function openNewSsfsModal(){
   const defaultName='Day '+(ssfsSchedules.length+1)+' Schedule';
   document.getElementById('ssfs-new-name').value=defaultName;
   document.getElementById('ssfs-new-loc').value='';
-  document.getElementById('ssfs-new-modal')?.classList.add('open');
+  document.getElementById('ssfs-new-modal').classList.add('open');
   setTimeout(()=>{const i=document.getElementById('ssfs-new-name');if(i){i.select();}},80);
 }
 function confirmNewSsfs(){
@@ -16279,13 +16114,13 @@ function confirmNewSsfs(){
   const id='sched-'+Date.now();
   ssfsSchedules.push({id,name,version:'A',date:new Date().toISOString().split('T')[0],location:loc,rowCount:0,modified:'Just now'});
   saveSsfsData();renderSsfsGrid();
-  document.getElementById('ssfs-new-modal')?.classList.remove('open');
+  document.getElementById('ssfs-new-modal').classList.remove('open');
 }
 function closeNewSsfsModal(){
-  document.getElementById('ssfs-new-modal')?.classList.remove('open');
+  document.getElementById('ssfs-new-modal').classList.remove('open');
 }
-function startRename(idx){ssfsRenameIdx=idx;document.getElementById('ssfs-rename-input').value=ssfsSchedules[idx].name;document.getElementById('ssfs-rename-modal')?.classList.add('open');}
-function closeRenameModal(){document.getElementById('ssfs-rename-modal')?.classList.remove('open');ssfsRenameIdx=null;}
+function startRename(idx){ssfsRenameIdx=idx;document.getElementById('ssfs-rename-input').value=ssfsSchedules[idx].name;document.getElementById('ssfs-rename-modal').classList.add('open');}
+function closeRenameModal(){document.getElementById('ssfs-rename-modal').classList.remove('open');ssfsRenameIdx=null;}
 function confirmRename(){if(ssfsRenameIdx===null)return;const v=document.getElementById('ssfs-rename-input').value.trim();if(!v)return;ssfsSchedules[ssfsRenameIdx].name=v;saveSsfsData();renderSsfsGrid();closeRenameModal();}
 function duplicateSsfs(idx){const s={...ssfsSchedules[idx],id:'sched-'+Date.now(),name:ssfsSchedules[idx].name+' (Copy)',modified:'Just now'};ssfsSchedules.push(s);saveSsfsData();renderSsfsGrid();}
 function deleteSsfs(idx){if(!confirm('Delete "'+ssfsSchedules[idx].name+'"?'))return;ssfsSchedules.splice(idx,1);saveSsfsData();renderSsfsGrid();}
@@ -16967,7 +16802,7 @@ function pvOpenAdd() {
   document.getElementById('pv-modal-title').textContent = 'Add Activity';
   document.getElementById('pv-save-btn').textContent = 'Add Activity';
   document.getElementById('pv-delete-btn').style.display = 'none';
-  document.getElementById('pv-add-modal')?.classList.add('open');
+  document.getElementById('pv-add-modal').classList.add('open');
   pvAttachModalEnter();
   setTimeout(() => document.getElementById('pv-act-name').focus(), 80);
 }
@@ -16991,7 +16826,7 @@ function pvOpenEdit(idx, si) {
   document.getElementById('pv-save-btn').textContent = 'Save';
   document.getElementById('pv-delete-btn').style.display = '';
   document.getElementById('pv-delete-btn').textContent = a.spans.length > 1 ? 'Remove Segment' : 'Delete';
-  document.getElementById('pv-add-modal')?.classList.add('open');
+  document.getElementById('pv-add-modal').classList.add('open');
   pvAttachModalEnter();
 }
 function pvResetModal() {
@@ -17019,7 +16854,7 @@ function pvAttachModalEnter() {
   document.addEventListener('keydown', _pvModalEnterHandler);
 }
 function pvCloseModal() {
-  document.getElementById('pv-add-modal')?.classList.remove('open');
+  document.getElementById('pv-add-modal').classList.remove('open');
   _pvEditIdx = null;
   if (_pvModalEnterHandler) {
     document.removeEventListener('keydown', _pvModalEnterHandler);
@@ -17710,7 +17545,7 @@ function msgBuildFlyer(s){
   if(s.includeCallSheet==='yes'&&typeof loadCS==='function'){var sheets=loadCS();if(sheets.length){var sh=sheets[0];csHtml='<div style="margin-top:12px;padding:10px 14px;border-radius:8px;background:rgba(128,128,128,.08);font-size:.78em;border:1px solid rgba(128,128,128,.15)"><div style="font-size:.75em;letter-spacing:2px;text-transform:uppercase;opacity:.35;margin-bottom:4px">Call Sheet Attached</div><div style="font-weight:500;opacity:.8">'+msgEsc(sh.title||'Untitled')+'</div>'+(sh.date?'<div style="opacity:.5;font-size:.9em;margin-top:2px">'+msgEsc(sh.date)+'</div>':'')+'</div>';}}
     notesHtml+=propsHtml+csHtml;
   // Build inline notes block — sits directly under the message body
-  var notesBlock=notesHtml?'<div style="margin-top:16px;padding-top:14px;margin-bottom:20px;border-top:1px solid rgba(128,128,128,.15)">'+(s.bring?'<div style="margin-bottom:8px"><div style="font-size:.68em;letter-spacing:2px;text-transform:uppercase;opacity:.35;margin-bottom:3px">Bring</div><div style="font-size:.88em;font-weight:400">'+msgEsc(s.bring)+'</div></div>':'')+(s.know?'<div><div style="font-size:.68em;letter-spacing:2px;text-transform:uppercase;opacity:.35;margin-bottom:3px">Notes</div><div style="font-size:.88em;font-weight:400">'+msgEsc(s.know)+'</div></div>':'')+(propsHtml||'')+(csHtml||'')+'</div>':'';
+  var notesBlock=notesHtml?'<div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(128,128,128,.15)">'+(s.bring?'<div style="margin-bottom:8px"><div style="font-size:.68em;letter-spacing:2px;text-transform:uppercase;opacity:.35;margin-bottom:3px">Bring</div><div style="font-size:.88em;font-weight:400">'+msgEsc(s.bring)+'</div></div>':'')+(s.know?'<div><div style="font-size:.68em;letter-spacing:2px;text-transform:uppercase;opacity:.35;margin-bottom:3px">Notes</div><div style="font-size:.88em;font-weight:400">'+msgEsc(s.know)+'</div></div>':'')+(propsHtml||'')+(csHtml||'')+'</div>':'';
   var calHtml=s.cal?'<a href="'+msgEsc(s.cal)+'" target="_blank" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:100px;font-size:.85em;font-weight:500;text-decoration:none;background:'+ac+';color:#000;margin-top:8px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Add to Calendar</a>':'';
   var logoHtml=s.logo?'<img src="'+s.logo+'" style="height:28px;width:auto;object-fit:contain;opacity:.85">':'<div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;opacity:.25">343 CINEMA</div>';
   var photoHtml=s.photo?'<img src="'+s.photo+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">':'';
@@ -17890,7 +17725,7 @@ function msgRenderSentList(){
   if(!_msgSentList.length){el.innerHTML='<div style="padding:32px;text-align:center;color:var(--text3);font-size:13px">No sent messages yet</div>';return;}
   el.innerHTML=_msgSentList.map(function(m,i){
     var date=m.savedAt?new Date(m.savedAt).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
-    return '<div class="msg-sent-row" onclick="msgEditSent('+i+')" style="cursor:pointer" title="Click to edit"><div class="msg-sent-dot" style="background:'+(m.color||'var(--c1)')+'"></div><div style="flex:1;min-width:0"><div class="msg-sent-name">'+msgEsc(m.name||'Unnamed')+'</div><div class="msg-sent-role">'+msgEsc(m.role||'-')+' / '+msgEsc(m.project||'-')+'</div></div><div class="msg-sent-date">'+date+'</div><div class="msg-sent-actions" onclick="event.stopPropagation()"><button class="msg-sent-action" onclick="msgEditSent('+i+')">Edit</button><button class="msg-sent-action" onclick="msgExportSent('+i+')">PDF</button><button class="msg-sent-action" style="color:var(--text4)" onclick="msgDeleteSent('+i+')">x</button></div></div>';
+    return '<div class="msg-sent-row"><div class="msg-sent-dot" style="background:'+(m.color||'var(--c1)')+'"></div><div><div class="msg-sent-name">'+msgEsc(m.name||'Unnamed')+'</div><div class="msg-sent-role">'+msgEsc(m.role||'-')+' / '+msgEsc(m.project||'-')+'</div></div><div class="msg-sent-date">'+date+'</div><div class="msg-sent-actions"><button class="msg-sent-action" onclick="msgEditSent('+i+')">Edit</button><button class="msg-sent-action" onclick="msgExportSent('+i+')">PDF</button><button class="msg-sent-action" style="color:var(--text4)" onclick="msgDeleteSent('+i+')">x</button></div></div>';
   }).join('');
 }
 function msgEditSent(i){
@@ -17923,211 +17758,507 @@ function saveCS(d){localStorage.setItem('cs_'+(activeProdId||'x'),JSON.stringify
 function loadCseState(id){try{return JSON.parse(localStorage.getItem('csestate_'+id)||'null');}catch(e){return null;}}
 function saveCseState(id,s){localStorage.setItem('csestate_'+id,JSON.stringify(s));}
 var cseEditIdx=null,cseCrewRows=[],cseSceneRows=[],cseCastRows=[],cseBackRows=[],cseProps=[],cseLogoUrl='';
+var clfLocType='INT';
+var cseSummaryDeptMsgs=[];
+var _statusCycles=['W','WD','SW','SWF','H','WF'];
+var _statusColors={W:'#5BA3C9',WD:'#E8887A',SW:'#72B584',SWF:'#9B7FD4',H:'#D4B84A',WF:'#888'};
+var _clfPbSection=null;
+
+function clfSetAccent(color,el){
+  cseExpAccentColor=color;
+  document.querySelectorAll('.clf-accent-swatch').forEach(function(s){s.classList.remove('active');});
+  if(el)el.classList.add('active');
+  clfApplyAccent(color);
+}
+function clfApplyAccent(color){
+  var c=color||'#F5A67D';
+  var hdr=document.getElementById('clf-hdr-el');
+  if(hdr) hdr.style.background='linear-gradient(135deg,'+c+' 0%,'+c+'cc 40%,#9B7FD4 100%)';
+  var bh=document.getElementById('clf-back-hdr');
+  if(bh) bh.style.borderBottomColor=c;
+  var dot=document.getElementById('clf-crew-dot');if(dot)dot.style.background=c;
+  var cdot=document.getElementById('clf-cast-dot');if(cdot)cdot.style.background=c;
+  document.querySelectorAll('.clf-loc-btn.active').forEach(function(b){b.style.background='#fff';b.style.color=c;});
+}
+function clfSetLocType(type,el){
+  document.querySelectorAll('.clf-loc-btn').forEach(function(b){b.classList.remove('active');b.style.background='';b.style.color='';});
+  if(el){el.classList.add('active');el.style.background='#fff';el.style.color=cseExpAccentColor||'#E8887A';}
+  clfLocType=type;
+}
+function clfHandleLogo(input){
+  var file=input&&input.files&&input.files[0];if(!file)return;
+  var r=new FileReader();r.onload=function(ev){
+    cseLogoUrl=ev.target.result;
+    var img=document.getElementById('clf-logo-img'),txt=document.getElementById('clf-hdr-logo-txt');
+    if(img){img.src=cseLogoUrl;img.style.display='';}if(txt)txt.style.display='none';
+  };r.readAsDataURL(file);
+}
+function clfCollectTable(tbodyId,cols){
+  var rows=[],tbody=document.getElementById(tbodyId);if(!tbody)return rows;
+  tbody.querySelectorAll('tr').forEach(function(tr){
+    var row={};cols.forEach(function(col){
+      var cell=tr.querySelector('[data-col="'+col+'"]');
+      if(!cell){
+        // Fallback: check data-status button for status col
+        if(col==='status'){
+          var btn=tr.querySelector('[data-status]');
+          row[col]=btn?btn.dataset.status:'W';
+        } else { row[col]=''; }
+        return;
+      }
+      row[col]=(cell.tagName==='INPUT'||cell.tagName==='SELECT')?cell.value:(cell.innerText||cell.textContent||'').trim();
+    });rows.push(row);
+  });return rows;
+}
+function clfRenderCrewRows(){
+  var t=document.getElementById('clf-crew-body');if(!t)return;
+  t.innerHTML=(cseCrewRows||[]).map(function(r,i){return'<tr><td><div class="clf-cell clf-pos-cell" contenteditable="true" data-col="pos" data-ph="Position" spellcheck="false">'+cseEsc(r.pos)+'</div></td><td><div class="clf-cell clf-name-cell" contenteditable="true" data-col="name" data-ph="Name" spellcheck="false">'+cseEsc(r.name)+'</div></td><td style="width:120px"></td><td><div class="clf-cell clf-phone-cell" contenteditable="true" data-col="phone" data-ph="(000) 000-0000" spellcheck="false">'+cseEsc(r.phone)+'</div></td><td><button class="clf-del-btn" onclick="clfDeleteRow(&quot;crew&quot;,'+i+')">×</button></td></tr>';}).join('');
+}
+function clfRenderSceneRows(){
+  var t=document.getElementById('clf-scene-body');if(!t)return;
+  t.innerHTML=(cseSceneRows||[]).map(function(r,i){
+    var sel='<select class="clf-sel-cell" data-col="type">'+['INT','EXT','INT/EXT'].map(function(v){return'<option'+(r.type===v?' selected':'')+'>'+v+'</option>';}).join('')+'</select>';
+    return'<tr><td>'+sel+'</td><td><div class="clf-cell" contenteditable="true" data-col="sc" data-ph="#" spellcheck="false">'+cseEsc(r.sc)+'</div></td><td><div class="clf-cell" contenteditable="true" data-col="desc" data-ph="Scene description" spellcheck="false">'+cseEsc(r.desc)+'</div></td><td><div class="clf-cell" contenteditable="true" data-col="cast" data-ph="1,2" spellcheck="false">'+cseEsc(r.cast||'')+'</div></td><td><div class="clf-cell" contenteditable="true" data-col="start" data-ph="1PM" spellcheck="false">'+cseEsc(r.start)+'</div></td><td><div class="clf-cell" contenteditable="true" data-col="pages" data-ph="2" spellcheck="false">'+cseEsc(r.pages||'')+'</div></td><td><button class="clf-del-btn" onclick="clfDeleteRow(&quot;scene&quot;,'+i+')">×</button></td></tr>';
+  }).join('');
+}
+function clfCycleStatus(btn){
+  var cur=btn.dataset.status||'W',idx=_statusCycles.indexOf(cur),next=_statusCycles[(idx+1)%_statusCycles.length];
+  btn.dataset.status=next;btn.textContent=next;var col=_statusColors[next]||'#888';
+  btn.style.background=col+'22';btn.style.color=col;
+}
+function clfRenderCastRows(){
+  var t=document.getElementById('clf-cast-body');if(!t)return;
+  var a=cseExpAccentColor||'#F5A67D';
+  t.innerHTML=(cseCastRows||[]).map(function(r,i){
+    var st=r.status||'W',sc=_statusColors[st]||'#888';
+    return'<tr><td style="padding-left:0"><div style="display:inline-flex;align-items:center;gap:5px"><div style="width:3px;height:26px;background:'+a+';border-radius:100px;flex-shrink:0"></div><div class="clf-cell" contenteditable="true" data-col="id" data-ph="#" style="width:22px;text-align:center" spellcheck="false">'+cseEsc(r.id)+'</div></div></td><td><div class="clf-cell" contenteditable="true" data-col="char" data-ph="Character" spellcheck="false">'+cseEsc(r.char)+'</div></td><td><div class="clf-cell" contenteditable="true" data-col="cast" data-ph="Actor name" spellcheck="false">'+cseEsc(r.cast)+'</div></td><td><button class="clf-status-chip" data-status="'+st+'" onclick="clfCycleStatus(this)" style="background:'+sc+'22;color:'+sc+'">'+st+'</button></td><td><div class="clf-cell" contenteditable="true" data-col="call" data-ph="11AM" spellcheck="false">'+cseEsc(r.call)+'</div></td><td><div class="clf-cell" contenteditable="true" data-col="wrap" data-ph="7PM" spellcheck="false">'+cseEsc(r.wrap)+'</div></td><td><button class="clf-del-btn" onclick="clfDeleteRow(&quot;cast&quot;,'+i+')">×</button></td></tr>';
+  }).join('');
+}
+function clfRenderBackRows(){
+  var t=document.getElementById('clf-back-body');if(!t)return;
+  t.innerHTML=(cseBackRows||[]).map(function(r,i){return'<tr><td><div class="clf-cell clf-pos-cell" contenteditable="true" data-col="pos" data-ph="Position" spellcheck="false">'+cseEsc(r.pos)+'</div></td><td><div class="clf-cell clf-name-cell" contenteditable="true" data-col="name" data-ph="Name" spellcheck="false">'+cseEsc(r.name)+'</div></td><td style="width:120px"></td><td><div class="clf-cell clf-phone-cell" contenteditable="true" data-col="phone" data-ph="(000) 000-0000" spellcheck="false">'+cseEsc(r.phone)+'</div></td><td><button class="clf-del-btn" onclick="clfDeleteRow(&quot;back&quot;,'+i+')">×</button></td></tr>';}).join('');
+}
+function clfRenderAllTables(){clfRenderCrewRows();clfRenderSceneRows();clfRenderCastRows();clfRenderBackRows();}
+function clfAddRow(type){
+  // Scenes add directly inline; crew/cast/back use popup
+  if(type==='scene'){
+    cseSceneRows=clfCollectTable('clf-scene-body',['type','sc','desc','cast','start','pages']);
+    cseSceneRows.push({sc:String(cseSceneRows.length+1),type:'INT',desc:'',cast:'',start:'',pages:''});
+    clfRenderSceneRows();
+    setTimeout(function(){
+      var tbody=document.getElementById('clf-scene-body');
+      if(!tbody)return;
+      var last=tbody.querySelector('tr:last-child .clf-cell');
+      if(last){last.focus();var r=document.createRange(),s=window.getSelection();r.selectNodeContents(last);r.collapse(false);s.removeAllRanges();s.addRange(r);}
+    },20);
+    return;
+  }
+  clfOpenAddModal(type);
+}
+var _clfAddModalType = null;
+function clfOpenAddModal(type){
+  _clfAddModalType = type;
+  var modal = document.getElementById('clf-add-modal');
+  var title = document.getElementById('clf-add-modal-title');
+  var f1lbl = document.getElementById('clf-add-modal-f1-lbl');
+  var f2lbl = document.getElementById('clf-add-modal-f2-lbl');
+  var f3wrap = document.getElementById('clf-add-f3-wrap');
+  var btn = document.getElementById('clf-add-modal-btn');
+  // Reset fields
+  ['clf-add-f1','clf-add-f2','clf-add-f3'].forEach(function(id){
+    var el=document.getElementById(id);if(el)el.value='';
+  });
+  if(type==='crew'){
+    title.textContent='Add Crew Member';
+    f1lbl.textContent='Position'; f2lbl.textContent='Name';
+    f3wrap.style.display=''; btn.textContent='Add to Crew';
+  } else if(type==='cast'){
+    title.textContent='Add Cast Member';
+    f1lbl.textContent='Character'; f2lbl.textContent='Actor Name';
+    f3wrap.style.display='none'; btn.textContent='Add to Cast';
+  } else if(type==='back'){
+    title.textContent='Add Background / Crew';
+    f1lbl.textContent='Position'; f2lbl.textContent='Name';
+    f3wrap.style.display=''; btn.textContent='Add';
+  }
+  modal.style.display='flex';
+  setTimeout(function(){document.getElementById('clf-add-f1')?.focus();},80);
+  // Enter key: move between fields, submit on last visible field
+  var visibleFields = ['clf-add-f1','clf-add-f2'];
+  if(type !== 'cast') visibleFields.push('clf-add-f3');
+  visibleFields.forEach(function(id, idx){
+    var el=document.getElementById(id);
+    if(!el) return;
+    el.onkeydown=function(e){
+      if(e.key!=='Enter') return;
+      e.preventDefault();
+      if(idx < visibleFields.length - 1){
+        // Move to next field
+        document.getElementById(visibleFields[idx+1])?.focus();
+      } else {
+        // Last field — submit
+        clfConfirmAddModal();
+      }
+    };
+  });
+}
+function clfCloseAddModal(){
+  var modal=document.getElementById('clf-add-modal');
+  if(modal) modal.style.display='none';
+  _clfAddModalType=null;
+}
+function clfConfirmAddModal(){
+  var f1=document.getElementById('clf-add-f1')?.value.trim()||'';
+  var f2=document.getElementById('clf-add-f2')?.value.trim()||'';
+  var f3=document.getElementById('clf-add-f3')?.value.trim()||'';
+  if(!f1&&!f2){document.getElementById('clf-add-f1')?.focus();return;}
+  var type=_clfAddModalType;
+  if(type==='crew'){
+    cseCrewRows=clfCollectTable('clf-crew-body',['pos','name','phone']);
+    cseCrewRows.push({pos:f1,name:f2,phone:f3});
+    clfRenderCrewRows();
+  } else if(type==='cast'){
+    cseCastRows=clfCollectTable('clf-cast-body',['id','char','cast','status','call','wrap']);
+    cseCastRows.push({id:String(cseCastRows.length+1),char:f1,cast:f2,status:'W',call:'',wrap:''});
+    clfRenderCastRows();
+  } else if(type==='back'){
+    cseBackRows=clfCollectTable('clf-back-body',['pos','name','phone']);
+    cseBackRows.push({pos:f1,name:f2,phone:f3});
+    clfRenderBackRows();
+  }
+  clfCloseAddModal();
+}
+
+function clfDeleteRow(type,idx){
+  if(type==='crew'){cseCrewRows=clfCollectTable('clf-crew-body',['pos','name','phone']);cseCrewRows.splice(idx,1);clfRenderCrewRows();}
+  if(type==='scene'){cseSceneRows=clfCollectTable('clf-scene-body',['type','sc','desc','cast','start','pages']);cseSceneRows.splice(idx,1);clfRenderSceneRows();}
+  if(type==='cast'){cseCastRows=clfCollectTable('clf-cast-body',['id','char','cast','status','call','wrap']);cseCastRows.splice(idx,1);clfRenderCastRows();}
+  if(type==='back'){cseBackRows=clfCollectTable('clf-back-body',['pos','name','phone']);cseBackRows.splice(idx,1);clfRenderBackRows();}
+}
+function clfAddProp(){
+  var inp=document.getElementById('clf-prop-inp');if(!inp)return;
+  var v=inp.value.trim();if(!v)return;
+  v.split(',').forEach(function(p){var t=p.trim();if(t)cseProps.push(t);});
+  inp.value='';clfRenderPropsWrap();
+}
+function clfRenderPropsWrap(){
+  var c=document.getElementById('clf-props-wrap');if(!c)return;
+  c.innerHTML=(cseProps||[]).map(function(p,i){return'<div class="clf-prop-chip">'+cseEsc(p)+'<button onclick="cseProps.splice('+i+',1);clfRenderPropsWrap()" title="Remove">×</button></div>';}).join('');
+}
+function clfOpenPhoneBook(section){
+  _clfPbSection=section;
+  var contacts=typeof loadContacts==='function'?loadContacts():[];
+  var picker=document.getElementById('cse-pb-picker');
+  if(!picker)return;
+  picker.style.display='flex';picker.classList.add('open');
+  clfPbRender(contacts,'');
+  var inp=document.getElementById('pbp-search');if(inp){inp.value='';inp.focus();}
+}
+function clfPbRender(contacts,query){
+  var list=document.getElementById('pbp-list');if(!list)return;
+  var f=query?contacts.filter(function(c){return(c.name||'').toLowerCase().includes(query.toLowerCase())||(c.role||'').toLowerCase().includes(query.toLowerCase());}):contacts;
+  if(!f.length){list.innerHTML='<div style="padding:14px;text-align:center;color:var(--text3);font-size:12px">No contacts found</div>';return;}
+  list._contacts=contacts;
+  list.innerHTML=f.map(function(c){var ri=contacts.indexOf(c);return'<div class="pbp-item" onclick="clfPbSelect('+ri+')" style="padding:9px 10px;border-radius:9px;cursor:pointer;display:flex;gap:9px;align-items:center;transition:background .12s" style="cursor:pointer"><div style="width:30px;height:30px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text2);flex-shrink:0">'+(c.name||'?')[0].toUpperCase()+'</div><div><div style="font-size:12px;font-weight:600;color:var(--text)">'+cseEsc(c.name||'')+'</div><div style="font-size:10px;color:var(--text3)">'+cseEsc((c.role||c.dept||'')+(c.phone?' · '+c.phone:''))+'</div></div></div>';}).join('');
+}
+function pbpFilter(query){clfPbRender(typeof loadContacts==='function'?loadContacts():[],query||'');}
+function clfPbSelect(idx){
+  var contacts=typeof loadContacts==='function'?loadContacts():[];
+  var c=contacts[idx];if(!c)return;
+  if(_clfPbSection==='crew'){cseCrewRows=clfCollectTable('clf-crew-body',['pos','name','phone']);cseCrewRows.push({pos:c.role||c.dept||'',name:c.name||'',phone:c.phone||''});clfRenderCrewRows();}
+  else if(_clfPbSection==='cast'){cseCastRows=clfCollectTable('clf-cast-body',['id','char','cast','status','call','wrap']);cseCastRows.push({id:String(cseCastRows.length+1),char:'',cast:c.name||'',status:'W',call:c.phone||'',wrap:''});clfRenderCastRows();}
+  else if(_clfPbSection==='back'){cseBackRows=clfCollectTable('clf-back-body',['pos','name','phone']);cseBackRows.push({pos:c.role||c.dept||'',name:c.name||'',phone:c.phone||''});clfRenderBackRows();}
+  closePbPicker();flashMsg(c.name+' added');
+}
+function closePbPicker(){var el=document.getElementById('cse-pb-picker');if(el){el.style.display='none';el.classList.remove('open');}}
+function csePopulateLiveSheet(d){
+  function sf(id,v){var el=document.getElementById(id);if(!el)return;if(el.tagName==='INPUT'||el.tagName==='SELECT')el.value=v||'';else el.innerText=v||'';}
+  d=d||{};
+  sf('clf-company',d.company||'');sf('clf-title',d.title||'');sf('clf-date',d.date||'');
+  sf('clf-crew-call',d.generalCall||'');sf('clf-sunset',d.sunset||'');sf('clf-weather',d.weather||'');
+  sf('clf-shoot-time',d.shootTime||'');sf('clf-hospital',d.hospital||'');
+  sf('clf-location',d.location||'');sf('clf-safety',d.safety||'');
+  sf('clf-notes',d.notes||'');sf('clf-office',d.office||'');
+  var lt=d.locType||'INT';clfLocType=lt;
+  document.querySelectorAll('.clf-loc-btn').forEach(function(b){b.classList.toggle('active',b.textContent.trim()===lt);});
+  var img=document.getElementById('clf-logo-img'),txt=document.getElementById('clf-hdr-logo-txt');
+  if(img&&txt){if(cseLogoUrl){img.src=cseLogoUrl;img.style.display='';txt.style.display='none';}else{img.style.display='none';txt.style.display='';}}
+  var ref=document.getElementById('clf-back-title-ref');if(ref)ref.textContent=d.title||'';
+  clfRenderAllTables();clfRenderPropsWrap();
+  clfApplyAccent(cseExpAccentColor||'#F5A67D');
+}
+
 var cseExpFileType='pdf',cseExpFormat='minimal',cseExpAccentColor='#F5A67D',cseExpFontFamily='Inter',cseExpSize='letter';
 function cseEsc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function cseSetField(id,v){var el=document.getElementById(id);if(el)el.value=v||'';}
 function cseGetField(id){return(document.getElementById(id)||{value:''}).value.trim();}
-function cseGetData(){return{title:cseGetField('cse-title'),company:cseGetField('cse-company'),date:cseGetField('cse-date'),day:cseGetField('cse-day'),generalCall:cseGetField('cse-crew-call'),shootTime:cseGetField('cse-shoot-time'),tz:cseGetField('cse-tz'),sunset:cseGetField('cse-sunset'),weather:cseGetField('cse-weather'),location:cseGetField('cse-location'),hospital:cseGetField('cse-hospital'),office:cseGetField('cse-office'),safety:cseGetField('cse-safety'),notes:cseGetField('cse-notes'),logoUrl:cseLogoUrl||'',crew:cseCrewRows.slice(),scenes:cseSceneRows.slice(),cast:cseCastRows.slice(),backRows:cseBackRows.slice(),props:cseProps.slice()};}
-function cseShowEditor(){document.getElementById('cs-list-view')?.classList.add('hidden');var ev=document.getElementById('cs-editor-view');if(ev)ev.style.display='flex';}
-function cseHideEditor(){document.getElementById('cs-list-view')?.classList.remove('hidden');var ev=document.getElementById('cs-editor-view');if(ev)ev.style.display='none';}
-function cseOpenNew(){cseEditIdx=null;var prod=productions.find(function(p){return p.id===activeProdId;})||{};cseSetField('cse-company',prod.title||'');cseSetField('cse-title',prod.title||'');cseSetField('cse-safety','SAFETY FIRST | NO FORCED CALLS | NO SMOKING ON SET');cseCrewRows=[{pos:'Producer',name:'',phone:''},{pos:'Director',name:'',phone:''},{pos:'1st AD',name:'',phone:''},{pos:'DP',name:'',phone:''}];cseSceneRows=[{sc:'1',type:'INT',desc:'',cast:'',start:'',pages:''}];cseCastRows=[{id:'1',char:'',cast:'',status:'W',call:'',wrap:''}];cseBackRows=[];cseProps=[];cseRenderAllTables();document.getElementById('cse-editor-title').textContent='New Call Sheet';cseShowEditor();}
+function cseGetData(){
+  function gt(id){var el=document.getElementById(id);if(!el)return'';return(el.tagName==='INPUT'||el.tagName==='SELECT')?el.value.trim():(el.innerText||el.textContent||'').trim();}
+  var crew=clfCollectTable('clf-crew-body',['pos','name','phone']);
+  var scenes=clfCollectTable('clf-scene-body',['type','sc','desc','cast','start','pages']);
+  var cast=clfCollectTable('clf-cast-body',['id','char','cast','status','call','wrap']);
+  var back=clfCollectTable('clf-back-body',['pos','name','phone']);
+  return{title:gt('clf-title'),company:gt('clf-company'),date:gt('clf-date'),day:'',generalCall:gt('clf-crew-call'),shootTime:gt('clf-shoot-time'),tz:'',sunset:gt('clf-sunset'),weather:gt('clf-weather'),location:gt('clf-location'),locType:clfLocType||'INT',hospital:gt('clf-hospital'),office:gt('clf-office'),safety:gt('clf-safety'),notes:gt('clf-notes'),summaryDay:'',deptMsgs:[],logoUrl:cseLogoUrl||'',crew:crew,scenes:scenes,cast:cast,back:back,backRows:back,props:cseProps?cseProps.slice():[]};
+}
+function cseShowEditor(){
+  document.getElementById('cs-list-view-wrapper')?.classList.add('hidden');
+  var ev=document.getElementById('cs-editor-view');
+  if(ev) ev.style.display='flex';
+  if(typeof clfApplyAccent==='function') clfApplyAccent(cseExpAccentColor||'#F5A67D');
+  if(typeof cseSetZoom==='function') cseSetZoom(document.getElementById('cse-zoom-slider')?.value||75);
+}
+function cseHideEditor(){
+  document.getElementById('cs-list-view-wrapper')?.classList.remove('hidden');
+  var ev=document.getElementById('cs-editor-view');
+  if(ev) ev.style.display='none';
+}
+function cseOpenNew(){
+  cseEditIdx=null;var prod=productions.find(function(p){return p.id===activeProdId;})||{};
+  cseLogoUrl='';cseProps=[];cseSummaryDeptMsgs=[];
+  cseCrewRows=[{pos:'Producer',name:'',phone:''},{pos:'Director',name:'',phone:''},{pos:'1st AD',name:'',phone:''},{pos:'DP',name:'',phone:''}];
+  cseSceneRows=[{sc:'1',type:'INT',desc:'',cast:'',start:'',pages:''}];
+  cseCastRows=[{id:'1',char:'',cast:'',status:'W',call:'',wrap:''}];
+  cseBackRows=[];
+  document.getElementById('cse-editor-title').textContent='New Call Sheet';
+  cseShowEditor();
+  csePopulateLiveSheet({company:prod.title||'',title:prod.title||'',safety:'SAFETY FIRST | NO FORCED CALLS | NO SMOKING ON SET'});
+}
 function cseBackToList(){cseHideEditor();renderCallSheets();}
-function cseSaveSheet(){var d=cseGetData(),data=loadCS();var id=cseEditIdx!==null&&data[cseEditIdx]?data[cseEditIdx].id||'cse_'+cseEditIdx:'cse_'+Date.now();var entry={id:id,title:d.title||'Untitled',company:d.company,date:d.date,location:d.location,crewCount:d.crew.filter(function(r){return r.name;}).length,sceneCount:d.scenes.filter(function(r){return r.desc||r.sc;}).length,status:'draft',savedAt:new Date().toISOString()};if(cseEditIdx!==null&&data[cseEditIdx]){Object.assign(data[cseEditIdx],entry);}else{data.push(entry);cseEditIdx=data.length-1;}saveCS(data);saveCseState(id,Object.assign({},d,{id:id}));document.getElementById('cse-editor-title').textContent=d.title||'Untitled';flashMsg('Call sheet saved');}
-function cseOpenEdit(idx){var data=loadCS();if(!data[idx])return;cseEditIdx=idx;var id=data[idx].id||'cse_'+idx,state=loadCseState(id);if(state){['title','company','date','day','safety','notes','location','hospital','office','sunset','weather'].forEach(function(k){cseSetField('cse-'+k,state[k]||'');});cseSetField('cse-crew-call',state.generalCall||'');cseSetField('cse-shoot-time',state.shootTime||'');cseCrewRows=state.crew||[];cseSceneRows=state.scenes||[];cseCastRows=state.cast||[];cseBackRows=state.backRows||[];cseProps=state.props||[];cseRenderAllTables();}document.getElementById('cse-editor-title').textContent=data[idx].title||'Call Sheet';cseShowEditor();}
-function cseRender(){}
+function cseSaveSheet(){
+  // Flush time formatters and weather before reading data
+  ['clf-crew-call','clf-sunset','clf-shoot-time'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el&&typeof clfFormatTime==='function'){
+      var raw=(el.tagName==='INPUT')?el.value:(el.innerText||el.textContent||'');
+      var fmt=clfFormatTime(raw.trim());
+      if(fmt){if(el.tagName==='INPUT')el.value=fmt;else el.textContent=fmt;}
+    }
+  });
+  if(typeof clfWeatherUpdate==='function') clfWeatherUpdate();
+  var d=cseGetData(),data=loadCS();var id=cseEditIdx!==null&&data[cseEditIdx]?data[cseEditIdx].id||'cse_'+cseEditIdx:'cse_'+Date.now();var entry={id:id,title:d.title||'Untitled',company:d.company,date:d.date,location:d.location,crewCount:d.crew.filter(function(r){return r.name;}).length,sceneCount:d.scenes.filter(function(r){return r.desc||r.sc;}).length,status:'draft',savedAt:new Date().toISOString()};if(cseEditIdx!==null&&data[cseEditIdx]){Object.assign(data[cseEditIdx],entry);}else{data.push(entry);cseEditIdx=data.length-1;}saveCS(data);saveCseState(id,Object.assign({},d,{id:id}));document.getElementById('cse-editor-title').textContent=d.title||'Untitled';flashMsg('Call sheet saved');}
+function cseOpenEdit(idx){
+  var data=loadCS();if(!data[idx])return;
+  cseEditIdx=idx;var id=data[idx].id||'cse_'+idx,state=loadCseState(id);
+  if(state){cseLogoUrl=state.logoUrl||'';cseProps=state.props||[];cseCrewRows=state.crew||[];cseSceneRows=state.scenes||[];cseCastRows=state.cast||[];cseBackRows=state.backRows||[];}
+  else{cseLogoUrl='';cseProps=[];cseCrewRows=[];cseSceneRows=[];cseCastRows=[];cseBackRows=[];}
+  document.getElementById('cse-editor-title').textContent=data[idx].title||'Call Sheet';
+  cseShowEditor();
+  csePopulateLiveSheet(state||{title:data[idx].title||''});
+}
+function cseRender(){
+  var front=document.getElementById('cse-preview-front');
+  var back=document.getElementById('cse-preview-back');
+  if(!front||!back){console.warn('cseRender: preview divs not found');return;}
+  var d;
+  try{ d=cseGetData(); }catch(e){console.error('cseGetData failed:',e);return;}
+  d.back=(cseBackRows||[]).slice();
+  var accent=cseExpAccentColor||'#F5A67D';
+  var font=cseExpFontFamily||'Inter';
+  var fmt=cseExpFormat||'minimal';
+  var hasData=d.title||d.company||
+    (d.crew&&d.crew.filter(function(r){return r.name;}).length)||
+    (d.scenes&&d.scenes.filter(function(r){return r.desc||r.sc;}).length);
+  if(!hasData){
+    front.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#ccc;font-family:Inter,sans-serif;text-align:center;gap:8px"><div style="font-size:32px">📋</div><div style="font-size:13px;font-weight:500">Fill in details to see preview</div></div>';
+    back.innerHTML=''; return;
+  }
+  try{
+    var fh,bh;
+    if(fmt==='floaty'){fh=cseBuildFloatyFront(d,accent,font);bh=cseBuildFloatyBack(d,accent,font);}
+    else if(fmt==='zine'){fh=cseBuildZineFront(d,accent,font);bh=cseBuildZineBack(d,accent,font);}
+    else{fh=cseBuildMinimalFront(d,accent,font);bh=cseBuildMinimalBack(d,accent,font);}
+    front.innerHTML=fh||''; back.innerHTML=bh||'';
+  }catch(e){
+    console.error('cseRender build error:',e);
+    front.innerHTML='<div style="padding:24px;color:#888;font-size:12px;font-family:Inter,sans-serif"><b>Preview error:</b><br>'+e.message+'</div>';
+    back.innerHTML='';
+  }
+}
 function cseRenderAllTables(){cseRenderCrewTable();cseRenderSceneTable();cseRenderCastTable();cseRenderBackTable();}
 function cseRenderProps(){var b=document.getElementById('cse-props-master-list');if(b)b.innerHTML=cseProps.map(function(p){return '<option value="'+cseEsc(p)+'">';}).join('');}
 function cseRenderCrewTable(){var t=document.getElementById('cse-crew-body');if(!t)return;t.innerHTML=cseCrewRows.map(function(r,i){return '<tr><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.pos)+'" placeholder="Position" oninput="cseCrewRows['+i+'].pos=this.value"></td><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.name)+'" placeholder="Name" oninput="cseCrewRows['+i+'].name=this.value"></td><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.phone)+'" placeholder="Phone" oninput="cseCrewRows['+i+'].phone=this.value"></td><td><button onclick="cseCrewRows.splice('+i+',1);cseRenderCrewTable()" style="background:none;border:none;color:var(--text4);cursor:pointer;font-size:16px;padding:2px 6px">x</button></td></tr>';}).join('');}
 function cseRenderSceneTable(){var t=document.getElementById('cse-scene-body');if(!t)return;t.innerHTML=cseSceneRows.map(function(r,i){return '<tr><td><input class="cse-input" style="width:50px" value="'+cseEsc(r.sc)+'" placeholder="#" oninput="cseSceneRows['+i+'].sc=this.value"></td><td><select class="cse-input" onchange="cseSceneRows['+i+'].type=this.value"><option'+(r.type==='INT'?' selected':'')+'>INT</option><option'+(r.type==='EXT'?' selected':'')+'>EXT</option><option'+(r.type==='INT/EXT'?' selected':'')+'>INT/EXT</option></select></td><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.desc)+'" placeholder="Description" oninput="cseSceneRows['+i+'].desc=this.value"></td><td><input class="cse-input" style="width:80px" value="'+cseEsc(r.start)+'" placeholder="Start" oninput="cseSceneRows['+i+'].start=this.value"></td><td><button onclick="cseSceneRows.splice('+i+',1);cseRenderSceneTable()" style="background:none;border:none;color:var(--text4);cursor:pointer;font-size:16px;padding:2px 6px">x</button></td></tr>';}).join('');}
 function cseRenderCastTable(){var t=document.getElementById('cse-cast-body');if(!t)return;t.innerHTML=cseCastRows.map(function(r,i){return '<tr><td><input class="cse-input" style="width:50px" value="'+cseEsc(r.id)+'" oninput="cseCastRows['+i+'].id=this.value"></td><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.char)+'" placeholder="Character" oninput="cseCastRows['+i+'].char=this.value"></td><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.cast)+'" placeholder="Actor" oninput="cseCastRows['+i+'].cast=this.value"></td><td><input class="cse-input" style="width:80px" value="'+cseEsc(r.call)+'" oninput="cseCastRows['+i+'].call=this.value"></td><td><input class="cse-input" style="width:80px" value="'+cseEsc(r.wrap)+'" oninput="cseCastRows['+i+'].wrap=this.value"></td><td><button onclick="cseCastRows.splice('+i+',1);cseRenderCastTable()" style="background:none;border:none;color:var(--text4);cursor:pointer;font-size:16px;padding:2px 6px">x</button></td></tr>';}).join('');}
 function cseRenderBackTable(){var t=document.getElementById('cse-back-body');if(!t)return;t.innerHTML=cseBackRows.map(function(r,i){return '<tr><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.pos)+'" oninput="cseBackRows['+i+'].pos=this.value"></td><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.name)+'" oninput="cseBackRows['+i+'].name=this.value"></td><td><input class="cse-input" style="width:100%" value="'+cseEsc(r.phone)+'" oninput="cseBackRows['+i+'].phone=this.value"></td><td><button onclick="cseBackRows.splice('+i+',1);cseRenderBackTable()" style="background:none;border:none;color:var(--text4);cursor:pointer;font-size:16px">x</button></td></tr>';}).join('');}
-function cseAddRow(type){if(type==='crew'){cseCrewRows.push({pos:'',name:'',phone:''});cseRenderCrewTable();}if(type==='scene'){cseSceneRows.push({sc:'',type:'INT',desc:'',cast:'',start:'',pages:''});cseRenderSceneTable();}if(type==='cast'){cseCastRows.push({id:'',char:'',cast:'',status:'W',call:'',wrap:''});cseRenderCastTable();}if(type==='back'){cseBackRows.push({pos:'',name:'',phone:''});cseRenderBackTable();}}
-function cseAddDeptMsg(dept){var n=document.getElementById('cse-notes');if(n){n.value+=(n.value?'\n':'')+dept+': ';}}
+function cseAddRow(type){
+  if(type==='crew'){cseCrewRows.push({pos:'',name:'',phone:''});cseRenderCrewTable();}
+  if(type==='scene'){cseSceneRows.push({sc:'',type:'INT',desc:'',cast:'',start:'',pages:''});cseRenderSceneTable();}
+  if(type==='cast'){cseCastRows.push({id:'',char:'',cast:'',status:'W',call:'',wrap:''});cseRenderCastTable();}
+  if(type==='back'){cseBackRows.push({pos:'',name:'',phone:'',inTime:''});cseRenderBackTable();}
+  cseRender();
+}
+function cseAddDeptMsg(dept){var n=document.getElementById('cse-notes');if(n){n.value+=(n.value?'\n':'')+dept+': ';cseRender();}}
 function cseSec(id){var s=document.getElementById(id);if(s)s.classList.toggle('open');}
-function cseSetFormat(fmt,el){document.querySelectorAll('.cse-tog').forEach(function(e){e.classList.remove('active');});if(el)el.classList.add('active');}
-function cseOpenExport(){cseDoExport();}
-function cseCloseExport(){}
-function cseSelExport(el,f){cseExpFormat=f;}
-function cseSelFileType(el,t){cseExpFileType=t;}
-function cseSelExpFont(el,f){cseExpFontFamily=f;}
-function cseSelExpColor(el,col){cseExpAccentColor=col;}
-function cseSetLocType(){}
-function cseSetPageSize(s){cseExpSize=s;var lb=document.getElementById('cse-size-label');if(lb)lb.textContent=s==='legal'?'8.5 x 14':'8.5 x 11';}
-function cseSetLogoSize(){}
-function cseSetFont(f){cseExpFontFamily=f;}
-function cseSetSize(s){cseSetPageSize(s);}
-function cseSet80ADLayout(){}
-function cseZoomStep(){}
-function cseSelSize(el,s){cseSetPageSize(s);}
+function cseSetFormat(fmt,el){
+  document.querySelectorAll('#cse-fmt-80ad,#cse-fmt-classic').forEach(function(e){e.classList.remove('active');});
+  if(el)el.classList.add('active');
+  cseExpFormat=(fmt==='80ad'?'minimal':'floaty');
+  cseRender();
+}
+function cseOpenExport(){
+  var m=document.getElementById('cse-export-modal');
+  if(m)m.classList.add('open');
+  setTimeout(cseRender,60);
+}
+function cseCloseExport(){document.getElementById('cse-export-modal')?.classList.remove('open');}
+function cseSelExport(fmt){
+  cseExpFormat=(fmt==='80ad'||fmt==='minimal')?'minimal':'floaty';
+  document.querySelectorAll('[id^="cse-exp-"]').forEach(function(e){e.classList.remove('sel');});
+  document.getElementById('cse-exp-'+(fmt==='80ad'?'80ad':'classic'))?.classList.add('sel');
+  cseRender();
+}
+function cseSelFileType(t){
+  cseExpFileType=t;
+  document.querySelectorAll('[id^="cse-eft-"]').forEach(function(e){e.classList.remove('sel');});
+  document.getElementById('cse-eft-'+t)?.classList.add('sel');
+}
+function cseSelExpFont(el,f){cseExpFontFamily=f||el;cseRender();}
+function cseSelExpColor(el,col){cseExpAccentColor=col||el;cseRender();}
+function cseSetLocType(type,el){
+  document.querySelectorAll('#cse-loctype-int,#cse-loctype-ext,#cse-loctype-intext,#cse-loctype-extint').forEach(function(b){b.classList.remove('active');});
+  if(el)el.classList.add('active');
+  cseRender();
+}
+function cseSetPageSize(s){
+  cseExpSize=s;
+  var lb=document.getElementById('cse-size-label');
+  if(lb)lb.textContent=s==='legal'?'8.5 × 14':'8.5 × 11';
+}
+function cseSetLogoSize(size,el){
+  document.querySelectorAll('#csols-small,#csols-medium,#csols-large').forEach(function(b){b.classList.remove('active');});
+  if(el)el.classList.add('active');
+  cseRender();
+}
+function cseSetFont(f){cseExpFontFamily=f;cseRender();}
+function cseSetSize(s,el){
+  document.querySelectorAll('#csesz-compact,#csesz-standard,#csesz-large').forEach(function(b){b.classList.remove('active');});
+  if(el)el.classList.add('active');
+  cseSetPageSize(s==='large'?'legal':'letter');
+  cseRender();
+}
+function cseSet80ADLayout(layout,el){
+  document.querySelectorAll('#cse-layout-standard,#cse-layout-rounded,#cse-layout-grid').forEach(function(b){b.classList.remove('active');});
+  if(el)el.classList.add('active');
+  cseRender();
+}
+function cseZoomStep(d){
+  var sl=document.getElementById('cse-zoom-slider');if(!sl)return;
+  sl.value=Math.min(110,Math.max(30,parseInt(sl.value||75)+d*10));
+  cseSetZoom(sl.value);
+}
+function cseSetZoom(v){
+  var pct=v/100;
+  var lbl=document.getElementById('cse-zoom-label');
+  if(lbl)lbl.textContent=Math.round(v)+'%';
+  document.querySelectorAll('.clf-sheet').forEach(function(s){
+    s.style.transform='scale('+pct+')';
+    s.style.transformOrigin='top center';
+    requestAnimationFrame(function(){s.style.marginBottom=(s.offsetHeight*pct-s.offsetHeight)+'px';});
+  });
+}
+function cseSelSize(sArg){var s=typeof sArg==='string'?sArg:(arguments[1]||'letter');cseSetPageSize(s);}
 function cseOpenMapPreview(){var loc=cseGetField('cse-location');if(loc)window.open('https://maps.google.com?q='+encodeURIComponent(loc),'_blank');}
 function cseUpdateMapPreview(){}
-function pvEsc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-function pvGetMeta(){
-  return {
-    title: (document.getElementById('pv-exp-title')||{value:''}).value || 'Production Timeline',
-    by:    (document.getElementById('pv-exp-by')||{value:''}).value || '',
-    dates: (document.getElementById('pv-exp-dates')||{value:''}).value || '',
-    rev:   (document.getElementById('pv-exp-rev')||{value:''}).value || 'v1',
+function cseExpPreviewRefresh(){cseRender();}
+function cseAddProp(){
+  var inp=document.getElementById('cse-prop-input');
+  if(!inp)return;
+  var v=inp.value.trim();if(!v)return;
+  cseProps.push(v);inp.value='';cseRenderProps();cseRender();
+}
+function cseRefreshPropSuggestions(){}
+function cseSaveToPacket(){flashMsg('Saved to Production Packet');}
+function cseUpdateClassicColor(){
+  var fill=document.getElementById('cse-classic-fill');
+  cseExpAccentColor=fill?fill.value:'#F5A67D';
+  cseRender();
+}
+function cseHandleVibeFile(input){
+  var file=input.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=document.getElementById('cse-vibe-preview'),txt=document.getElementById('cse-vibe-txt');
+    if(img){img.src=e.target.result;img.style.display='block';}
+    if(txt)txt.style.display='none';
   };
+  reader.readAsDataURL(file);
 }
-
-function pvGetExpOpts(){
-  return {
-    font: document.getElementById('pv-exp-font')?.value || 'Inter',
-    fontSize: parseInt(document.getElementById('pv-exp-fontsize')?.value || '8'),
-    bw: pvExpColorMode === 'bw',
-    orient: pvExpOrient || 'landscape',
-    range: pvExpGetRangeDays(),
-    notes: document.getElementById('pv-exp-notes')?.value || '',
-    titlePage: document.getElementById('pv-exp-titlepage')?.checked || false,
-  };
+function cseHandleVibeDrop(e){
+  e.preventDefault();
+  var file=(e.dataTransfer.files||[])[0];if(!file)return;
+  var dt=new DataTransfer();dt.items.add(file);
+  var inp=document.getElementById('cse-vibe-file');
+  if(inp){inp.files=dt.files;cseHandleVibeFile(inp);}
 }
-
-function pvRefreshPreview(){
-  const paper = document.getElementById('pv-preview-paper');
-  if (!paper) return;
-  const m = pvGetMeta(), opts = pvGetExpOpts(), fmt = pvExpFmt || '80ad';
-  try {
-    const pages = pvRenderPreviewPages(m.title, m.by, m.dates, m.rev, fmt, opts);
-    paper.innerHTML = pages.map(p =>
-      `<iframe srcdoc="${p.html.replace(/"/g,'&quot;')}"
-        style="width:${p.W}px;height:${p.H}px;border:none;display:block;background:#fff;
-               box-shadow:0 8px 40px rgba(0,0,0,.35);border-radius:4px;flex-shrink:0"
-        scrolling="no"></iframe>`
-    ).join('');
-    const info = document.getElementById('pv-preview-page-info');
-    if (info) info.textContent = pages.length + ' page' + (pages.length !== 1 ? 's' : '');
-    setTimeout(pvPreviewFit, 100);
-  } catch(e) {
-    paper.innerHTML = '<div style="color:#fff;padding:20px;font-size:12px">Preview error: ' + e.message + '</div>';
-  }
+function cseHandleLogoFile(input){
+  var file=input.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){cseLogoUrl=e.target.result;cseRender();};
+  reader.readAsDataURL(file);
 }
-
-function pvDoExport(){
-  const m = pvGetMeta(), opts = pvGetExpOpts(), fmt = pvExpFmt || '80ad';
-  const pages = pvRenderPreviewPages(m.title, m.by, m.dates, m.rev, fmt, opts);
-  if (!pages.length) { flashMsg('Nothing to export'); return; }
-  const W = pages[0].W, H = pages[0].H;
-  const gf = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Courier+Prime:wght@400;700&display=swap';
-  const printDoc = `<!DOCTYPE html><html><head><meta charset="UTF-8">
-<link href="${gf}" rel="stylesheet">
-<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'${opts.font||'Inter'}',sans-serif;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}.pv-page{width:${W}px;min-height:${H}px;page-break-after:always;overflow:hidden}.pv-page:last-child{page-break-after:auto}@page{size:${opts.orient==='portrait'?'letter portrait':'letter landscape'};margin:0}</style>
-</head><body>
-${pages.map(p=>{ const m=p.html.match(/<body>([\s\S]*)<\/body>/); return `<div class="pv-page">${m?m[1]:p.html}</div>`; }).join('\n')}
-<script>window.onload=function(){window.print()}<\/script>
-</body></html>`;
-  const win = window.open('', '_blank');
-  if (!win) { flashMsg('Allow pop-ups to export PDF'); return; }
-  win.document.write(printDoc);
-  win.document.close();
+function cseHandleLogoDrop(e){
+  e.preventDefault();
+  var file=(e.dataTransfer.files||[])[0];if(!file)return;
+  var dt=new DataTransfer();dt.items.add(file);
+  var tmp=document.createElement('input');tmp.type='file';tmp.files=dt.files;
+  cseHandleLogoFile(tmp);
 }
-
-function pvBuildTitlePage(title, by, dates, rev, fmt, opts){
-  const bw=opts.bw, font=opts.font||'Inter', ac=bw?'#333':'#2563EB';
-  return `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'${font}',sans-serif;padding:80px;text-align:center;gap:8px">
-    <div style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:${bw?'#999':ac};margin-bottom:20px">Production Timeline</div>
-    <div style="font-size:48px;font-weight:800;color:#0F172A;letter-spacing:-1px;margin-bottom:12px">${pvEsc(title)}</div>
-    <div style="font-size:14px;color:#666;margin-bottom:40px">${pvEsc(dates)}</div>
-    <div style="width:60px;height:3px;background:${bw?'#333':ac};margin-bottom:40px"></div>
-    <div style="font-size:12px;color:#999">Prepared by ${pvEsc(by)} · ${pvEsc(rev)}</div>
-    <div style="font-size:10px;color:#bbb;margin-top:8px">${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>
-  </div>`;
+function cseOpenPbPicker(section){
+  var contacts=typeof loadContacts==='function'?loadContacts():[];
+  if(!contacts.length){flashMsg('No contacts in Phone Book yet');return;}
+  document.getElementById('cse-pb-overlay')?.remove();
+  var overlay=document.createElement('div');
+  overlay.id='cse-pb-overlay';
+  overlay.style.cssText='position:fixed;inset:0;z-index:4000;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center';
+  overlay.onclick=function(e){if(e.target===overlay)overlay.remove();};
+  var box=document.createElement('div');
+  box.style.cssText='background:var(--bg);border-radius:16px;padding:20px;width:min(400px,92vw);max-height:60vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px';
+  box.innerHTML='<div style="font-size:13px;font-weight:700;margin-bottom:4px">Add from Phone Book</div>'+
+    contacts.map(function(c,i){
+      return '<div onclick="csePickContact(\''+section+'\','+i+');document.getElementById(\'cse-pb-overlay\').remove()" style="padding:8px 12px;border-radius:10px;border:1px solid var(--border);cursor:pointer;display:flex;justify-content:space-between;align-items:center" onmouseover="this.style.background=\'var(--hover)\'" onmouseleave="this.style.background=\'\'">'+
+        '<div><div style="font-size:13px;font-weight:600">'+cseEsc(c.name)+'</div><div style="font-size:11px;color:var(--text3)">'+cseEsc(c.role||c.dept||'')+'</div></div>'+
+        '<div style="font-size:11px;color:var(--text3)">'+cseEsc(c.phone||'')+'</div></div>';
+    }).join('');
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
 }
-
-function pvBuildActivityListPage(title, by, dates, rev, fmt, opts){
-  const bw=opts.bw, font=opts.font||'Inter', fs=opts.fontSize||8, ac=bw?'#333':'#2563EB';
-  const PHASE_COLORS=bw?{preproduction:'#333',production:'#555',postproduction:'#777',other:'#999'}:{preproduction:'#2563EB',production:'#059669',postproduction:'#7C3AED',other:'#D97706'};
-  const PHASE_LABELS={preproduction:'Pre-Production',production:'Production',postproduction:'Post-Production',other:'Other'};
-  const PHASE_ORDER=['preproduction','production','postproduction','other'];
-  let rows='';
-  for(const phase of PHASE_ORDER){
-    const items=pvActivities.filter(a=>a.cat===phase).sort((a,b)=>{const as=a.spans?Math.min(...a.spans.map(s=>s.start)):a.start,bs=b.spans?Math.min(...b.spans.map(s=>s.start)):b.start;return as-bs;});
-    if(!items.length) continue;
-    const pc=PHASE_COLORS[phase];
-    rows+=`<tr><td colspan="4" style="padding:14px 10px 4px;font-size:${fs-1}px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:${bw?'#444':pc};border-bottom:1px solid #E5E7EB">${PHASE_LABELS[phase]}</td></tr>`;
-    items.forEach(a=>{
-      const spans=a.spans&&a.spans.length?a.spans:[{start:a.start,dur:a.dur}];
-      const startDay=Math.min(...spans.map(s=>s.start)),endDay=Math.max(...spans.map(s=>s.start+s.dur-1));
-      const startStr=pvFmtDate(pvDayToDateStr(startDay)),endStr=pvFmtDate(pvDayToDateStr(endDay));
-      const barColor=bw?'#555':(a.color||pc);
-      rows+=`<tr style="border-bottom:1px solid #F3F4F6"><td style="padding:5px 10px;font-size:${fs}px"><span style="display:inline-block;width:7px;height:7px;border-radius:2px;background:${barColor};margin-right:8px;vertical-align:middle"></span><strong style="font-weight:600;color:#111">${pvEsc(a.name)}</strong></td><td style="padding:5px 10px;font-size:${fs}px;color:#6B7280">${pvEsc(a.chief||'—')}</td><td style="padding:5px 10px;font-size:${fs}px;color:#374151;white-space:nowrap">${startStr}</td><td style="padding:5px 10px;font-size:${fs}px;color:#374151;white-space:nowrap">${endStr}</td></tr>`;
-    });
-  }
-  const notes=opts.notes?`<div style="position:absolute;bottom:24px;left:40px;right:40px;font-size:8px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:8px">${pvEsc(opts.notes)}</div>`:'';
-  return `<div style="position:relative;width:100%;min-height:100%;font-family:'${font}',sans-serif;padding:40px;background:#fff">
-    <div style="display:flex;align-items:flex-end;justify-content:space-between;border-bottom:2.5px solid ${bw?'#222':ac};padding-bottom:12px;margin-bottom:28px">
-      <div><div style="font-size:22px;font-weight:800;color:#0F172A;letter-spacing:-.5px">${pvEsc(title)}</div><div style="font-size:10px;color:#999;margin-top:3px;letter-spacing:1px;text-transform:uppercase">${pvEsc(dates)}</div></div>
-      <div style="text-align:right"><div style="font-size:9px;color:#bbb">Prepared by ${pvEsc(by)}</div><div style="font-size:9px;color:#bbb">${pvEsc(rev)} · ${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div></div>
-    </div>
-    <table style="border-collapse:collapse;width:100%;font-family:'${font}',sans-serif">
-      <thead><tr><th style="padding:5px 10px;font-size:${fs-1}px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;border-bottom:1.5px solid #E5E7EB;text-align:left">Activity</th><th style="padding:5px 10px;font-size:${fs-1}px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;border-bottom:1.5px solid #E5E7EB;text-align:left">Owner</th><th style="padding:5px 10px;font-size:${fs-1}px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;border-bottom:1.5px solid #E5E7EB;text-align:left">Start</th><th style="padding:5px 10px;font-size:${fs-1}px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;border-bottom:1.5px solid #E5E7EB;text-align:left">End</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    ${notes}
-  </div>`;
+function csePickContact(section,idx){
+  var contacts=typeof loadContacts==='function'?loadContacts():[];
+  var c=contacts[idx];if(!c)return;
+  if(section==='crew'){cseCrewRows.push({pos:c.role||c.dept||'',name:c.name||'',phone:c.phone||''});cseRenderCrewTable();}
+  else if(section==='cast'){cseCastRows.push({id:String(cseCastRows.length+1),char:'',cast:c.name||'',status:'W',call:c.phone||'',wrap:''});cseRenderCastTable();}
+  else if(section==='back'){cseBackRows.push({pos:c.role||c.dept||'',name:c.name||'',phone:c.phone||'',inTime:''});cseRenderBackTable();}
+  cseRender();flashMsg(c.name+' added');
 }
-
-function pvBuildShared(title, by, dates, rev, fmt, opts){
-  const bw=opts.bw, font=opts.font||'Inter', fs=opts.fontSize||8, ac=bw?'#333':'#2563EB';
-  const W=opts.orient==='portrait'?816:1056;
-  const {startDay,endDay}=opts.range;
-  const dayCount=endDay-startDay+1;
-  const cellW=Math.max(18,Math.floor((W-200)/dayCount));
-  const PHASE_COLORS=bw?{preproduction:'#444',production:'#666',postproduction:'#888',other:'#aaa'}:{preproduction:'#2563EB',production:'#059669',postproduction:'#7C3AED',other:'#D97706'};
-  const PHASE_ORDER=['preproduction','production','postproduction','other'];
-  const PHASE_LABELS={preproduction:'PRE-PRODUCTION',production:'PRODUCTION',postproduction:'POST-PRODUCTION',other:'OTHER'};
-  let headCells='';
-  for(let d=startDay;d<=endDay;d++){
-    const dateStr=pvDayToDateStr?pvDayToDateStr(d):'';
-    const dt=dateStr?new Date(dateStr+'T12:00'):null;
-    const isWknd=dt?(dt.getDay()===0||dt.getDay()===6):false;
-    const label=dt?dt.toLocaleString('default',{month:'short',day:'numeric'}):('D'+d);
-    headCells+=`<th style="width:${cellW}px;min-width:${cellW}px;font-size:${fs-2}px;font-weight:400;color:${isWknd?'#ccc':'#999'};background:${isWknd?'#fafafa':'#fff'};padding:3px 1px;text-align:center;border-right:1px solid #f0f0f0;white-space:nowrap;overflow:hidden">${label}</th>`;
-  }
-  let bodyRows='';
-  const acts=pvActivities.filter(a=>{
-    const spans=a.spans&&a.spans.length?a.spans:[{start:a.start,dur:a.dur}];
-    return Math.max(...spans.map(s=>s.start+s.dur-1))>=startDay&&Math.min(...spans.map(s=>s.start))<=endDay;
+// Export aliases
+function cseBuildADFront(d){return cseBuildMinimalFront(d,cseExpAccentColor||'#F5A67D',cseExpFontFamily||'Inter');}
+function cseBuildADBack(d){return cseBuildMinimalBack(d,cseExpAccentColor||'#F5A67D',cseExpFontFamily||'Inter');}
+function cseBuildClassicFront(d){return cseBuildMinimalFront(d,cseExpAccentColor||'#F5A67D',cseExpFontFamily||'Inter');}
+function cseBuildClassicBack(d){return cseBuildMinimalBack(d,cseExpAccentColor||'#F5A67D',cseExpFontFamily||'Inter');}
+// Wire form inputs to live preview
+setTimeout(function(){
+  ['cse-company','cse-title','cse-date','cse-day','cse-crew-call','cse-shoot-time',
+   'cse-tz','cse-sunset','cse-weather','cse-location','cse-hospital','cse-office',
+   'cse-safety','cse-notes'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el&&!el._cseWired){el._cseWired=true;el.addEventListener('input',cseRender);}
   });
-  for(const phase of PHASE_ORDER){
-    const items=acts.filter(a=>a.cat===phase);
-    if(!items.length) continue;
-    const pc=PHASE_COLORS[phase];
-    bodyRows+=`<tr><td colspan="${dayCount+1}" style="background:${bw?'#f5f5f5':'#f8faff'};padding:5px 8px;font-size:${fs-1}px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:${bw?'#555':pc};border-bottom:1px solid #e5e7eb">${PHASE_LABELS[phase]}</td></tr>`;
-    items.forEach(a=>{
-      const spans=a.spans&&a.spans.length?a.spans:[{start:a.start,dur:a.dur}];
-      const barColor=bw?'#555':(a.color||pc);
-      let cells=`<td style="padding:3px 8px;font-size:${fs}px;font-weight:500;white-space:nowrap;overflow:hidden;max-width:180px;border-right:1px solid #f0f0f0;color:#111">${pvEsc(a.name)}</td>`;
-      for(let d=startDay;d<=endDay;d++){
-        const inSpan=spans.some(sp=>d>=sp.start&&d<sp.start+sp.dur);
-        const isFirst=spans.some(sp=>d===sp.start);
-        const isLast=spans.some(sp=>d===sp.start+sp.dur-1);
-        const radius=isFirst&&isLast?'4px':isFirst?'4px 0 0 4px':isLast?'0 4px 4px 0':'0';
-        cells+=`<td style="width:${cellW}px;min-width:${cellW}px;padding:2px 0;border-right:1px solid #f0f0f0">${inSpan?`<div style="background:${barColor};border-radius:${radius};height:14px;opacity:${bw?.85:1}">${isFirst?`<span style="font-size:${fs-2}px;color:#fff;padding:0 4px;white-space:nowrap;overflow:hidden;display:block;line-height:14px">${pvEsc(a.name)}</span>`:''}</div>`:''}</td>`;
-      }
-      bodyRows+=`<tr style="border-bottom:1px solid #f5f5f5">${cells}</tr>`;
-    });
-  }
-  const notes=opts.notes?`<div style="position:absolute;bottom:16px;left:40px;right:40px;font-size:8px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:6px">${pvEsc(opts.notes)}</div>`:'';
-  return `<div style="position:relative;width:100%;min-height:100%;font-family:'${font}',sans-serif;padding:28px 32px 48px;background:#fff">
-    <div style="display:flex;align-items:flex-end;justify-content:space-between;border-bottom:2px solid ${bw?'#222':ac};padding-bottom:8px;margin-bottom:16px">
-      <div style="font-size:16px;font-weight:800;color:#0F172A;letter-spacing:-.3px">${pvEsc(title)}</div>
-      <div style="font-size:9px;color:#bbb">${pvEsc(dates)} · ${pvEsc(rev)} · ${pvEsc(by)}</div>
-    </div>
-    <div style="overflow:hidden"><table style="border-collapse:collapse;width:100%;table-layout:fixed">
-      <thead><tr><th style="width:180px;min-width:180px;font-size:${fs-1}px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;padding:4px 8px;text-align:left;border-bottom:1px solid #e5e7eb;border-right:1px solid #f0f0f0">Activity</th>${headCells}</tr></thead>
-      <tbody>${bodyRows}</tbody>
-    </table></div>
-    ${notes}
-  </div>`;
-}
-
-function pvBuildPortraitPagesArr(title, by, dates, rev, fmt, opts){
-  if(!pvStartDate||!pvTotalDays) return [pvBuildShared(title,by,dates,rev,fmt,opts)];
-  const pages=[]; let d=1;
-  while(d<=pvTotalDays){ pages.push(pvBuildShared(title,by,dates,rev,fmt,Object.assign({},opts,{range:{startDay:d,endDay:Math.min(pvTotalDays,d+27)}}))); d+=28; }
-  return pages;
+},500);
+function pvDoExport(){
+  const m=pvGetMeta&&pvGetMeta()||{title:'Timeline',by:'',dates:'',rev:'v1'};
+  const opts=pvGetExpOpts&&pvGetExpOpts()||{font:'Inter',fontSize:8,bw:false,orient:'landscape',range:{startDay:1,endDay:pvTotalDays||90},notes:'',titlePage:false};
+  const fmt=pvExpFmt||'80ad';
+  if(typeof pvRenderPreviewPages!=='function'){flashMsg('Export unavailable');return;}
+  const pages=pvRenderPreviewPages(m.title,m.by,m.dates,m.rev,fmt,opts);
+  if(!pages.length){flashMsg('Nothing to export');return;}
+  const W=pages[0].W,H=pages[0].H;
+  const gf='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap';
+  const printDoc='<!DOCTYPE html><html><head><meta charset="UTF-8"><link href="'+gf+'" rel="stylesheet"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Inter,sans-serif;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}.pv-page{width:'+W+'px;min-height:'+H+'px;page-break-after:always;overflow:hidden}.pv-page:last-child{page-break-after:auto}@page{size:'+(opts.orient==='portrait'?'letter portrait':'letter landscape')+';margin:0}</style></head><body>'+
+    pages.map(function(p){var m=p.html.match(/<body>([\s\S]*)<\/body>/);return '<div class="pv-page">'+(m?m[1]:p.html)+'</div>';}).join('')+
+    '<scr'+'ipt>window.onload=function(){window.print()}<\/script></body></html>';
+  const win=window.open('','_blank');
+  if(!win){flashMsg('Allow pop-ups to export PDF');return;}
+  win.document.write(printDoc);win.document.close();
 }
 function pvSaveToPacket(){}
 function clearProjectColors(){}
@@ -18270,4 +18401,295 @@ function adShowImportResult(result,source){var parts=[];if(result.scenes)parts.p
     </div>
   </div>
 </div>
+
+<!-- ── Add Crew/Cast Modal ── -->
+<div id="clf-add-modal" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);align-items:center;justify-content:center">
+  <div style="background:var(--card);border:1px solid var(--border2);border-radius:18px;padding:24px 26px 20px;width:min(380px,94vw);box-shadow:0 20px 60px rgba(0,0,0,.3);animation:modal-in .18s cubic-bezier(.4,0,.2,1)">
+    <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px" id="clf-add-modal-title">Add Crew Member</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:18px">Press Tab to move between fields</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);margin-bottom:5px" id="clf-add-modal-f1-lbl">Position</div>
+        <input id="clf-add-f1" class="cse-input" style="width:100%" placeholder="e.g. Director of Photography" autocomplete="off">
+      </div>
+      <div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);margin-bottom:5px" id="clf-add-modal-f2-lbl">Name</div>
+        <input id="clf-add-f2" class="cse-input" style="width:100%" placeholder="Full name" autocomplete="off">
+      </div>
+      <div id="clf-add-f3-wrap">
+        <div style="font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);margin-bottom:5px">Phone</div>
+        <input id="clf-add-f3" class="cse-input" style="width:100%" placeholder="(000) 000-0000" autocomplete="off">
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px">
+      <button class="pill-btn" onclick="clfCloseAddModal()">Cancel</button>
+      <button class="pill-btn accent" onclick="clfConfirmAddModal()" id="clf-add-modal-btn">Add</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Call Sheet Editor: Enter-key field navigation ── */
+(function(){
+  // Ordered list of top-level field IDs (header + strip + safety + notes)
+  var CLF_FIELD_ORDER = [
+    'clf-company','clf-title','clf-location','clf-crew-call','clf-date',
+    'clf-sunset','clf-weather-temp','clf-shoot-time','clf-hospital',
+    'clf-safety','clf-notes'
+  ];
+
+  function focusField(id){
+    var el=document.getElementById(id);
+    if(!el)return;
+    if(el.tagName==='INPUT'||el.tagName==='SELECT'){el.focus();el.select();}
+    else{el.focus();try{var r=document.createRange(),s=window.getSelection();r.selectNodeContents(el);r.collapse(false);s.removeAllRanges();s.addRange(r);}catch(e){}}
+  }
+
+  function nextTopField(currentId){
+    var idx=CLF_FIELD_ORDER.indexOf(currentId);
+    if(idx>=0&&idx<CLF_FIELD_ORDER.length-1) focusField(CLF_FIELD_ORDER[idx+1]);
+  }
+
+  // Wire top-level fields once editor is visible
+  function wireClfFields(){
+    CLF_FIELD_ORDER.forEach(function(id){
+      var el=document.getElementById(id);
+      if(!el||el._clfEnterWired)return;
+      el._clfEnterWired=true;
+      el.addEventListener('keydown',function(e){
+        if(e.key!=='Enter')return;
+        e.preventDefault();
+        nextTopField(id);
+      });
+    });
+  }
+
+  // Wire table cell Enter: move to next row same column, or blur
+  function wireClfTable(tbodyId){
+    var tbody=document.getElementById(tbodyId);
+    if(!tbody||tbody._clfTableWired)return;
+    tbody._clfTableWired=true;
+    tbody.addEventListener('keydown',function(e){
+      if(e.key!=='Enter')return;
+      var cell=e.target;
+      if(!cell||(!cell.classList.contains('clf-cell')&&cell.tagName!=='SELECT'&&cell.tagName!=='INPUT'))return;
+      e.preventDefault();
+      var td=cell.closest('td');
+      var tr=cell.closest('tr');
+      if(!td||!tr)return;
+      var tdIdx=Array.from(tr.children).indexOf(td);
+      var nextTr=tr.nextElementSibling;
+      if(nextTr){
+        var nextTd=nextTr.children[tdIdx];
+        var nextCell=nextTd&&(nextTd.querySelector('.clf-cell')||nextTd.querySelector('select')||nextTd.querySelector('input'));
+        if(nextCell){
+          if(nextCell.tagName==='INPUT'||nextCell.tagName==='SELECT'){nextCell.focus();}
+          else{nextCell.focus();try{var r=document.createRange(),s=window.getSelection();r.selectNodeContents(nextCell);r.collapse(false);s.removeAllRanges();s.addRange(r);}catch(ex){}}
+          return;
+        }
+      }
+      // Last row: blur and open add modal
+      cell.blur();
+    });
+  }
+
+  // Re-wire whenever editor opens (showPage callsheets or cseOpenNew/Edit)
+  var _origShow = window.cseShowEditor;
+  window.cseShowEditor = function(){
+    if(_origShow) _origShow.apply(this, arguments);
+    setTimeout(function(){
+      wireClfFields();
+      ['clf-crew-body','clf-scene-body','clf-cast-body','clf-back-body'].forEach(wireClfTable);
+    },120);
+  };
+
+  // Also wire on DOMContentLoaded in case editor is already visible
+  document.addEventListener('DOMContentLoaded',function(){
+    wireClfFields();
+    ['clf-crew-body','clf-scene-body','clf-cast-body','clf-back-body'].forEach(wireClfTable);
+  });
+})();
+</script>
+
+<script>
+/* ── Phone number auto-formatter ── */
+function clfFormatPhone(raw){
+  var digits = (raw||'').replace(/\D/g,'').slice(0,10);
+  if(digits.length === 0) return '';
+  if(digits.length <= 3) return '('+digits;
+  if(digits.length <= 6) return '('+digits.slice(0,3)+') '+digits.slice(3);
+  return '('+digits.slice(0,3)+') '+digits.slice(3,6)+'-'+digits.slice(6);
+}
+
+function clfWirePhoneInput(el){
+  if(!el || el._clfPhoneWired) return;
+  el._clfPhoneWired = true;
+  el.addEventListener('input', function(){
+    var isContentEditable = el.getAttribute('contenteditable') === 'true';
+    var raw = isContentEditable ? (el.innerText||el.textContent||'') : el.value;
+    var formatted = clfFormatPhone(raw);
+    if(isContentEditable){
+      if(el.textContent !== formatted){
+        el.textContent = formatted;
+        // Move cursor to end
+        try{var r=document.createRange(),s=window.getSelection();r.selectNodeContents(el);r.collapse(false);s.removeAllRanges();s.addRange(r);}catch(e){}
+      }
+    } else {
+      var pos = el.selectionStart;
+      el.value = formatted;
+      // Keep cursor at end of formatted digits
+      try{ el.setSelectionRange(formatted.length, formatted.length); }catch(e){}
+    }
+  });
+}
+
+// Wire the modal phone field
+document.addEventListener('DOMContentLoaded', function(){
+  clfWirePhoneInput(document.getElementById('clf-add-f3'));
+});
+
+// Wire table phone cells via delegation — called after each table render
+function clfWireTablePhones(tbodyId){
+  var tbody = document.getElementById(tbodyId);
+  if(!tbody) return;
+  tbody.querySelectorAll('[data-col="phone"]').forEach(clfWirePhoneInput);
+}
+
+// Patch render functions to wire phones after rendering
+var _origRenderCrew = window.clfRenderCrewRows;
+window.clfRenderCrewRows = function(){
+  if(_origRenderCrew) _origRenderCrew.apply(this, arguments);
+  clfWireTablePhones('clf-crew-body');
+};
+var _origRenderBack = window.clfRenderBackRows;
+window.clfRenderBackRows = function(){
+  if(_origRenderBack) _origRenderBack.apply(this, arguments);
+  clfWireTablePhones('clf-back-body');
+};
+// Also re-wire modal phone field on open
+var _origOpenModal = window.clfOpenAddModal;
+window.clfOpenAddModal = function(){
+  if(_origOpenModal) _origOpenModal.apply(this, arguments);
+  setTimeout(function(){ clfWirePhoneInput(document.getElementById('clf-add-f3')); }, 50);
+};
+</script>
+
+<script>
+/* ── Time auto-formatter: always outputs "10:00 PM" ── */
+function clfFormatTime(raw){
+  var s = (raw||'').trim();
+  if(!s) return '';
+  // Normalise: lowercase, collapse spaces
+  s = s.toLowerCase().replace(/\s+/g,' ');
+  // Detect AM/PM
+  var ampm = null;
+  if(/am/.test(s)){ ampm='AM'; s=s.replace(/am/g,'').trim(); }
+  else if(/pm/.test(s)){ ampm='PM'; s=s.replace(/pm/g,'').trim(); }
+  // Strip any remaining non-digit/colon
+  s = s.replace(/[^\d:]/g,'');
+  var h, m;
+  if(s.indexOf(':') >= 0){
+    var parts = s.split(':');
+    h = parseInt(parts[0],10)||0;
+    m = parseInt((parts[1]||'0').slice(0,2),10)||0;
+  } else {
+    // Pure digits: 1-2 = hour only, 3-4 = hhmm
+    if(s.length <= 2){ h=parseInt(s,10)||0; m=0; }
+    else { h=parseInt(s.slice(0,-2),10)||0; m=parseInt(s.slice(-2),10)||0; }
+  }
+  // If no ampm clue and hour is 0-12, leave as-is; if 13-23 it is 24h
+  if(ampm === null){
+    if(h >= 13 && h <= 23){ ampm='PM'; h=h-12; }
+    else if(h === 0){ ampm='AM'; h=12; }
+    else { ampm = h >= 12 ? 'PM' : 'AM'; }
+  } else {
+    // Normalise 24h input with explicit ampm (rare but handle)
+    if(ampm==='PM' && h > 12) h=h-12;
+    if(ampm==='AM' && h===12) h=0;
+  }
+  // Convert to 12h
+  if(h===0) h=12;
+  if(h>12) h=h-12;
+  m = Math.min(59, Math.max(0, m));
+  var ms = m < 10 ? '0'+m : ''+m;
+  return h+':'+ms+' '+ampm;
+}
+
+function clfWireTimeInput(el){
+  if(!el || el._clfTimeWired) return;
+  el._clfTimeWired = true;
+  var isDiv = el.getAttribute('contenteditable') === 'true';
+  // Format on blur (not on each keystroke, so user can type freely)
+  el.addEventListener('blur', function(){
+    var raw = isDiv ? (el.innerText||el.textContent||'') : el.value;
+    var formatted = clfFormatTime(raw);
+    if(!formatted) return;
+    if(isDiv){
+      if((el.innerText||el.textContent||'').trim() !== formatted)
+        el.textContent = formatted;
+    } else {
+      if(el.value.trim() !== formatted)
+        el.value = formatted;
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  ['clf-crew-call','clf-sunset','clf-shoot-time'].forEach(function(id){
+    clfWireTimeInput(document.getElementById(id));
+  });
+});
+
+// Re-wire after editor opens
+var _origShowEditorTime = window.cseShowEditor;
+window.cseShowEditor = function(){
+  if(_origShowEditorTime) _origShowEditorTime.apply(this,arguments);
+  setTimeout(function(){
+    ['clf-crew-call','clf-sunset','clf-shoot-time'].forEach(function(id){
+      clfWireTimeInput(document.getElementById(id));
+    });
+  }, 150);
+};
+</script>
+
+<script>
+/* ── Weather field helpers ── */
+function clfWeatherUpdate(){
+  var temp = (document.getElementById('clf-weather-temp')?.value||'').trim();
+  var desc = document.getElementById('clf-weather-desc')?.value||'';
+  var combined = temp ? temp+'°F'+(desc?' '+desc:'') : (desc||'');
+  var hidden = document.getElementById('clf-weather');
+  if(hidden) hidden.value = combined;
+}
+
+function clfWeatherRestore(val){
+  // Parse "72°F Clear" back into temp + desc
+  if(!val){ return; }
+  var m = val.match(/^(-?\d+)°?F?\s*(.*)/i);
+  var temp = m ? m[1] : '';
+  var desc = m ? (m[2]||'').trim() : val;
+  var tempEl = document.getElementById('clf-weather-temp');
+  var descEl = document.getElementById('clf-weather-desc');
+  if(tempEl) tempEl.value = temp;
+  if(descEl){
+    // Try to select matching option
+    var found = false;
+    for(var i=0;i<descEl.options.length;i++){
+      if(descEl.options[i].value.toLowerCase()===desc.toLowerCase()){
+        descEl.selectedIndex=i; found=true; break;
+      }
+    }
+    if(!found) descEl.selectedIndex=0;
+  }
+  clfWeatherUpdate();
+}
+
+// Patch csePopulateLiveSheet to restore weather properly
+var _origPopulate = window.csePopulateLiveSheet;
+window.csePopulateLiveSheet = function(d){
+  if(_origPopulate) _origPopulate.apply(this,arguments);
+  // Restore weather split fields after populate
+  clfWeatherRestore(d&&d.weather||'');
+};
+</script>
 </body>
