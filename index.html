@@ -8626,10 +8626,11 @@ select.msg-prelim-input{cursor:pointer;-webkit-appearance:none;appearance:none;b
       <div class="inner-subtitle" id="pb-subtitle">Universal contacts · all productions</div>
     </div>
     <div class="inner-actions" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-      <button class="pill-btn" onclick="openPbImportModal()" style="display:flex;align-items:center;gap:6px;">
+      <label class="pill-btn" for="pb-direct-file-input" style="display:flex;align-items:center;gap:6px;cursor:pointer;">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Import CSV
-      </button>
+      </label>
+      <input type="file" id="pb-direct-file-input" accept=".csv" style="display:none" onchange="pbImportHandleFile(this.files[0])">
       <button class="pill-btn" onclick="exportPhonebookCSV()" style="display:flex;align-items:center;gap:6px;">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Export for 343Leads
@@ -8983,13 +8984,13 @@ function sseSaveEditRow() {
     if (t === 'wrap')    { r.who = mainVal; r.notes = notesVal; }
   }
 
-  document.getElementById('sse-edit-modal').classList.remove('open');
+  document.getElementById('sse-edit-modal')?.classList.remove('open');
   _sseEditIdx = null;
   sseRenderRowList(); sseRender(); sseSaveData();
 }
 
 function sseCloseEdit() {
-  document.getElementById('sse-edit-modal').classList.remove('open');
+  document.getElementById('sse-edit-modal')?.classList.remove('open');
   _sseEditIdx = null;
 }
 
@@ -9407,25 +9408,115 @@ function cseDoExport(){
 // ── MINIMAL layout builders ─────────────────────────────────────────────
 function cseBuildMinimalFront(d, accent, font) {
   const f = font || 'Inter';
-  const rows = (d.scenes||[]).map(r=>`<tr><td style="padding:5px 0;border-bottom:1px solid #f0f0f0;font-size:8px;color:#888;width:40px">${cseEsc(r.sc)}</td><td style="padding:5px 8px;border-bottom:1px solid #f0f0f0;font-size:8px;color:#aaa;width:50px">${cseEsc(r.type)}</td><td style="padding:5px 0;border-bottom:1px solid #f0f0f0;font-size:9px;color:#222">${cseEsc(r.desc)}</td><td style="padding:5px 0 5px 8px;border-bottom:1px solid #f0f0f0;font-size:8px;color:#888;white-space:nowrap">${cseEsc(r.start)}</td></tr>`).join('');
-  const crewRows = (d.crew||[]).filter(r=>r.name).map(r=>`<tr><td style="padding:4px 0;font-size:8px;color:#888;width:120px">${cseEsc(r.pos)}</td><td style="padding:4px 0;font-size:9px;color:#222">${cseEsc(r.name)}</td><td style="padding:4px 0 4px 8px;font-size:8px;color:#aaa">${cseEsc(r.phone)}</td></tr>`).join('');
-  return `<div style="font-family:'${f}',sans-serif;color:#111;padding:0;max-width:100%">
-    <div style="border-bottom:2px solid ${accent};padding-bottom:12px;margin-bottom:24px">
-      <div style="font-size:22px;font-weight:700;letter-spacing:-.5px">${cseEsc(d.title||'Call Sheet')}</div>
-      <div style="font-size:11px;color:#888;margin-top:4px;display:flex;gap:20px">
-        <span>${cseEsc(d.date||'')}</span><span>General Call: <strong style="color:#333">${cseEsc(d.generalCall||'—')}</strong></span>
-        <span>${cseEsc(d.location||'')}</span>
+  const a = accent || '#F5A67D';
+  const crewRows = (d.crew||[]).filter(r=>r.name).map(r=>`
+    <tr>
+      <td style="padding:4px 0;font-size:9px;font-style:italic;color:#666;width:30%;vertical-align:top">${cseEsc(r.pos)}</td>
+      <td style="padding:4px 8px;font-size:12px;font-weight:700;color:#111;width:32%;vertical-align:top">${cseEsc(r.name)}</td>
+      <td style="padding:4px 0;font-size:9px;color:#555;vertical-align:top">${cseEsc(r.phone)}</td>
+    </tr>`).join('');
+  const sceneRows = (d.scenes||[]).filter(r=>r.desc||r.sc).map(r=>`
+    <tr>
+      <td style="padding:4px 6px 4px 0;font-size:9px;font-weight:700;color:#333;width:34px;border-bottom:1px solid #f0f0f0;vertical-align:top">${cseEsc(r.sc)}</td>
+      <td style="padding:4px 6px;font-size:8px;color:#888;width:42px;border-bottom:1px solid #f0f0f0;vertical-align:top">${cseEsc(r.type)}</td>
+      <td style="padding:4px 6px;font-size:10px;color:#222;border-bottom:1px solid #f0f0f0;vertical-align:top">${cseEsc(r.desc)}</td>
+      <td style="padding:4px 6px;font-size:8.5px;color:#666;width:48px;border-bottom:1px solid #f0f0f0;white-space:nowrap;vertical-align:top">${cseEsc(r.cast||'')}</td>
+      <td style="padding:4px 0;font-size:9px;font-weight:700;color:#333;white-space:nowrap;border-bottom:1px solid #f0f0f0;vertical-align:top">${cseEsc(r.start)}</td>
+    </tr>`).join('');
+  const statusColors={W:'#5BA3C9',WD:'#E8887A',SW:'#72B584',SWF:'#9B7FD4',H:'#D4B84A',WF:'#888'};
+  const castRows = (d.cast||[]).filter(r=>r.cast||r.char).map(r=>{
+    const sc=statusColors[r.status]||'#5BA3C9';
+    return `<tr>
+      <td style="padding:5px 8px;border-bottom:1px solid #f0f0f0;vertical-align:middle">
+        <div style="display:inline-flex;align-items:center;gap:7px">
+          <div style="width:3px;height:22px;background:${a};border-radius:100px;flex-shrink:0"></div>
+          <span style="font-size:10px;font-weight:700;color:#888">${cseEsc(r.id)}</span>
+        </div>
+      </td>
+      <td style="padding:5px 8px;font-size:10px;font-weight:600;color:#111;border-bottom:1px solid #f0f0f0">${cseEsc(r.char)}</td>
+      <td style="padding:5px 8px;font-size:10px;color:#333;border-bottom:1px solid #f0f0f0">${cseEsc(r.cast)}</td>
+      <td style="padding:5px 8px;border-bottom:1px solid #f0f0f0"><span style="background:${sc}22;color:${sc};padding:2px 7px;border-radius:100px;font-size:8px;font-weight:700">${cseEsc(r.status||'W')}</span></td>
+      <td style="padding:5px 8px;font-size:9.5px;font-weight:700;color:#222;border-bottom:1px solid #f0f0f0;white-space:nowrap">${cseEsc(r.call)}</td>
+      <td style="padding:5px 8px;font-size:9.5px;color:#666;border-bottom:1px solid #f0f0f0;white-space:nowrap">${cseEsc(r.wrap)}</td>
+    </tr>`;
+  }).join('');
+  const propChips=(d.props||[]).map(p=>`<span style="display:inline-block;background:#f5f5f5;border:1px solid #ebebeb;border-radius:100px;padding:3px 10px;font-size:9px;color:#555;margin:2px 3px 2px 0">${cseEsc(p)}</span>`).join('');
+  let dateStr=d.date||'';
+  try{if(dateStr){const dt=new Date(dateStr+'T12:00');dateStr=dt.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric',year:'numeric'});}}catch(e){}
+  return `<div style="font-family:'${f}',sans-serif;color:#111">
+    <!-- HEADER -->
+    <div style="background:linear-gradient(135deg,${a} 0%,${a}cc 40%,#9B7FD4 100%);padding:22px 24px;position:relative;min-height:180px;display:flex;flex-direction:column;justify-content:flex-end;-webkit-print-color-adjust:exact;print-color-adjust:exact">
+      ${d.logoUrl?`<div style="position:absolute;top:14px;right:16px;width:88px;height:70px;background:#fff;border-radius:7px;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.2)"><img src="${d.logoUrl}" style="width:100%;height:100%;object-fit:contain"></div>`:''}
+      <div style="position:absolute;right:20px;top:${d.logoUrl?'100':'16'}px;text-align:right">
+        <div style="font-size:7px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:2px">CREW CALL</div>
+        <div style="font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1">${cseEsc(d.generalCall||'TBD')}</div>
+        <div style="font-size:8px;color:rgba(255,255,255,.65);margin-top:2px">${cseEsc(dateStr)}</div>
+      </div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:5px">${cseEsc(d.company||'')}</div>
+      <div style="font-size:26px;font-weight:900;color:#fff;letter-spacing:-.5px;line-height:1.1;margin-bottom:10px;max-width:500px">${cseEsc(d.title||'Call Sheet')}</div>
+      <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.2);border-radius:100px;padding:4px 12px 4px 8px">
+        <span style="background:#fff;color:${a};border-radius:100px;padding:2px 7px;font-size:7.5px;font-weight:800">${cseEsc(d.locType||'INT')}</span>
+        <span style="font-size:9.5px;font-weight:700;color:#fff">${cseEsc(d.location||'')}</span>
       </div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1.8fr;gap:32px">
-      <div>
-        <div style="font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:10px">Crew</div>
-        <table style="width:100%;border-collapse:collapse">${crewRows}</table>
+    <!-- INFO STRIP -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 2fr">
+      ${[['SUNSET',d.sunset],['WEATHER',d.weather],['SHOOT TIME',d.shootTime],['HOSPITAL & OFFICE',d.hospital]].map(([lbl,val])=>`
+      <div style="padding:9px 14px;border-right:1px solid #ebebeb;border-bottom:1px solid #ebebeb">
+        <div style="font-size:6.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:#bbb;margin-bottom:3px">${lbl}</div>
+        <div style="font-size:13px;font-weight:700;color:#111">${cseEsc(val||'—')}</div>
+      </div>`).join('')}
+    </div>
+    <!-- SAFETY -->
+    <div style="padding:7px 18px;text-align:center;background:#fafafa;border-bottom:1px solid #ebebeb">
+      <div style="font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#444">${cseEsc(d.safety||'SAFETY FIRST | NO FORCED CALLS | NO SMOKING ON SET')}</div>
+    </div>
+    <!-- 2-COL: CREW + SCENES -->
+    <div style="display:grid;grid-template-columns:1fr 1.7fr;border-bottom:1px solid #f0f0f0">
+      <div style="padding:13px 14px">
+        <div style="display:flex;align-items:center;gap:5px;margin-bottom:9px">
+          <div style="width:6px;height:6px;border-radius:50%;background:${a}"></div>
+          <div style="font-size:7.5px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:#222">KEY CREW</div>
+        </div>
+        <table style="width:100%;border-collapse:collapse">${crewRows||'<tr><td colspan="3" style="font-size:9px;color:#ccc;padding:6px 0">No crew added</td></tr>'}</table>
       </div>
-      <div>
-        <div style="font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:10px">Scenes</div>
-        <table style="width:100%;border-collapse:collapse">${rows}</table>
+      <div style="padding:13px 14px;border-left:1px solid #ebebeb">
+        <div style="display:flex;align-items:center;gap:5px;margin-bottom:9px">
+          <div style="width:6px;height:6px;border-radius:50%;background:#5BA3C9"></div>
+          <div style="font-size:7.5px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:#222">SCENE BREAKDOWN</div>
+        </div>
+        <table style="width:100%;border-collapse:collapse">
+          <tr><th style="font-size:6.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#bbb;padding:0 6px 5px 0;text-align:left;width:34px">SC#</th><th style="font-size:6.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#bbb;padding:0 6px 5px;text-align:left;width:40px">TYPE</th><th style="font-size:6.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#bbb;padding:0 6px 5px;text-align:left">DESCRIPTION</th><th style="font-size:6.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#bbb;padding:0 6px 5px;text-align:left;width:44px">CAST</th><th style="font-size:6.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#bbb;padding:0 0 5px;text-align:left;width:60px">START</th></tr>
+          ${sceneRows||'<tr><td colspan="5" style="font-size:9px;color:#ccc;padding:6px 0">No scenes added</td></tr>'}
+        </table>
       </div>
+    </div>
+    <!-- CAST -->
+    <div style="padding:11px 14px;border-bottom:1px solid #f0f0f0">
+      <div style="display:flex;align-items:center;gap:5px;margin-bottom:8px">
+        <div style="width:6px;height:6px;border-radius:50%;background:#E8887A"></div>
+        <div style="font-size:7.5px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:#222">CAST &amp; TALENT</div>
+      </div>
+      <table style="width:100%;border-collapse:collapse">
+        <tr><th style="font-size:6.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#bbb;padding:0 8px 5px;text-align:left;width:28px">ID</th><th style="font-size:6.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#bbb;padding:0 8px 5px;text-align:left">CHARACTER</th><th style="font-size:6.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#bbb;padding:0 8px 5px;text-align:left">CAST</th><th style="font-size:6.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#bbb;padding:0 8px 5px;text-align:left;width:54px">STATUS</th><th style="font-size:6.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#bbb;padding:0 8px 5px;text-align:left;width:82px">CALL TIME</th><th style="font-size:6.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#bbb;padding:0 8px 5px;text-align:left;width:70px">WRAP</th></tr>
+        ${castRows||'<tr><td colspan="6" style="font-size:9px;color:#ccc;padding:8px">No cast added</td></tr>'}
+      </table>
+    </div>
+    <!-- NOTES + PROPS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #f0f0f0">
+      <div style="padding:10px 14px;border-right:1px solid #ebebeb">
+        <div style="font-size:6.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:#bbb;margin-bottom:5px">NOTES</div>
+        <div style="font-size:10px;color:#333;line-height:1.6;white-space:pre-wrap">${cseEsc(d.notes||'')}</div>
+      </div>
+      <div style="padding:10px 14px">
+        <div style="font-size:6.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:#bbb;margin-bottom:5px">PROPS</div>
+        <div>${propChips||'<span style="font-size:9px;color:#ccc">None listed</span>'}</div>
+      </div>
+    </div>
+    <!-- ON-SET NOTES -->
+    <div style="padding:10px 14px">
+      <div style="font-size:6.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:#bbb;margin-bottom:7px">ON-SET NOTES</div>
+      ${[1,2,3,4,5].map(()=>'<div style="border-bottom:1px solid #ebebeb;height:22px"></div>').join('')}
     </div>
   </div>`;
 }
@@ -9999,13 +10090,13 @@ let _cseImportFileName = '';
 
 function cseOpenImportModal() {
   cseImportReset();
-  document.getElementById('cse-import-overlay').classList.add('open');
+  document.getElementById('cse-import-overlay')?.classList.add('open');
 }
 function cseImportOverlayClick(e) {
   if (e.target === document.getElementById('cse-import-overlay')) cseCloseImportModal();
 }
 function cseCloseImportModal() {
-  document.getElementById('cse-import-overlay').classList.remove('open');
+  document.getElementById('cse-import-overlay')?.classList.remove('open');
 }
 
 function cseShowImportStep(n) {
@@ -10025,7 +10116,7 @@ function cseImportReset() {
 
 function cseHandleImportDrop(event) {
   event.preventDefault();
-  document.getElementById('cse-import-dropzone').classList.remove('drag-over');
+  document.getElementById('cse-import-dropzone')?.classList.remove('drag-over');
   const file = event.dataTransfer.files[0];
   if (file) cseHandleImportFile(file);
 }
@@ -10460,7 +10551,7 @@ function openDocCtx(event, docId, docType) {
   // Position menu near cursor
   const menu = document.getElementById('doc-ctx-menu');
   menu.classList.add('open');
-  document.getElementById('doc-ctx-overlay').classList.add('open');
+  document.getElementById('doc-ctx-overlay')?.classList.add('open');
   const mx = event.clientX, my = event.clientY;
   const mw = 188, mh = 260;
   menu.style.left = (mx + mw > window.innerWidth  ? mx - mw : mx) + 'px';
@@ -10574,10 +10665,10 @@ function openPacketModal() {
   pktPopulateDetails();
   pktPopulateContent();
   pktShowStep(1);
-  document.getElementById('packet-modal').classList.add('open');
+  document.getElementById('packet-modal')?.classList.add('open');
 }
 function closePacketModal() {
-  document.getElementById('packet-modal').classList.remove('open');
+  document.getElementById('packet-modal')?.classList.remove('open');
 }
 
 // ── Step navigation ──
@@ -11656,12 +11747,13 @@ ${propsPage}
         <div class="pb-import-dropzone" id="pb-import-dropzone"
              ondragover="event.preventDefault();this.classList.add('drag-over')"
              ondragleave="this.classList.remove('drag-over')"
-             ondrop="pbImportHandleDrop(event)">
+             ondrop="pbImportHandleDrop(event)"
+             style="cursor:default">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:10px;opacity:.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           <div class="pb-import-drop-title">Drop a CSV here or click to browse</div>
           <div class="pb-import-drop-sub">Accepts CSV files — columns: name, role, email, phone, company (or dept)</div>
+          <label class="pill-btn" for="pb-import-file-input" style="margin-top:14px;cursor:pointer">Browse CSV</label>
           <input type="file" id="pb-import-file-input" accept=".csv" style="display:none" onchange="pbImportHandleFile(this.files[0])">
-          <button class="pill-btn" style="margin-top:14px" onclick="document.getElementById('pb-import-file-input').click()">Browse</button>
         </div>
       </div>
       <!-- Step 2: Loading -->
@@ -11768,11 +11860,11 @@ function openNewMeetingModal() {
   document.getElementById('mtg-time').value = '10:00';
   document.querySelectorAll('.mtg-color-swatch').forEach(s => s.classList.toggle('selected', s.dataset.color === _mtgColor));
   document.querySelectorAll('#mtg-loc-inperson,#mtg-loc-gmeet,#mtg-loc-otp').forEach(b => b.classList.remove('active'));
-  document.getElementById('mtg-loc-inperson').classList.add('active');
+  document.getElementById('mtg-loc-inperson')?.classList.add('active');
   document.getElementById('mtg-address-row').style.display = '';
   document.getElementById('mtg-link-row').style.display = 'none';
   renderMtgAttendees();
-  document.getElementById('meeting-modal').classList.add('open');
+  document.getElementById('meeting-modal')?.classList.add('open');
 }
 
 function openEditMeetingModal(id) {
@@ -11800,10 +11892,10 @@ function openEditMeetingModal(id) {
   document.getElementById('mtg-address-row').style.display = _mtgLocType !== 'gmeet' ? '' : 'none';
   document.getElementById('mtg-link-row').style.display    = _mtgLocType === 'gmeet' ? '' : 'none';
   renderMtgAttendees();
-  document.getElementById('meeting-modal').classList.add('open');
+  document.getElementById('meeting-modal')?.classList.add('open');
 }
 
-function closeMeetingModal() { document.getElementById('meeting-modal').classList.remove('open'); }
+function closeMeetingModal() { document.getElementById('meeting-modal')?.classList.remove('open'); }
 
 function mtgSetColor(el, color) {
   _mtgColor = color;
@@ -12096,9 +12188,9 @@ function openPktDlModal(id) {
   // Start on style tab
   pktDlTab(document.querySelector('.pktdl-tab'), 'style');
 
-  document.getElementById('pkt-dl-modal').classList.add('open');
+  document.getElementById('pkt-dl-modal')?.classList.add('open');
 }
-function closePktDlModal() { document.getElementById('pkt-dl-modal').classList.remove('open'); }
+function closePktDlModal() { document.getElementById('pkt-dl-modal')?.classList.remove('open'); }
 
 function pktDlTab(el, tab) {
   document.querySelectorAll('.pktdl-tab').forEach(t => t.classList.remove('active'));
@@ -12856,8 +12948,8 @@ function fabToggle(){
 }
 function fabOpen(){
   _fabOpen = true;
-  document.getElementById('fab-backdrop').classList.add('open');
-  document.getElementById('fab-menu').classList.add('open');
+  document.getElementById('fab-backdrop')?.classList.add('open');
+  document.getElementById('fab-menu')?.classList.add('open');
   const floatBtn = document.getElementById('fab-float-btn');
   if (floatBtn) floatBtn.classList.add('fab-open');
   // legacy nav btn (may not exist)
@@ -12867,8 +12959,8 @@ function fabOpen(){
 }
 function fabClose(){
   _fabOpen = false;
-  document.getElementById('fab-backdrop').classList.remove('open');
-  document.getElementById('fab-menu').classList.remove('open');
+  document.getElementById('fab-backdrop')?.classList.remove('open');
+  document.getElementById('fab-menu')?.classList.remove('open');
   const floatBtn = document.getElementById('fab-float-btn');
   if (floatBtn) floatBtn.classList.remove('fab-open');
   document.getElementById('nav-fab-btn')?.classList.remove('fab-open');
@@ -13074,12 +13166,12 @@ function fabOpenQM(type){
   // Color the submit button to match type accent
   const colors = { callsheet:'#F5A67D', contact:'#9B7FD4', meeting:'#5BA3C9', expense:'#72B584', todo:'#D4B84A' };
   submitBtn.style.background = colors[type] || 'var(--c1)';
-  document.getElementById('fab-quick-modal').classList.add('open');
+  document.getElementById('fab-quick-modal')?.classList.add('open');
   setTimeout(()=>document.getElementById('fab-f1')?.focus(), 80);
 }
 
 function fabQmClose(){
-  document.getElementById('fab-quick-modal').classList.remove('open');
+  document.getElementById('fab-quick-modal')?.classList.remove('open');
   _fabQmType = null;
 }
 
@@ -13094,10 +13186,10 @@ function fabQmSave(){
 // Keyboard: Enter to submit, Escape to close
 document.addEventListener('keydown', function(e){
   if(e.key === 'Escape'){
-    if(document.getElementById('fab-quick-modal').classList.contains('open')){ fabQmClose(); return; }
+    if(document.getElementById('fab-quick-modal')?.classList.contains('open')){ fabQmClose(); return; }
     if(_fabOpen){ fabClose(); return; }
   }
-  if(e.key === 'Enter' && document.getElementById('fab-quick-modal').classList.contains('open')){
+  if(e.key === 'Enter' && document.getElementById('fab-quick-modal')?.classList.contains('open')){
     if(document.activeElement?.tagName !== 'TEXTAREA') fabQmSave();
   }
 
@@ -13198,10 +13290,10 @@ let _pbImportClean   = [];   // contacts with no duplicates
 
 function openPbImportModal() {
   pbImportReset();
-  document.getElementById('pb-import-overlay').classList.add('open');
+  document.getElementById('pb-import-overlay')?.classList.add('open');
 }
 function closePbImportModal() {
-  document.getElementById('pb-import-overlay').classList.remove('open');
+  document.getElementById('pb-import-overlay')?.classList.remove('open');
 }
 
 function pbImportShowStep(n) {
@@ -13222,7 +13314,7 @@ function pbImportReset() {
 
 function pbImportHandleDrop(event) {
   event.preventDefault();
-  document.getElementById('pb-import-dropzone').classList.remove('drag-over');
+  document.getElementById('pb-import-dropzone')?.classList.remove('drag-over');
   const file = event.dataTransfer.files[0];
   if (file) pbImportHandleFile(file);
 }
@@ -13549,7 +13641,7 @@ function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&l
       <label class="cstm-check"><input type="checkbox" id="cstm-chk-safety" checked> Safety notice</label>
     </div>
     <div class="cstm-footer">
-      <button class="pill-btn" onclick="document.getElementById('cs-template-modal').classList.remove('open')">Cancel</button>
+      <button class="pill-btn" onclick="document.getElementById('cs-template-modal')?.classList.remove('open')">Cancel</button>
       <button class="pill-btn accent" onclick="csConfirmSaveTemplate()">Save Template</button>
     </div>
   </div>
@@ -13563,7 +13655,7 @@ function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&l
     <div style="font-family:var(--font-display);font-size:18px;font-weight:400;margin-bottom:14px;letter-spacing:-.3px">Rename Call Sheet</div>
     <input class="cstm-input" id="csrn-input" placeholder="Sheet title…" style="margin-bottom:16px;display:block;width:100%;box-sizing:border-box">
     <div style="display:flex;gap:8px;justify-content:flex-end">
-      <button class="pill-btn" onclick="document.getElementById('cs-rename-modal').classList.remove('open')">Cancel</button>
+      <button class="pill-btn" onclick="document.getElementById('cs-rename-modal')?.classList.remove('open')">Cancel</button>
       <button class="pill-btn accent" onclick="csConfirmRename()">Rename</button>
     </div>
   </div>
@@ -13574,10 +13666,10 @@ function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&l
 //  NEW DOCUMENT MODAL — ⌘+Shift+N
 // ════════════════════════════════════════════════
 function openNewDocModal() {
-  document.getElementById('new-doc-modal').classList.add('open');
+  document.getElementById('new-doc-modal')?.classList.add('open');
 }
 function closeNewDocModal() {
-  document.getElementById('new-doc-modal').classList.remove('open');
+  document.getElementById('new-doc-modal')?.classList.remove('open');
 }
 function newDocNavigate(page) {
   closeNewDocModal();
@@ -13611,8 +13703,8 @@ document.addEventListener('keydown', function(e) {
   }
   if (e.key === 'Escape') {
     closeNewDocModal();
-    document.getElementById('cs-template-modal').classList.remove('open');
-    document.getElementById('cs-rename-modal').classList.remove('open');
+    document.getElementById('cs-template-modal')?.classList.remove('open');
+    document.getElementById('cs-rename-modal')?.classList.remove('open');
     closeMeetingModal();
   }
 });
@@ -13805,7 +13897,7 @@ function csOpenRename(idx) {
   _csCtxIdx = idx;
   const data = loadCS();
   document.getElementById('csrn-input').value = data[idx]?.title || '';
-  document.getElementById('cs-rename-modal').classList.add('open');
+  document.getElementById('cs-rename-modal')?.classList.add('open');
   setTimeout(() => document.getElementById('csrn-input').focus(), 200);
 }
 function csConfirmRename() {
@@ -13819,7 +13911,7 @@ function csConfirmRename() {
     const state = loadCseState(data[_csCtxIdx].id || ('cse_'+_csCtxIdx));
     if (state) { state.title = name; saveCseState(state.id, state); }
   }
-  document.getElementById('cs-rename-modal').classList.remove('open');
+  document.getElementById('cs-rename-modal')?.classList.remove('open');
   renderCallSheets();
   flashMsg('Renamed');
 }
@@ -13829,7 +13921,7 @@ function csOpenSaveTemplate(idx) {
   _csCtxIdx = idx;
   const data = loadCS();
   document.getElementById('cstm-name').value = (data[idx]?.title||'Sheet') + ' Template';
-  document.getElementById('cs-template-modal').classList.add('open');
+  document.getElementById('cs-template-modal')?.classList.add('open');
 }
 function csConfirmSaveTemplate() {
   const name = document.getElementById('cstm-name').value.trim() || 'Template';
@@ -13853,7 +13945,7 @@ function csConfirmSaveTemplate() {
   const templates = JSON.parse(localStorage.getItem('cs_templates')||'[]');
   templates.push(template);
   localStorage.setItem('cs_templates', JSON.stringify(templates));
-  document.getElementById('cs-template-modal').classList.remove('open');
+  document.getElementById('cs-template-modal')?.classList.remove('open');
   flashMsg('Template saved: ' + name);
 }
 
@@ -14034,8 +14126,8 @@ function aboutDrop(e, i) {
   aboutDragEnd();
   aboutSave(); aboutRenderScenes();
 }
-function aboutAddScene() { _aboutEditSceneIdx = null; document.getElementById('about-scene-modal-title').textContent='Add Scene'; ['name','loc','pages'].forEach(k=>document.getElementById('abt-sc-'+k).value=''); document.getElementById('abt-sc-ie').value='INT'; document.getElementById('about-scene-modal').classList.add('open'); }
-function aboutEditScene(i) { _aboutEditSceneIdx=i; const s=aboutData.scenes[i]; document.getElementById('about-scene-modal-title').textContent='Edit Scene'; document.getElementById('abt-sc-name').value=s.name||''; document.getElementById('abt-sc-loc').value=s.loc||''; document.getElementById('abt-sc-ie').value=s.ie||'INT'; document.getElementById('abt-sc-pages').value=s.pages||''; document.getElementById('about-scene-modal').classList.add('open'); }
+function aboutAddScene() { _aboutEditSceneIdx = null; document.getElementById('about-scene-modal-title').textContent='Add Scene'; ['name','loc','pages'].forEach(k=>document.getElementById('abt-sc-'+k).value=''); document.getElementById('abt-sc-ie').value='INT'; document.getElementById('about-scene-modal')?.classList.add('open'); }
+function aboutEditScene(i) { _aboutEditSceneIdx=i; const s=aboutData.scenes[i]; document.getElementById('about-scene-modal-title').textContent='Edit Scene'; document.getElementById('abt-sc-name').value=s.name||''; document.getElementById('abt-sc-loc').value=s.loc||''; document.getElementById('abt-sc-ie').value=s.ie||'INT'; document.getElementById('abt-sc-pages').value=s.pages||''; document.getElementById('about-scene-modal')?.classList.add('open'); }
 function aboutSaveScene() {
   const sc = { name:document.getElementById('abt-sc-name').value.trim(), loc:document.getElementById('abt-sc-loc').value.trim(), ie:document.getElementById('abt-sc-ie').value, pages:document.getElementById('abt-sc-pages').value.trim() };
   if (_aboutEditSceneIdx !== null) aboutData.scenes[_aboutEditSceneIdx] = sc;
@@ -14043,7 +14135,7 @@ function aboutSaveScene() {
   aboutCloseScene(); aboutSave(); aboutRenderScenes();
 }
 function aboutDeleteScene(i) { aboutData.scenes.splice(i,1); aboutSave(); aboutRenderScenes(); }
-function aboutCloseScene() { document.getElementById('about-scene-modal').classList.remove('open'); _aboutEditSceneIdx=null; }
+function aboutCloseScene() { document.getElementById('about-scene-modal')?.classList.remove('open'); _aboutEditSceneIdx=null; }
 
 function aboutRenderCast() {
   const el = document.getElementById('about-cast-rows');
@@ -14061,8 +14153,8 @@ function aboutRenderCast() {
   const hdr = document.querySelector('#about-panel-cast .about-scene-hdr');
   if (hdr) hdr.style.gridTemplateColumns = '1fr 1fr 1fr 1fr 50px';
 }
-function aboutAddCast() { _aboutEditCastIdx=null; buildCastChips(''); ['name','role','costume','props'].forEach(k=>document.getElementById('abt-cast-'+k).value=''); document.getElementById('about-cast-modal').classList.add('open'); }
-function aboutEditCast(i) { _aboutEditCastIdx=i; const c=aboutData.cast[i]; buildCastChips(c.name||''); document.getElementById('abt-cast-name').value=c.name||''; document.getElementById('abt-cast-role').value=c.role||''; document.getElementById('abt-cast-costume').value=c.costume||''; document.getElementById('abt-cast-props').value=c.props||''; document.getElementById('about-cast-modal').classList.add('open'); }
+function aboutAddCast() { _aboutEditCastIdx=null; buildCastChips(''); ['name','role','costume','props'].forEach(k=>document.getElementById('abt-cast-'+k).value=''); document.getElementById('about-cast-modal')?.classList.add('open'); }
+function aboutEditCast(i) { _aboutEditCastIdx=i; const c=aboutData.cast[i]; buildCastChips(c.name||''); document.getElementById('abt-cast-name').value=c.name||''; document.getElementById('abt-cast-role').value=c.role||''; document.getElementById('abt-cast-costume').value=c.costume||''; document.getElementById('abt-cast-props').value=c.props||''; document.getElementById('about-cast-modal')?.classList.add('open'); }
 function buildCastChips(selected) {
   const contacts = (typeof loadContacts==='function' ? loadContacts() : []).map(c=>c.name).filter(Boolean);
   const chips = document.getElementById('abt-cast-chips');
@@ -14076,7 +14168,7 @@ function aboutSaveCast() {
   aboutCloseCast(); aboutSave(); aboutRenderCast();
 }
 function aboutDeleteCast(i) { aboutData.cast.splice(i,1); aboutSave(); aboutRenderCast(); }
-function aboutCloseCast() { document.getElementById('about-cast-modal').classList.remove('open'); _aboutEditCastIdx=null; }
+function aboutCloseCast() { document.getElementById('about-cast-modal')?.classList.remove('open'); _aboutEditCastIdx=null; }
 
 function aboutTab(id, btn) {
   document.querySelectorAll('.about-tab').forEach(b=>b.classList.remove('active'));
@@ -14941,10 +15033,10 @@ function loadProfile() {
 }
 
 function openModal() {
-  document.getElementById('restart-modal').classList.add('open');
+  document.getElementById('restart-modal')?.classList.add('open');
 }
 function closeModal() {
-  document.getElementById('restart-modal').classList.remove('open');
+  document.getElementById('restart-modal')?.classList.remove('open');
 }
 function confirmRestart() {
   localStorage.clear();
@@ -15463,11 +15555,11 @@ function switchProduction(id) {
 
 // New production modal
 function openNewProd() {
-  document.getElementById('new-prod-modal').classList.add('open');
+  document.getElementById('new-prod-modal')?.classList.add('open');
   document.getElementById('np-title').focus();
 }
 function closeNewProd() {
-  document.getElementById('new-prod-modal').classList.remove('open');
+  document.getElementById('new-prod-modal')?.classList.remove('open');
   document.getElementById('np-title').value = '';
   document.getElementById('np-type').value = '';
 }
@@ -15585,7 +15677,7 @@ function schubAction(){
   const activeTab = document.querySelector('.schub-tab.active');
   const cur = activeTab ? (activeTab.getAttribute('onclick')||'').match(/'(\w+)'/)?.[1] : 'schedules';
   if(cur==='schedules' || !cur) openNewSsfsModal();
-  else if(cur==='prodview') document.getElementById('pv-add-modal').classList.add('open');
+  else if(cur==='prodview') document.getElementById('pv-add-modal')?.classList.add('open');
   else openNewSsfsModal(); // fallback
 }
 
@@ -15705,7 +15797,7 @@ function sseTogglePreview() {
   if (topLbl) topLbl.textContent = isCollapsed ? 'Show Preview' : 'Hide Preview';
 }
 function closeSsfsEditor() {
-  document.getElementById('schub-panel-editor').classList.remove('active');
+  document.getElementById('schub-panel-editor')?.classList.remove('active');
   document.body.style.overflow = '';
 }
 function openSsfsEditor(idx){
@@ -15722,7 +15814,7 @@ function openSsfsEditor(idx){
   else{ssRows=[];ssInfo={company:'',day:'',date:'',total:'',crewCall:'',window:'',location:'',weather:'',hospital:'',footer:''};}
   renderSsTimeline();updateSsInfoDisplay();
   // Open fullscreen editor overlay
-  document.getElementById('schub-panel-editor').classList.add('active');
+  document.getElementById('schub-panel-editor')?.classList.add('active');
   document.body.style.overflow = 'hidden';
   } catch(err) { console.error('openSsfsEditor error:', err); }
 }
@@ -16104,7 +16196,7 @@ function openNewSsfsModal(){
   const defaultName='Day '+(ssfsSchedules.length+1)+' Schedule';
   document.getElementById('ssfs-new-name').value=defaultName;
   document.getElementById('ssfs-new-loc').value='';
-  document.getElementById('ssfs-new-modal').classList.add('open');
+  document.getElementById('ssfs-new-modal')?.classList.add('open');
   setTimeout(()=>{const i=document.getElementById('ssfs-new-name');if(i){i.select();}},80);
 }
 function confirmNewSsfs(){
@@ -16114,13 +16206,13 @@ function confirmNewSsfs(){
   const id='sched-'+Date.now();
   ssfsSchedules.push({id,name,version:'A',date:new Date().toISOString().split('T')[0],location:loc,rowCount:0,modified:'Just now'});
   saveSsfsData();renderSsfsGrid();
-  document.getElementById('ssfs-new-modal').classList.remove('open');
+  document.getElementById('ssfs-new-modal')?.classList.remove('open');
 }
 function closeNewSsfsModal(){
-  document.getElementById('ssfs-new-modal').classList.remove('open');
+  document.getElementById('ssfs-new-modal')?.classList.remove('open');
 }
-function startRename(idx){ssfsRenameIdx=idx;document.getElementById('ssfs-rename-input').value=ssfsSchedules[idx].name;document.getElementById('ssfs-rename-modal').classList.add('open');}
-function closeRenameModal(){document.getElementById('ssfs-rename-modal').classList.remove('open');ssfsRenameIdx=null;}
+function startRename(idx){ssfsRenameIdx=idx;document.getElementById('ssfs-rename-input').value=ssfsSchedules[idx].name;document.getElementById('ssfs-rename-modal')?.classList.add('open');}
+function closeRenameModal(){document.getElementById('ssfs-rename-modal')?.classList.remove('open');ssfsRenameIdx=null;}
 function confirmRename(){if(ssfsRenameIdx===null)return;const v=document.getElementById('ssfs-rename-input').value.trim();if(!v)return;ssfsSchedules[ssfsRenameIdx].name=v;saveSsfsData();renderSsfsGrid();closeRenameModal();}
 function duplicateSsfs(idx){const s={...ssfsSchedules[idx],id:'sched-'+Date.now(),name:ssfsSchedules[idx].name+' (Copy)',modified:'Just now'};ssfsSchedules.push(s);saveSsfsData();renderSsfsGrid();}
 function deleteSsfs(idx){if(!confirm('Delete "'+ssfsSchedules[idx].name+'"?'))return;ssfsSchedules.splice(idx,1);saveSsfsData();renderSsfsGrid();}
@@ -16802,7 +16894,7 @@ function pvOpenAdd() {
   document.getElementById('pv-modal-title').textContent = 'Add Activity';
   document.getElementById('pv-save-btn').textContent = 'Add Activity';
   document.getElementById('pv-delete-btn').style.display = 'none';
-  document.getElementById('pv-add-modal').classList.add('open');
+  document.getElementById('pv-add-modal')?.classList.add('open');
   pvAttachModalEnter();
   setTimeout(() => document.getElementById('pv-act-name').focus(), 80);
 }
@@ -16826,7 +16918,7 @@ function pvOpenEdit(idx, si) {
   document.getElementById('pv-save-btn').textContent = 'Save';
   document.getElementById('pv-delete-btn').style.display = '';
   document.getElementById('pv-delete-btn').textContent = a.spans.length > 1 ? 'Remove Segment' : 'Delete';
-  document.getElementById('pv-add-modal').classList.add('open');
+  document.getElementById('pv-add-modal')?.classList.add('open');
   pvAttachModalEnter();
 }
 function pvResetModal() {
@@ -16854,7 +16946,7 @@ function pvAttachModalEnter() {
   document.addEventListener('keydown', _pvModalEnterHandler);
 }
 function pvCloseModal() {
-  document.getElementById('pv-add-modal').classList.remove('open');
+  document.getElementById('pv-add-modal')?.classList.remove('open');
   _pvEditIdx = null;
   if (_pvModalEnterHandler) {
     document.removeEventListener('keydown', _pvModalEnterHandler);
@@ -18046,33 +18138,31 @@ function cseOpenEdit(idx){
   csePopulateLiveSheet(state||{title:data[idx].title||''});
 }
 function cseRender(){
-  var front=document.getElementById('cse-preview-front');
-  var back=document.getElementById('cse-preview-back');
-  if(!front||!back){console.warn('cseRender: preview divs not found');return;}
+  var frame=document.getElementById('cse-exp-preview-frame');
+  if(!frame) return;
   var d;
-  try{ d=cseGetData(); }catch(e){console.error('cseGetData failed:',e);return;}
-  d.back=(cseBackRows||[]).slice();
+  try{ d=cseGetData(); }catch(e){ return; }
+  d.back=(d.backRows||[]).slice();
   var accent=cseExpAccentColor||'#F5A67D';
   var font=cseExpFontFamily||'Inter';
   var fmt=cseExpFormat||'minimal';
-  var hasData=d.title||d.company||
-    (d.crew&&d.crew.filter(function(r){return r.name;}).length)||
-    (d.scenes&&d.scenes.filter(function(r){return r.desc||r.sc;}).length);
-  if(!hasData){
-    front.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#ccc;font-family:Inter,sans-serif;text-align:center;gap:8px"><div style="font-size:32px">📋</div><div style="font-size:13px;font-weight:500">Fill in details to see preview</div></div>';
-    back.innerHTML=''; return;
-  }
+  var fh='';
   try{
-    var fh,bh;
-    if(fmt==='floaty'){fh=cseBuildFloatyFront(d,accent,font);bh=cseBuildFloatyBack(d,accent,font);}
-    else if(fmt==='zine'){fh=cseBuildZineFront(d,accent,font);bh=cseBuildZineBack(d,accent,font);}
-    else{fh=cseBuildMinimalFront(d,accent,font);bh=cseBuildMinimalBack(d,accent,font);}
-    front.innerHTML=fh||''; back.innerHTML=bh||'';
+    if(fmt==='floaty') fh=cseBuildFloatyFront(d,accent,font);
+    else if(fmt==='zine') fh=cseBuildZineFront(d,accent,font);
+    else fh=cseBuildMinimalFront(d,accent,font);
   }catch(e){
-    console.error('cseRender build error:',e);
-    front.innerHTML='<div style="padding:24px;color:#888;font-size:12px;font-family:Inter,sans-serif"><b>Preview error:</b><br>'+e.message+'</div>';
-    back.innerHTML='';
+    fh='<div style="padding:24px;color:#888;font-size:12px;font-family:Inter,sans-serif"><b>Preview error:</b><br>'+cseEsc(e.message)+'</div>';
   }
+  var gf='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap';
+  var doc='<!DOCTYPE html><html><head><meta charset="UTF-8"><link href="'+gf+'" rel="stylesheet">'+
+    '<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Inter,sans-serif;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;}</style>'+
+    '</head><body>'+fh+'</body></html>';
+  try{
+    frame.contentDocument.open();
+    frame.contentDocument.write(doc);
+    frame.contentDocument.close();
+  }catch(e){}
 }
 function cseRenderAllTables(){cseRenderCrewTable();cseRenderSceneTable();cseRenderCastTable();cseRenderBackTable();}
 function cseRenderProps(){var b=document.getElementById('cse-props-master-list');if(b)b.innerHTML=cseProps.map(function(p){return '<option value="'+cseEsc(p)+'">';}).join('');}
